@@ -493,3 +493,19 @@
 
   * http://codicesoftware.blogspot.com/2007/05/linus-torvalds-on-git-and-scm.html
   * http://www.betaversion.org/~stefano/linotype/news/106/
+  * on tracking content instead of files: http://marc.info/?l=git&m=116473016012824
+
+  * on why git is so revolutionary.  This is actually the most "concept-ish"
+    of all the praising articles on git, and yet the most tangible because he
+    keeps on pumping us with examples of stuff he and others had done which
+    could ALL be replaced by git:
+    http://www.advogato.org/person/apenwarr/diary/371.html.  Has stuff like "I
+    wanted to build distributed filesystem, but git beat me to it; I wanted a
+    file backup system, but git beat me to it", etc., essentially saying that
+    git is a platform for building whatever you want, not just a VCS.  Or how
+    about a "hash indexed backup system" to store backups from different
+    systems efficiently?
+
+=== funny stuff
+  * http://changelog.complete.org/posts/698-If-Version-Control-Systems-were-Airlines.html
+    -- esp the last 2 "airlines".  No wonder I like git so much :-)
