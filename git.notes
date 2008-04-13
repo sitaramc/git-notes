@@ -414,6 +414,11 @@
         git merge origin
         # (not sure how to do a clone with this method)
 
+  * {{{git diff}}} has a really cool {{{--color-words}}} option that works
+    like the office suites do, instead of the usual line-by-line diff.  //This
+    works fine on normal (non-git) files if at least one of them is untracked,
+    but you can force it by doing --no-index//.
+
 === more exploration
 
   * to see a list of ALL the objects in the entire system, including
