@@ -78,13 +78,18 @@
         # clone your project first
         cd repopath/repo
         git clone --bare projpath/project project.baregit
+        cd project.baregit
+        git config core.sharedrepository true
+        chgrp -R gitpushers .
+        chmod -R g+w .
+        chmod -R g+s .      # not sure about this
         # then come back and tell your original project that it is now a
         # clone, and where it's "origin" is
         cd projpath/project
         git remote add origin file:///repopath/repo/project.baregit
             # or use an ssh based repo URL if you like
-        git config branch.master.merge refs/heads/master
         git config branch.master.remote origin
+        git config branch.master.merge refs/heads/master
             # just take these on faith ok? :-)
         # now "git pull" and "git push" will work automatically
 
@@ -425,6 +430,19 @@
     filenames:
         git rev-list --objects --all
 
+=== the bleeding edge
+
+  * making an independent branch in an existing repo (from
+    http://madduck.net/blog/2007.07.11:creating-a-git-branch-without-ancestry/)
+        git status  # ensure all clear
+        git symbolic-ref HEAD refs/heads/indbr
+        rm .git/index
+        ...create new tree as you like...
+        git add .
+        git commit -m "first commit of independent branch"
+
+  * http://www.ishlif.org/blog/linux/git-submodules/
+
 === questions
 
   * can you make the working copy and the HEAD agree, while the index does
@@ -478,6 +496,8 @@
   * http://tech.slashdot.org/comments.pl?sid=499412&cid=22866970
   * http://cubist.cs.washington.edu/Security/category/security-reviews/
 
+  * http://www.advogato.org/person/apenwarr/diary/371.html
+
   * http://www.developsense.com/testing/VSSDefects.html
 
   * http://creativekarma.com/ee.php/weblog/comments/why_clearcase_sucks/
@@ -486,6 +506,8 @@
   * http://www.trolocsis.com/wp/2007/04/18/the-joys-of-clearcase/
   * http://www.germane-software.com:8080/ser/aikido/clearcase-sucks
   * http://evilparty.org/~orc/2004/08/03/001/index.html
+
+  * http://weblog.masukomi.org/2008/2/4/some-thoughts-about-git (cf Hg)
      
   * http://kb.perforce.com/UserTasks/WorkingDisconnected
   * http://luqui.org/blog/archives/2007/02/19/perforce-sucks/
@@ -494,6 +516,10 @@
   * http://codicesoftware.blogspot.com/2007/05/linus-torvalds-on-git-and-scm.html
   * http://www.betaversion.org/~stefano/linotype/news/106/
   * on tracking content instead of files: http://marc.info/?l=git&m=116473016012824
+
+  * descriptive article on the advantages of a DVCS and speculative branching
+    and low overhead repos and so on:
+    http://griddlenoise.blogspot.com/2007/12/distributed-vcss-are-great-enablers-or.html
 
   * on why git is so revolutionary.  This is actually the most "concept-ish"
     of all the praising articles on git, and yet the most tangible because he
