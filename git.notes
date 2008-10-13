@@ -75,23 +75,8 @@
     fact, anything that others can push to should never be a working
     directory.  This should be a "bare" repository -- it contains only the
     stuff that normally sits inside "{{{.git}}}", but no "working files".
-        # clone your project first
-        cd repopath/repo
-        git clone --bare projpath/project project.baregit
-        cd project.baregit
-        git config core.sharedrepository true
-        chgrp -R gitpushers .
-        chmod -R g+w .
-        chmod -R g+s .      # not sure about this
-        # then come back and tell your original project that it is now a
-        # clone, and where it's "origin" is
-        cd projpath/project
-        git remote add origin file:///repopath/repo/project.baregit
-            # or use an ssh based repo URL if you like
-        git config branch.master.remote origin
-        git config branch.master.merge refs/heads/master
-            # just take these on faith ok? :-)
-        # now "git pull" and "git push" will work automatically
+
+    To do this, see the program "mk.gitmaster".
 
   * or start by cloning an existing project hosted elsewhere
     ** most common usage for most developers
