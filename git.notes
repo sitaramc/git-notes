@@ -386,7 +386,28 @@
     sometimes makes it difficult to find the specific commit that caused an
     error.  See
     http://www.kernel.org/pub/software/scm/git/docs/user-manual.html#bisect-merges
-  * {{{git-stash}}}
+  * {{{git stash}}}
+    ** this can be simulated, and some say it's better to simulate git stash
+       than actually use it!  The following makes use of the fact that the
+       repo HEAD is usually one step behind the index, which is one step
+       behind the working tree.
+        # initial values: R (repo), I (index), C (changed), and U (untracked)
+        # notation: repo contents/index contents/work tree contents
+        # R/RI/RICU; start
+        git commit -m wip-index-state
+        # now RI/RI/RICU; pushed index onto repo
+        git add -A && git commit -m wip-worktree-state
+        # now RICU/RICU/RICU; pushed C/U files onto repo
+            #   ... switch branch, work work work, commit ...
+            #   now you want to get back to the saved state
+        # go back to whatever branch it was
+        git checkout whatever
+        # now RICU/RICU/RICU
+        git reset --mixed HEAD^ # repo=index=R+I
+        # now RI/RI/RICU; moved HEAD and index back one step
+        git reset --soft HEAD^
+        # now R/RI/RICU; moved HEAD back one more step
+        
   * {{{git bisect}}}
   * {{{git add -i}}} is really awesome when you want to partially checkin a
     file
