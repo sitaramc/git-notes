@@ -382,6 +382,26 @@
             # to the appropriate topic (A, B, C).
         git checkout master
         git reset --hard HEAD~9
+  * combining and splitting commits
+    ** to split the top commit into multiple commits
+       *** start {{{git gui}}}
+       *** choose "amend last commit" from the commit menu
+       *** unstage all files
+       *** pick files or hunks in files to stage and commit
+       *** continue all changes are committed
+    ** same as above, but the commit to split is not the top one
+       *** start an interactive rebase that includes that commit
+       *** mark that commit as "edit" and start the rebase
+       *** when the rebase pauses, use {{{git gui}}} as described above
+    ** to combine a set of commits and split the result in some other way
+       *** start an interactive rebase
+       *** move lines as appropriate so your commits are together
+       *** choose "squash" on the second and subsequent ones and start the
+       rebase
+       *** (dirty trick warning) when the editor for the combined commit
+       message pops up, delete ALL the lines and save
+       *** use git gui as above
+       *** then continue the rebase
   * Advantages of doing a rebase: doing a {{{git bisect}}} on a merged chain
     sometimes makes it difficult to find the specific commit that caused an
     error.  See
