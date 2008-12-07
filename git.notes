@@ -20,307 +20,7 @@
   * set your name in the config as shown below, but it is useful not to set
     your email, so that you can be reminded what machine was used to make a
     particular change
-  * //ORIG_HEAD//: pull or merge always leave a copy of the old head with this
-    name.  Reset can use it if needed.  (see {{{man git-reset}}}).  And reset
-    itself copies the old //HEAD// to //ORIG_HEAD//, though that seems less
-    useful.
-  * //FETCH_HEAD//: similar, for fetch
   * man pages frustrating?  Look at the examples first!
-
-=== actual work!
-==== starting (on) a project
-
-  * one-time
-        git config --global user.name "Sitaram Chamarty"
-
-  * my {{{~/.gitconfig}}}
-        [user]
-                name = Sitaram Chamarty
-        # [core]
-        # 	pager = cat
-        [color]
-                branch = auto
-                status = auto
-                diff = auto
-                pager = true
-        [core]
-                pager = less -R
-                compression = 6
-        [alias]
-                s = status
-                ci = commit
-                ds  = diff  --stat
-                dsp = diff  --stat -p
-                ls  = log   --stat
-                lsp = log   --stat -p
-
-  * a few useful aliases
-        alias g='git --no-pager'
-        alias gp='git -p'
-        alias mg='git help'
-
-  * use git for an existing project.  Others can only PULL from this, since
-    this is **your** working directory.  If you allow push, bad things happen
-    (your working directory becomes inconsistent with the {{{.git}}} inside of
-    it)
-        cd projpath/project
-        git init
-        vim .gitignore
-            # optional.  Needed if you have files or extensions that you wish
-            # to exclude from revision control.  man gitignore for details)
-        git add .
-        git commit [-m "some commit message"]
-
-  * make a master repo of your project so others can pull **and** push.  In
-    fact, anything that others can push to should never be a working
-    directory.  This should be a "bare" repository -- it contains only the
-    stuff that normally sits inside "{{{.git}}}", but no "working files".
-
-    To do this, see the program "mk.gitmaster".
-
-  * or start by cloning an existing project hosted elsewhere
-    ** most common usage for most developers
-    ** creates a "remote" called "origin" automatically (which you did
-       manually in the previous example)
-        git clone git:...   # or http:...
-        # again, "git pull" and "git push" will now work automatically
-
-==== look around and explore
-
-    Get a feel for what that project has so far and examine a few objects
-    (files), or commits/revisions, etc.
-
-    These commands offer some more complex views into the git repo.  There's
-    some amount of duplication here, and it often gets confusing.  Suffice it
-    to say that between these commands you ought to get pretty much anything
-    you want.
-
-===== log and show (object)
-
-    Check the logs to see what's happened recently
-        git log [--stat] -[p] [-n <number>]
-        git log "@{yesterday}.."
-            # note the suffix "..", since the default is prefix "..", which is
-            # probably not what you want
-        git log somefile.c
-
-    {{{git show}}} is almost an alias for {{{git log -p -n 1}}}.  In general,
-    {{{git show}}} does the right thing: shows a commit as a commit, a tree as
-    a plain "ls", etc.  But if you're printing a large blob you better use a
-    pager or redirect!
-        git show [ HEAD^ | HEAD^^ | HEAD@{3} | origin | origin/master | etc ]
-        git show 7a8b9c     # or some hex number; shows you the object
-        git show HEAD~3:file.c  # get file.c from 3 versions back
-
-===== cat-file (repo object) and ls-tree (tree object)
-
-    Note: I'm not sure what, if any, is the difference between {{{show}}} and
-    {{{cat-file -p}}} for "blob" objects.  For commits there is a subtle
-    difference.  (Try it)
-
-        # any object
-        git cat-file [ -t | -s | -p ] 789abc
-            # find the type or size of an object, or pretty print it
-            # If it's a blob, I'd use use "git show" until we find out what
-            # "pretty" means for arbitrary blobs :-)
-        git cat-file blob 789abc        # cat the object
-
-        # any tree
-        git ls-tree         # files and directories, top level only
-        git ls-tree -l      # also show the size of the object
-        git ls-tree -d      # only directories
-        git ls-tree -r      # recurse, only files
-        git ls-tree -r -d   # recurse, only directories
-        git ls-tree -r -t   # recurse, both directories and files
-
-        # working set and index (doesn't seem to be of much use, this one...)
-        git ls-files -d -m -o -u -t     # list deleted/modified/other/unmerged files
-
-==== make some changes
-
-        # ...hack hack test... :-)
-
-==== more exploration -- what did we do
-
-    Getting the status of repo is a very important and often used command.  It
-    gives you a quick summary of changed/new/deleted files, as well as reminds
-    you what branch you're sitting on right now.
-
-        git status  # overall status of changed/deleted files and new files,
-                    # plus what is in the index (staging area) and what is
-                    # not.
-
-    Getting a diff is the next important thing before committing.
-        # ...if using staging/index, which you SHOULD (see later):
-        git diff
-        # ...otherwise (ie, still using the CVS model)
-        git diff HEAD
-        # note that "git diff" + "git diff --cached" == "git diff HEAD"
-        git diff "@{yesterday}"
-
-  * {{{git-show-branch}}} is pretty cool.  Read the man page and look at the
-    example carefully.  It's really awesome!  Best uses:
-        git-show-branch -a  # "all", or -r for remote
-        git-show-branch -g  # or, say, -g=20, to see reflogs with commits
-        git reflog          # like "git log -g" (see man git-reflog)
-
-  * need serious troubleshooting with branches
-        git show-branch $(git show-ref -h |cut -c41-)
-            # technically you could use "-s" but I like the human friendly
-            # names that come up on the right side of show-ref better, so I
-            # chose those using cut to pass to show-branch
-
-==== commit
-
-  * commit, GIT style, using staging/index (preferred)
-        git add <newfiles>
-        git add <changedfiles>
-        git rm  <deletedfiles>
-        git commit
-            # read the comments carefully, add the commit message, and save
-  * commit, CVS style (NOT preferred)
-        git add .           # covers new files
-        git commit -a       # covers deleted and changed files also
-
-==== UNDOs
-
-    The following are useful to undo **before a commit**.  Note that these
-    usages of "checkout" (with a **specific** files/paths) do not result in
-    switching branches but in updating the files/paths given.
-
-  * bad working copy, want to make working <= staged
-        git checkout -- filename
-  * bad working copy, want to make working <= HEAD
-        git checkout HEAD -- filename
-  * bad staged version, want to make staged <= HEAD (working copy is not
-    touched)
-        git reset HEAD -- filename
-
-    When things get worse, and it's not just a few files that were screwed up,
-    use this
-
-  * throw away all local changes and make working, staged <= HEAD
-        git checkout -f
-
-    The following are useful to undo **after a commit**, as long as you
-    haven't published or pushed the commit elsewhere:
-
-  * screwed up commit?  hope no one else pulled your last commit, quickly fix
-    the source, and then
-        git commit -a --amend
-
-  * bad commit? apply a reversed patch as an additional commit on top
-        git revert HEAD^    # one revision ago
-        git revert "@{1 hour ago}"
-        git revert "@{5}"   # 5th last saved state, from reflog
-            # this may not be the 5th last revision if there were resets in
-            # between.
-
-  * commit is so bad you want to roll back time?
-        git reset --hard HEAD~5 # 5th last revision
-            # a reset rolls back the log, but is still recorded in the reflog,
-            # which gets expired after some 30 to 90 days.
-
-==== housekeeping
-
-  * made lots of changes?  pack the repository
-        git gc
-        git gc --prune      # dangerous if others may be pushing to the repo!
-
-==== syncing and merging
-
-  * resync with the server (like cvs update) BLINDLY
-        git pull            # default remote is usually "origin"
-        gitk ORIG_HEAD..    # imm'ly after a pull, to see what happened
-        git whatchanged ORIG_HEAD..
-            # briefer than gitk; good for a quick scan of what changed
-  * push your updates to the server
-        git push            # default remote is usually "origin"
-        git push --tags     # if you created any tags
-
-    A pull is functionally the same as fetch+(give you a chance to
-    browse)+merge, so you get a chance to see what precisely you are merging
-
-  * resync with server or get stuff from some other repo CAREFULLY
-        git remote add friend git:...   # or some local path perhaps
-        git fetch friend
-            # or just "git fetch" for origin, where "origin" == whatever repo
-            # you cloned to get this repo in the first place
-        git log -p master..friend/master    # examine changes like this, or...
-        git log -p master..origin/master    # like this
-        # if happy with the changes,
-        git merge friend                # or just "git merge" for origin
-
-  * finding out when a particular change happened or who made it
-        git log -S"some code line" file.c   # why is this called pickaxe search?
-        git blame -b file.c
-
-==== branching
-
-    Branches are to your working directory what tabs are to firefox :-)
-
-  * create and switch to an experimental branch based on current master.
-        git branch experimental
-        git checkout experimental
-        git branch          # will show you what branch you're on
-            # so will "git status"
-        # ...hack hack commit... and finally...
-        # switch between branches using "git checkout"
-  * the experiment was a success...
-        git checkout master     # get back to mainline
-        git merge experimental  # we liked those changes and want to get them in to the mainline
-        # fix conflicts, if any; use "git diff" to find them, then "git add"
-        git commit
-        git branch -d experimental      # clean up if you like
-  * ...or maybe it was a failure!
-        git branch -d experimental      # boo hoo
-
-==== tags
-
-  * using tags
-        git tag sometag     # tags HEAD
-        git tag sometag [ HEAD^^^ | 0a42c6 | etc... ]
-        # or use gitk to tag things visually -- awesome stuff
-        git diff v2.0: v1.9:
-        git diff v2.0:somefile v1.9:somefile
-        git show v2.0:somefile
-
-==== remote branches
-
-  * tracking and updating a remote branch from a local branch
-        git clone ...; cd ...
-        git checkout -b mybr1 origin/br1
-        # ...hack hack commit...
-        git pull        # resolve conflicts and commit if needed
-        # the --track option is only for pull; for push you need this:
-        git push origin mybr1:br1
-        # or create+push a completely new remote branch
-        git push origin mybr1:refs/heads/newbr1
-
-=== startup tips for CVSers
-
-  * **gotcha**: {{{git add somefile}}} adds the **current** content of
-    {{{somefile}}} to the staging area.  Changes made after this do not affect
-    {{{git commit}}} unless you again do a {{{git add}}} or use the {{{-a}}}
-    option to {{{git commit}}}.
-    ** **you will eventually prefer this :-)**
-  * **gotcha**: {{{commit}}} means to your local repo, not to the "server"!
-  * these commands/options effectively bypass the "index" or "staging area",
-    **but the INDEX is really a wonderful concept, and you really should not
-    bypass it like this**.  See
-    http://blogs.gnome.org/newren/2007/12/08/limbo-why-users-are-more-error-prone-with-git-than-other-vcses/
-        git diff HEAD       # to see changes you made
-        git add             # to tell git about new files...
-        git commit -a       # ...and let git figure out changed and deleted files before committing
-  * CVS equivalence
-        CVS                 GIT
-        ---                 ---
-        checkout            clone
-        update              pull
-        checkin             commit + push
-        add                 add
-        remove              rm
-        ???                 mv   
 
 === simple gotchas
 
@@ -345,13 +45,6 @@
     original and the clone being on the same file system or even machine)
         git clone foo bar           # versus
         git clone file:///foo bar
-  * don't rebase if you've published or pushed commits from the branch being
-    rebased!
-  * using {{{git clone}}} from behind a firewall (this did not work in 1.5.3,
-    but works fine in 1.5.4.4)
-        export GIT_PROXY_COMMAND=/tmp/gitproxy      # ...which contains:
-        #!/bin/bash
-        /usr/bin/socat - PROXY:proxy.server:$1:$2,proxyport=3128
 
 === really cool stuff
 
@@ -369,39 +62,7 @@
     particular, you can rebase off of your own ancestor, to refactor a large
     set of recent changes, like this:
         git rebase -i HEAD~10
-    ** YOU DON'T KNOW HOW COOL THIS IS UNTIL YOU TRY IT!  For example, you
-       have a complex set of commits, which you want to split up into 3
-       different topics (keep {{{gitk --all}}} running on the side, and hit F5
-       at each stage):
-        git branch A master
-        git branch B master
-        git branch C master
-        map "git checkout __F__; git rebase -i HEAD~9" A B C
-            # (assuming 9 commits need to re-orged) as each editor session
-            # comes up, delete lines pertaining to commits that don't belong
-            # to the appropriate topic (A, B, C).
-        git checkout master
-        git reset --hard HEAD~9
-  * combining and splitting commits
-    ** to split the top commit into multiple commits
-       *** start {{{git gui}}}
-       *** choose "amend last commit" from the commit menu
-       *** unstage all files
-       *** pick files or hunks in files to stage and commit
-       *** continue all changes are committed
-    ** same as above, but the commit to split is not the top one
-       *** start an interactive rebase that includes that commit
-       *** mark that commit as "edit" and start the rebase
-       *** when the rebase pauses, use {{{git gui}}} as described above
-    ** to combine a set of commits and split the result in some other way
-       *** start an interactive rebase
-       *** move lines as appropriate so your commits are together
-       *** choose "squash" on the second and subsequent ones and start the
-       rebase
-       *** (dirty trick warning) when the editor for the combined commit
-       message pops up, delete ALL the lines and save
-       *** use git gui as above
-       *** then continue the rebase
+    ** YOU DON'T KNOW HOW COOL THIS IS UNTIL YOU TRY IT!
   * Advantages of doing a rebase: doing a {{{git bisect}}} on a merged chain
     sometimes makes it difficult to find the specific commit that caused an
     error.  See
@@ -427,10 +88,6 @@
         # now RI/RI/RICU; moved HEAD and index back one step
         git reset --soft HEAD^
         # now R/RI/RICU; moved HEAD back one more step
-        
-  * {{{git bisect}}}
-  * {{{git add -i}}} is really awesome when you want to partially checkin a
-    file
 
   * {{{git bundle}}}: really awesome, but be careful, not all refspecs will
     work on the receiving side.  Assuming we're talking about a normal
@@ -445,17 +102,6 @@
         git merge origin
         # (not sure how to do a clone with this method)
 
-  * {{{git diff}}} has a really cool {{{--color-words}}} option that works
-    like the office suites do, instead of the usual line-by-line diff.  //This
-    works fine on normal (non-git) files if at least one of them is untracked,
-    but you can force it by doing --no-index//.
-
-=== more exploration
-
-  * to see a list of ALL the objects in the entire system, including
-    filenames:
-        git rev-list --objects --all
-
 === the bleeding edge
 
   * making an independent branch in an existing repo (from
@@ -466,8 +112,6 @@
         ...create new tree as you like...
         git add .
         git commit -m "first commit of independent branch"
-
-  * http://www.ishlif.org/blog/linux/git-submodules/
 
 === questions
 
@@ -497,13 +141,6 @@
 
   * verify-pack gives you a list of all the objects in the pack.  How do you
     find stuff that is not yet packed?
-
-=== best practices for teams
-
-    (this section is work in progress; I am putting stuff in it essentially at
-    random right now)
-
-  * install lighttpd and run "git instaweb" on your primary repo :-)
 
 === some URLs
 

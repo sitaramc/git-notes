@@ -1,0 +1,210 @@
+= git -- best practices for projects
+
+[[TOC]]
+
+----
+
+    **WARNING: I have not checked out all the commands -- there could be
+    errors!  The first time you use it, please try them on a sandbox!**
+
+    This is written from a git perspective, but it translates equally well to
+    any project that uses a DVCS (like Mercurial, for instance).
+
+    This is essentially a modification and simplification of the typical
+    workflow that Linux and other projects using DVCSs use.
+
+=== terms used
+
+    Let's define some simple terms //in the context of version control//.
+
+  * a **project** is the minimum set of source code (and related files) that
+    need to be kept together to **build** the software.  Example: Linux
+    ** each project will have one **repository**
+    ** one **team** can work on multiple projects, so there could be multiple
+       repositories on each desktop
+  * a **branch** in a project is an active line of development
+    ** **master** is the conventional name for the main development tree of a
+       project
+    ** other conventional branches are **next** (for code that is ready to
+       come into //main//), and various maintenance branches like **v1.3** or
+       **v2.6.4** to designate released versions
+    ** these are only conventions, not rules, but they seem to work well in
+       general
+  * a **feature** is a part of a project that is large and complex enough that
+    it's day-to-day commits would be too noisy to include in the main project.
+    Example: the disk subsystem, the networking subsystem, etc., in Linux
+    ** a **feature branch** is a branch for a feature, and is usually
+       long-lived.  This means it regularly acquires changes made in the main
+       line, and -- at stable points in its development cycle -- merges its
+       changes back into the main line
+    ** small projects may not have any feature branches.  That doesn't mean
+       they don't have any features :-)
+
+=== assumptions
+
+  * the team needs to manage multiple projects
+  * the team has one "server", in the sense that it is "on" most of the time
+    (doesn't have to be big and powerful; can even be someone's desktop)
+  * each developer has a copy of git on his desktop, and knows some basic
+    commands or at least the GUI stuff
+
+=== roles
+
+    Every project has the following loosely defined roles.  If it's a small
+    project the same person may take on multiple roles.
+
+  * 1 release manager.  In $COMPANY terms, this is the PL
+  * 1 quality guy (maybe the same as the release manager)
+  * (optional) M feature guys, one for each major "feature" in the project, if
+    any.  In $COMPANY terms, this is like the ML
+  * N developers
+
+=== hardware
+
+    We have no special hardware needs.  One machine needs to be the master
+    server.  (Any developer's desktop can do double duty as the team's server
+    if needed -- we don't need something very big and powerful).
+
+=== what's on...
+
+==== ...the server
+
+    The server contains "bare" repositories for each project that the team
+    develops.  This is the "definitive" or "canonical" source for the
+    project's code, and it has the following characteristics:
+
+  * does not have a "working directory" attached (that's what "bare" means)
+  * developers do not directly commit to this repository
+  * //new// developers clone from it to start work in the project
+  * //all// developers fetch or pull from it at regular intervals to acquire
+    updates from other developers into their repository
+  * only the release manager (or maybe the quality guy, or both) can **push**
+    changes to this repository
+
+==== ...the developer's desktop
+
+    If you are a developer you will have a repository on your desktop for each
+    project you are involved in.  Apart from **master**, **next**, **vX.Y**
+    etc., you will also have a set of branches called **origin/branchname**
+    (example {{{origin/master}}}).  These are your copy of the corresponding
+    branch from the master server.  You will never commit to it directly.
+
+    You can have any other branches you wish!  Go wild -- no one will stop
+    you, and it's quite difficult to lose data so have fun!
+
+==== ...the release manager's desktop
+
+    We'll assume you are doing some development also, not just integrating
+    changes from the developers.
+
+    Apart from what a developer has, you will have a set of branches called
+    **dev-feature**, named for either the developer you pulled the changes
+    from or the feature the code pertains to.  This is where you pull changes
+    from your developers or feature guys.  Name it consistently, either with
+    the dev's name, or the feature, or both.
+
+=== typical workflow
+
+    Here's a typical workflow, assuming a starting point from the "master"
+    branch on the master server.  This assume that the people on the project
+    have ssh (write) access to the repo -- it is not the "please pull..." mode
+    that internet projects use.
+
+==== developer
+
+One-time:
+  * clone from master
+        git clone ssh://sita@master.server.com/path/to/repo.git
+  * create your work branch and switch to it
+        git checkout -b sita-work master
+
+Regular:
+  * switch to your work branch; assumed for the rest of this section
+        git checkout sita-work
+  * work work work/commit/test etc
+        ...
+  * keep up-to-date with changes on the server
+        git fetch origin
+        # destroys history but OK if you haven't published your commits yet
+        git rebase origin/master
+        # preserves history, but not always pretty; mandatory if you have
+        # published your changes somewhere already
+        git merge origin/master
+        # make sure you re-test all your changes after this operation, in case
+        # some upstream change has affected your code
+  * keep sending your changes upstream
+        git push origin sita-work
+
+Irregular:
+  * emergency fix ordered for bug 123 on v2.3
+        git stash
+        git pull master.server v2.3
+        git checkout -b sita-v2.3-bug123 origin/v2.3
+        # work work work test commit test commit etc
+        git push origin sita-v2.3-bug123
+        # email release manager to pull/test the above branch and merge into
+        # master if OK
+        # go back to your work
+        git checkout sita-work
+        git stash apply
+
+  * (wild idea strikes you; so wild you don't even want to risk putting it in
+    next)
+        git checkout -b wildidea sita-work
+        (work work work/commit/test etc)
+        git checkout sita-work
+        # is wildidea useful?
+        git merge wildidea  # should be a "fast-forward"
+        # get rid of temp branch
+        git branch -d wildidea
+
+==== feature guy
+
+    This will be a mix between the developers workflow and the release
+    manager's workflow.
+
+==== release manager
+
+    When doing your own development, you do the same thing as the developer
+    described above
+
+    Regular:
+  * keep up-to-date with changes on the server (not needed if you are the only
+    release manager)
+        ...same as for developer workflow above...
+  * pull stuff from developers
+        git checkout next
+        git tag -f savenext
+        git merge . dev-work
+        # test it
+        # test ok?
+            git checkout master
+            gitk --all  # and graphically cherry-pick whatever you want from
+                        # "next" to "master"
+            # test again just to make sure
+        # test not ok?
+            # discard changes
+            git reset --hard savenext
+            # send dev a problem report and ask him to resubmit
+
+  * make sure next > master > maint is preserved
+        git checkout master
+        git merge vX.Y      # for each vX.Y that has seen any recent activity
+        # test...
+
+        git checkout next
+        git merge master
+        # test...
+
+  * submit code to the master server
+        git checkout master
+        # test
+        # test ok?  tag it
+        git tag ready-`date -I`     # or something appropriate
+        git push origin ready-`date -I`"
+
+  * make a release
+        git checkout master
+        # test again?
+        git tag v3.7
+        git push git://master.server/path/to/repo v3.7

@@ -1,0 +1,268 @@
+= how to do some UNcommon tasks
+
+----
+
+[[TOC]]
+
+----
+
+=== setting up
+
+==== bash aliases for git
+
+        alias g='git --no-pager'
+        alias gp='git -p'
+        alias mg='git help'
+
+==== most useful stuff in {{{$HOME/.gitconfig}}}
+
+    My {{{.gitconfig}}}, as of 2008-12-07, is below.  Parts of this document
+    assume some of these aliases.
+
+        [user]
+                name = Sitaram Chamarty
+        # [core]
+        # 	pager = cat
+        [color]
+                ui = true
+        [core]
+                pager = less -R
+                compression = 6
+        [alias]
+                s   = status
+                b   = branch
+                ba  = branch -a -v
+
+                ci  = commit
+                co  = checkout
+
+                d   = diff  -C
+                ds  = diff  -C --stat
+                dsp = diff  -C --stat -p
+                dw  = diff  -C --color-words
+
+                l   = log   -C
+                lg  = log   --graph --pretty=oneline --abbrev-commit --decorate --all
+                ls  = log   -C --stat
+                lsp = log   -C --stat -p
+
+                ru  = remote update
+
+                sba = show-branch -a
+        [rerere]
+                enabled = 1
+
+=== working with others
+
+==== creating a bare repo and setting up devs (ssh)
+
+See the program "mk.gitmaster"
+
+==== publishing a repository on the web
+
+  * from http://www.cs.helsinki.fi/u/kaitanie/gittalk.pdf
+  * Prepare an empty public repository as user on machine example.org:
+        cd $HOME/public html
+        mkdir myproject.git; cd myproject.git
+        git --bare init
+        chmod a+x hooks/post-update
+        git update-server-info
+  * Push your work to that repository:
+        git remote add public ssh://user@example.org/path/to/myproject.git
+        git push public refs/heads/master:refs/heads/master
+
+=== stuff you tend to forget
+
+==== add and commit
+
+        # stage updates/deletes for files git already knows about
+        git add -u  [paths...]
+        # ditto for ALL files, including new ones
+        git add -A
+
+        # stage updates/deletes for files git already knows about AND COMMIT
+        git commit -a
+
+==== push
+
+  * don't forget to {{{git push --tags}}} when needed
+
+==== diff
+
+        # diff between work area and stage
+        git diff
+        # diff between work area and repo (CVS model)
+        # note that "git diff" + "git diff --cached" == "git diff HEAD"
+        git diff HEAD
+        # other coolness
+        git diff "@{yesterday}"
+
+==== log pickaxe and blame
+
+  * finding out when a particular change happened or who made it
+        git log -S"some code line" file.c   # why is this called pickaxe search?
+        git blame -b file.c
+
+
+==== misc
+
+  * {{{ORIG_HEAD}}}: pull or merge always leave a copy of the old head with
+    this name.  Reset can use it if needed.  (see {{{man git-reset}}}).  And
+    reset itself copies the old {{{HEAD}}} to {{{ORIG_HEAD}}}, though that
+    seems less useful.
+  * {{{FETCH_HEAD}}}: similar, for fetch
+
+==== oopsies!
+
+    The following are useful to undo **before a commit**.  Note that these
+    usages of "checkout" (with a **specific** files/paths) do not result in
+    switching branches but in updating the files/paths given.
+
+  * bad working copy, want to make working <= staged
+        git checkout -- filename
+  * bad working copy, want to make working <= HEAD
+        git checkout HEAD -- filename
+  * bad staged version, want to make staged <= HEAD (working copy is not
+    touched)
+        git reset HEAD -- filename
+
+    When things get worse, and it's not just a few files that were screwed up,
+    use this
+
+  * throw away all local changes and make working, staged <= HEAD
+        git checkout -f
+
+    The following are useful to undo **after a commit**, as long as you
+    haven't published or pushed the commit elsewhere:
+
+  * screwed up commit?  hope no one else pulled your last commit, quickly fix
+    the source, and then
+        git commit -a --amend
+
+  * bad commit? apply a reversed patch as an additional commit on top
+        git revert HEAD^    # one revision ago
+        git revert "@{1 hour ago}"
+        git revert "@{5}"   # 5th last saved state, from reflog
+            # this may not be the 5th last revision if there were resets in
+            # between.
+
+  * commit is so bad you want to roll back time?
+        git reset --hard HEAD~5 # 5th last revision
+            # a reset rolls back the log, but is still recorded in the reflog,
+            # which gets expired after some 30 to 90 days.
+
+=== useful commands
+
+==== log and show
+
+  * {{{git lg}}} is pretty cool
+
+  * Check the logs to see what's happened recently
+        git log [--stat] -[p] [-n <number of commits to show>]
+        git log "@{yesterday}.."
+            # note the suffix "..", since the default is prefix "..", which is
+            # probably not what you want
+        git log somefile.c
+
+  * {{{git show}}} is almost an alias for {{{git log -p -n 1}}}.  In general,
+    {{{git show}}} does the right thing: shows a commit as a commit, a tree as
+    a plain "ls", etc.  But if you're printing a large blob you better use a
+    pager or redirect!
+        git show [ HEAD^ | HEAD^^ | HEAD@{3} | origin | origin/master | etc ]
+        git show 7a8b9c     # or some hex number; shows you the object
+        git show HEAD~3:file.c  # get file.c from 3 versions back
+
+==== cat-file (repo object) and ls-tree (tree object)
+
+    Note: I'm not sure what, if any, is the difference between {{{show}}} and
+    {{{cat-file -p}}} for "blob" objects.  For commits there is a subtle
+    difference.  (Try it)
+
+        # any object
+        git cat-file [ -t | -s | -p ] 789abc
+            # find the type or size of an object, or pretty print it
+            # If it's a blob, I'd use use "git show" until we find out what
+            # "pretty" means for arbitrary blobs :-)
+        git cat-file blob 789abc        # cat the object
+
+        # any tree
+        git ls-tree         # files and directories, top level only
+        git ls-tree -l      # also show the size of the object
+        git ls-tree -d      # only directories
+        git ls-tree -r      # recurse, only files
+        git ls-tree -r -d   # recurse, only directories
+        git ls-tree -r -t   # recurse, both directories and files
+
+        # working set and index (doesn't seem to be of much use, this one...)
+        git ls-files -d -m -o -u -t     # list deleted/modified/other/unmerged files
+
+==== show-branch
+
+  * best use is through {{{git sba}}}
+  * if you need serious troubleshooting with branches, use the following.  It
+    may be useful in some contexts where {{{git lg}}} is to complex to figure
+    out what tip contains what commit
+        git show-branch $(git show-ref -h |cut -c41-)
+
+=== less common stuff
+
+==== housekeeping
+
+  * made lots of changes?  pack the repository
+        git gc
+        git gc --prune      # dangerous if others may be pushing to the repo!
+
+=== less common stuff
+
+==== combining and splitting commits
+  * to split the top commit into multiple commits
+    ** start {{{git gui}}}
+    ** choose "amend last commit" from the commit menu
+    ** unstage all files
+    ** pick files or hunks in files to stage and commit
+    ** continue all changes are committed
+  * same as above, but the commit to split is not the top one
+    ** start an interactive rebase that includes that commit
+    ** mark that commit as "edit" and start the rebase
+    ** when the rebase pauses, use {{{git gui}}} as described above
+  * to combine a set of commits and split the result in some other way
+    ** start an interactive rebase
+    ** move lines as appropriate so your commits are together
+    ** choose "squash" on the second and subsequent ones and start the rebase
+    ** (dirty trick warning) when the editor for the combined commit message
+       pops up, delete ALL the lines and save
+    ** use git gui as above
+    ** then continue the rebase
+
+==== more exploration
+
+  * to see a list of ALL the objects in the entire system, including
+    filenames:
+        git rev-list --objects --all
+
+==== startup tips for CVSers
+
+  * **gotcha**: {{{git add somefile}}} adds the **current** content of
+    {{{somefile}}} to the staging area.  Changes made after this do not affect
+    {{{git commit}}} unless you again do a {{{git add}}} or use the {{{-a}}}
+    option to {{{git commit}}}.
+    ** **you will eventually prefer this :-)**
+  * **gotcha**: {{{commit}}} means to your local repo, not to the "server"!
+  * these commands/options effectively bypass the "index" or "staging area",
+    **but the INDEX is really a wonderful concept, and you really should not
+    bypass it like this**.  See
+    http://blogs.gnome.org/newren/2007/12/08/limbo-why-users-are-more-error-prone-with-git-than-other-vcses/
+        git diff HEAD       # to see changes you made
+        git add             # to tell git about new files...
+        git commit -a       # ...and let git figure out changed and deleted files before committing
+  * CVS equivalence
+        CVS                 GIT
+        ---                 ---
+        checkout            clone
+        update              pull
+        checkin             commit + push
+        add                 add
+        remove              rm
+        ???                 mv   
+
+  * http://github.com/guides/completely-remove-a-file-from-all-revisions
