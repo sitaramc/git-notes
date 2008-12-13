@@ -67,61 +67,11 @@
     sometimes makes it difficult to find the specific commit that caused an
     error.  See
     http://www.kernel.org/pub/software/scm/git/docs/user-manual.html#bisect-merges
-  * {{{git stash}}}
-    ** this can be simulated, and some say it's better to simulate git stash
-       than actually use it!  The following makes use of the fact that the
-       repo HEAD is usually one step behind the index, which is one step
-       behind the working tree.
-        # initial values: R (repo), I (index), C (changed), and U (untracked)
-        # notation: repo contents/index contents/work tree contents
-        # R/RI/RICU; start
-        git commit -m wip-index-state
-        # now RI/RI/RICU; pushed index onto repo
-        git add -A && git commit -m wip-worktree-state
-        # now RICU/RICU/RICU; pushed C/U files onto repo
-            #   ... switch branch, work work work, commit ...
-            #   now you want to get back to the saved state
-        # go back to whatever branch it was
-        git checkout whatever
-        # now RICU/RICU/RICU
-        git reset --mixed HEAD^ # repo=index=R+I
-        # now RI/RI/RICU; moved HEAD and index back one step
-        git reset --soft HEAD^
-        # now R/RI/RICU; moved HEAD back one more step
-
-  * {{{git bundle}}}: really awesome, but be careful, not all refspecs will
-    work on the receiving side.  Assuming we're talking about a normal
-    "origin" pull for an existing clone, this is what you do
-        # sending side
-        git bundle create ~/junk HEAD^^^..
-            # (or something like "254c8de4..", assuming the receiving side has
-            # that hash)
-        # receiving side
-        git ls-remote ~/junk    # note the refs on the right side
-        git fetch ~/junk HEAD   # one of the refs that showed up
-        # now merge it wherever you want
-        git merge FETCH_HEAD
-        # (not sure how to do a clone with this method)
-
-=== the bleeding edge
-
-  * making an independent branch in an existing repo (from
-    http://madduck.net/blog/2007.07.11:creating-a-git-branch-without-ancestry/)
-        git status  # ensure all clear
-        git symbolic-ref HEAD refs/heads/indbr
-        rm .git/index
-        ...create new tree as you like...
-        git add .
-        git commit -m "first commit of independent branch"
 
 === questions
 
   * can you make the working copy and the HEAD agree, while the index does
     not? -- seems you can
-  * how do you find out how many remotes you have and what they are called?
-        vim .git/config                         # or...
-        git remote | map git remote [-n] show   # even better!
-            # use -n to prevent lookup if needed
 
   * what the heck is a //reflog// and why is it so important?
     ** from a comment in
