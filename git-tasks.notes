@@ -192,8 +192,23 @@ See the program "mk.gitmaster"
         git ls-tree -r -d   # recurse, only directories
         git ls-tree -r -t   # recurse, both directories and files
 
-        # working set and index (doesn't seem to be of much use, this one...)
-        git ls-files -d -m -o -u -t     # list deleted/modified/other/unmerged files
+==== ls-files
+
+    To get listings of various types of files, use {{{git ls-files}}}.  The
+    common but less intuitive ones are shown here, the rest can be had from
+    the man page:
+
+        # deleted files and modified files (deleted files are also counted as
+        # modified, so may come up twice...
+        git ls-files -d -m
+        # what's in the index; includes files that were "git add"ed
+        git ls-files -s
+        # "other files"; includes EVERYthing not in c/d/m/s, I think
+        git ls-files -o
+        # untracked files only
+        git ls-files --exclude-standard -o
+        # ignored files only
+        git ls-files --exclude-standard -o -i
 
 ==== show-branch
 
