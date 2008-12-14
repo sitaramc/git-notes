@@ -212,13 +212,18 @@ See the program "mk.gitmaster"
     an existing clone, this is what you do
         # sending side
         git bundle create ~/junk HEAD^^^..
-            # (or say "254c8de..", assuming the receiving side has that hash)
+            # or say "254c8de..", assuming the receiving side has that hash)
         # receiving side
         git ls-remote ~/junk    # note the refs on the right side
         git fetch ~/junk HEAD   # one of the refs that showed up
         # now merge it wherever you want
         git merge FETCH_HEAD
-        # (not sure how to do a clone with this method)
+
+  * to clone a repo using this method:
+        # sending side: cd to repo and checkout the master or whatever, then:
+        git bundle create ~/junk HEAD
+        # receiving side: mkdir/cd some empty directory, then:
+        git init; git pull ~/junk
 
 ==== making an independent branch in an existing repo
 
