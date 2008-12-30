@@ -7,10 +7,10 @@
 === basic concepts and simple tips
 
   * a branch is "an active line of development"
-  * //master//: default branch in a project
+  * //master//: default branch in a project, by convention
   * //head//: tip of a branch
   * a repo can track many branches, but the working tree is associated with
-    only one branch
+    only one branch at a time
   * //HEAD//: tip of the branch associated with the working tree; this is
     where commits go
     ** except when it's "detached"
