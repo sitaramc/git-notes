@@ -154,7 +154,8 @@ See the program "mk.gitmaster"
 
 ==== log and show
 
-  * {{{git lg}}} is pretty cool
+  * {{{git lg}}} is pretty cool; lg is an alias in my config for
+        log --graph --pretty=oneline --abbrev-commit --decorate --all
 
   * Check the logs to see what's happened recently
         git log [--stat] -[p] [-n <number of commits to show>]
@@ -212,9 +213,9 @@ See the program "mk.gitmaster"
 
 ==== show-branch
 
-  * best use is through {{{git sba}}}
+  * best use is through {{{git show-branch -a}}}
   * if you need serious troubleshooting with branches, use the following.  It
-    may be useful in some contexts where {{{git lg}}} is to complex to figure
+    may be useful in some contexts where {{{git lg}}} is too complex to figure
     out what tip contains what commit
         git show-branch $(git show-ref -h |cut -c41-)
 
@@ -270,11 +271,12 @@ See the program "mk.gitmaster"
     ** choose "amend last commit" from the commit menu
     ** unstage all files
     ** pick files or hunks in files to stage and commit
-    ** continue all changes are committed
+    ** continue until all changes are committed
   * same as above, but the commit to split is not the top one
     ** start an interactive rebase that includes that commit
     ** mark that commit as "edit" and start the rebase
     ** when the rebase pauses, use {{{git gui}}} as described above
+    ** continue the rebase
   * to combine a set of commits and split the result in some other way
     ** start an interactive rebase
     ** move lines as appropriate so your commits are together
@@ -287,7 +289,7 @@ See the program "mk.gitmaster"
 ==== more exploration
 
   * to see a list of ALL the objects in the entire system, including
-    filenames:
+    filenames (but this isn't tremendously useful though):
         git rev-list --objects --all
 
 ==== simulating git stash
