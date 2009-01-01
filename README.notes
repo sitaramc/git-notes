@@ -1,0 +1,100 @@
+This repo contains all my notes about git.  I started writing them for my
+own understanding, almost like cheat sheets, but they may be useful for others
+also.
+
+----
+
+[[TOC]]
+
+----
+
+= What do these files have?
+
+  * "git-tasks.notes" is probably the most important and best organised of
+    these files, at present.
+  * "git-bp" is a set of best practices I wrote up for my $DAYJOB internal
+    use, but they have not been field tested yet.
+  * "git.lfy" is the text of an article I wrote on git for "Linux For You", a
+    magazine in India.  It appeared in the June 2008 issue.
+    "git-article-figures.zip", the only binary file in this repo so far,
+    contains the figures used in that article.
+  * "git.notes" contains misc stuff that didn't seem to fit anywhere else.
+
+= Reading these files
+
+    All these documents are plain text, so reading them as is should be no
+    problem using any text editor/viewer.
+
+=== HTML and PDF
+
+    If you want to format them to HTML, do this:
+
+        cd tools-etc
+        perl -I. ./wiki_creole.pl < ../input.notes > ../output.html
+
+    Adjust the paths if you want to do this from some other directory.  If you
+    will be running this frequently, I suggest you:
+
+  * install the Text::WikiCreole module from CPAN so you can leave out the
+    "-I."
+  * symlink or copy "wiki_creole.pl" to somewhere in your $PATH and make it
+    executable so you can just start the command with "wiki_creole.pl"
+
+    You can convert the HTML to PDF using the following command sequence.  The
+    links in the generated Table of Contents are preserved:
+        wiki_creole.pl < input.txt | html2ps | ps2pdf - - > output.pdf
+
+----
+
+= Updating the content
+
+  # Please continue to use the ".notes" extension for these files.  Some parts
+    of my automated workflow (not part of this repo) use this to identify
+    which files to pre-process using wiki_creole.pl.
+  # Please do not use hard tabs, or if you do, make sure your tabstop is set
+    to 8, not 4.  I do not use hard tabs.
+  # If you wish to send me patches, please use the wikicreole markup, with
+    extensions, that I use.
+  # If you don't want to be bothered by the details of the markup language,
+    and can infer most things from the existing document, just remember that
+    any line or block with 8 or more leading spaces becomes a code block.
+  # Please note that I consider HTML and PDF to be generated outputs, so
+    they are listed in ".gitignore".
+    
+=== Details on the WikiCreole markup and extensions
+
+    Information on wikicreole can be found at http://www.wikicreole.org --
+    briefly, it is an attempt to unify the many many different types of
+    markups that each wiki engine seems to use.
+
+    I use a Perl module called Text::WikiCreole to convert the marked up text
+    to HTML.  This module supports some extensions to the base wikicreole,
+    only one of which I use extensively (indented paragraphs or blockquote).
+
+    On top of those I have my own extensions to make some really common things
+    even easier.  The "wiki_creole.pl" program in the "tools-etc" directory
+    recognises my extensions, converts them, and passes the result to the
+    "Text::WikiCreole" perl module for the final output.
+
+    These are my extensions to the syntax supported by wikicreole and
+    Text::WikiCreole:
+
+  * any line or block with 8 or more leading spaces becomes a code block.
+    This is because I have so many code blocks in my text that it is tedious
+    to use the triple-curly delimiters that wikicreole normally requires.
+  * Lines that have exactly 4 leading spaces become indented (blockquote in
+    HTML), if they are not part of a bulleted list already.  This is a
+    Text::WikiCreole extension which allows a leading colon (":") to denote an
+    indented paragraph, but that looks ugly and I like most of my text to be a
+    little indented from the left margins, to set off the various headings a
+    little.
+
+=== Generating a TOC
+
+    This is a somewhat more complex extension.  Wikicreole uses
+    double-square-brackets to mark URLs.  If the URL is on a line by itself
+    and happens to be the word "TOC" (as you can see at the top of the plain
+    text version of this file), my extension will generate a table of contents
+    for all headings upto level 4 and insert it at that position.  You can
+    change that to some other level, say 3, by saying "TOC 3" instead of just
+    TOC.
