@@ -1,5 +1,7 @@
 = how to do some UNcommon tasks
 
+This document describes stuff that's not necessarily done every day.
+
 ----
 
 [[TOC]]
@@ -252,13 +254,22 @@ See the program "mk.gitmaster"
         git add .
         git commit -m "first commit of independent branch"
 
-=== less common stuff
+==== garbage collection
 
-==== housekeeping
+  * Warning: {{{git gc --prune}}} is dangerous if others may be pushing to the
+    repo at the same time!
+  * Warning: {{{git gc}}} may **increase** the space used, since it even
+    unpacks objects that were in packs if they became unreachable.  This is
+    the same thing as {{{git repack -Adf}}} (note the uppercase "A")
 
-  * made lots of changes?  pack the repository
-        git gc
-        git gc --prune      # dangerous if others may be pushing to the repo!
+  * To bring the repo size down the bare minimum, you need //both// the
+    following commands (neither command by itself does the whole job).  Also
+    Note the lowercase "a" on the "repack", which says you want to blindly
+    discard unreachable objects instead of keeping them as loose objects.
+        git repack -adf     # kills in-pack garbage
+        g prune             # kills loose garbage
+
+==== remotes
 
   * how do you find out how many remotes you have and what they are called?
         vim .git/config                         # or...
@@ -313,7 +324,7 @@ See the program "mk.gitmaster"
         git reset --soft HEAD^
         # now R/RI/RICU; moved HEAD back one more step
 
-==== startup tips for CVSers
+=== startup tips for CVSers
 
   * **gotcha**: {{{git add somefile}}} adds the **current** content of
     {{{somefile}}} to the staging area.  Changes made after this do not affect
