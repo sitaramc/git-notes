@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# create a blank repo master
+
+die() { echo "$@"; exit 1; }
+usage() {
+cat <<EOF
+$0 [empty | repo/proj.git]
+    Use this when your existing code is not yet in git anywhere,
+    and you want to have a bare repo from the start.  It creates a
+    bare, empty, project that you can **clone** from on your client.
+
+    On the server:
+        $0 empty        # only once per machine
+        $0 repo/proj.git
+    On the client:
+        git clone ssh://server.ip/path/to/repo/proj.git
+
+    If your project is already on git, do the following manually:
+    On the server:
+        mkdir repo/proj.git;cd repo/proj.git
+        git --bare init --shared=group
+        sudo chgrp -R gitpushers .
+    On the client:
+        git remote add origin ssh://server.ip/path/to/repo/proj.git
+        git config branch.master.remote origin
+        git config branch.master.merge refs/heads/master
+
+    MAKE SURE the "gitpushers" group has write access to the repo!
+
+EOF
+exit 1
+}
+
+# create project directory
+[[ -z $1 ]] && usage
+[[ -f $1 ]] && die $1 exists
+
+# start with an empty repo (you only to do this once per machine)
+if [[ $1 == empty ]]
+then
+    mkdir empty		|| die mkdir empty failed
+    cd empty		|| die chdir empty failed
+    touch empty
+    git init; git add .;git commit -m start
+    git rm empty; git commit -m empty
+else
+    mkdir $1    || die mkdir $1 failed
+    cd $1
+    git --bare init --shared=group
+    echo running \"sudo chgrp -R gitpushers .\"...
+    sudo chgrp -R gitpushers .
+    od=$PWD
+    cd ~/empty  || die cd ~/empty failed
+    git push --all $od
+
+    echo your repo master is ready at $1 "($od)"
+fi
