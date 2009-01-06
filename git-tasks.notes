@@ -43,10 +43,10 @@ This document describes stuff that's not necessarily done every day.
                 dsp = diff  -C --stat -p
                 dw  = diff  -C --color-words
 
-                l   = log   -C
+                l   = log   -C --decorate
                 lg  = log   --graph --pretty=oneline --abbrev-commit --decorate --all
-                ls  = log   -C --stat
-                lsp = log   -C --stat -p
+                ls  = log   -C --stat --decorate
+                lsp = log   -C --stat -p --decorate
 
                 ru  = remote update
 

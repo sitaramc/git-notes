@@ -77,7 +77,7 @@
     ** from a comment in
        http://blogs.gnome.org/newren/2007/11/24/local-caching-a-major-distinguishing-difference-between-vcses/,
        it seems to be: a very special "branch" since it records each position
-       of HEAD in the last 30 days (by default). So removed branches won’t be
+       of HEAD in the last 30 days (by default). So removed branches won't be
        purged by purge [he might have meant prune] until after waiting for 30
        days, when the last reference to them will finally be released.
     ** and I managed to understand it, after hard-resetting a commit and then
