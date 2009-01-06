@@ -1,0 +1,19 @@
+= (READ THIS FIRST) README for the git-notes repo
+
+This repo contains all my notes about git.  I started writing them for my
+own understanding, almost like cheat sheets, but they may be useful for others
+also.
+
+----
+
+== What do these files have?
+
+  * "git-tasks.notes" is probably the most important and best organised of
+    these files, at present.
+  * "git-bp" is a set of best practices I wrote up for my $DAYJOB internal
+    use, but they have not been field tested yet.
+  * "git.lfy" is the text of an article I wrote on git for "Linux For You", a
+    magazine in India.  It appeared in the June 2008 issue.
+    "git-article-figures.zip", the only binary file in this repo so far,
+    contains the figures used in that article.
+  * "git.notes" contains misc stuff that didn't seem to fit anywhere else.
