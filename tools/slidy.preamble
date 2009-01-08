@@ -1,0 +1,28 @@
+<head>
+<title>HTML Slidy</title>
+<link rel="stylesheet" href="tools/slidy.css" type="text/css">
+<meta name="font-size-adjustment" content="3">
+<script src="tools/slidy.js" charset="utf-8" type="text/javascript">
+</script>
+</head>
+<body>
+
+<div class="slide cover">
+<center>
+<br/>
+<br/>
+<br/>
+<br/>
+<img src="tools/git.png">
+<br/>
+<br/>
+<br/>
+<br/>
+#TITLE
+<br/>
+<br/>
+#SUBTITLE
+
+</center>
+</div>
+
