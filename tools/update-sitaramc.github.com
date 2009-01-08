@@ -29,11 +29,19 @@ do
 
     oldd=$d
 done > $outdir/index.html
+echo ...git notes done >&2
+
+wiki_creole.pl < gittalk.notes | tools/mkslidy.pl > $outdir/gittalk.html
+mkdir -p $outdir/tools
+cp tools/git.png $outdir/tools
+cp tools/slidy.* $outdir/tools
+echo ...git talk done >&2
 
 cd ~/hobbits/info/notes
 ./.mk.notes *.notes
 cd -
 mv ~-/notes.html $outdir
+echo ...main notes done >&2
 
 cd $outdir || die "couldnt CD to $outdir"
 cat > README <<EOF
@@ -63,4 +71,5 @@ WikiCreole?  What's that?
 EOF
 git add .
 git commit -m "latest HTML output (see git-notes repo for history)"
-git push -f
+echo now you can:
+echo '    ' cd $outdir\; git push -f\; cd -
