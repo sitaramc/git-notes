@@ -12,11 +12,11 @@ it is so exciting.
 Here's a taste: Figure 1 is a screenshot from the GUI version of what SVN
 folks would know as //svn blame//.
 
-Figure 1: Git gui blame
+{{images/gitlfy-fig1-gui-blame.gif|Figure 1: Git GUI blame}}
 
 As you can see, git says that the function called {{{find_tree_entry}}} was
 originally written in {{{sha1_name.c}}} and later moved to {{{tree-walk.c}}}
-(this file).  However, no programmer //told// git all this – it inferred it by
+(this file).  However, no programmer //told// git all this -- it inferred it by
 looking at the revisions.  That's an amazing level of traceability in a world
 where most current VCSs can't handle even a simple file-rename without being
 explicitly told, such as with the {{{svn rename}}} command!
@@ -35,7 +35,7 @@ folks at that time. The problems with Bitkeeper were non-technical, and we
 will not go into them here, except to say that the workflows of Bitkeeper were
 a large part of the inspiration behind Git.
 
-Git development was very rapid – it became self-hosting in just 4 days of
+Git development was very rapid -- it became self-hosting in just 4 days of
 development, but remember that's in "Linus-days" :-),  and in about 2.5 months
 it was helping Linus manage Linux kernel development.  Currently, apart from
 the Linux kernel and related projects, it is used by several projects, for
@@ -51,7 +51,7 @@ anything else to understand the git model quickly and easily. It is called
 http://eagain.net/articles/git-for-computer-scientists/.  I consider this
 essential reading for anyone trying to understood the git object store.
 
-=== Merging – git's first and biggest strength
+=== Merging -- git's first and biggest strength
 
 The most basic function of a VCS is to give us a way to rollback to a known
 state, should we really mess up whatever we are working on. In that sense, a
@@ -80,7 +80,7 @@ responsible for a much larger refactoring effort, renames and moves that file
 to some other directory?
 
 Git handles such situations much better than any of the old style VCSs. It
-currently has 5 different merge strategies that you can use (don't worry – you
+currently has 5 different merge strategies that you can use (don't worry -- you
 don't have to think about them if you don't want to!) and it's designed so
 that if some new strategy to handle merging is discovered, it can be added in
 very easily.
@@ -105,7 +105,7 @@ In addition, git has excellent GUI tools to visualise this sort of branching
 easily. Figure 2, for example, is from the development tree of a project
 called //cobbler.//
 
-Figure 2: Branch visualisation
+{{images/gitlfy-fig2-branch-visual.gif|Figure 2: Branch visualisation}}
 
 Merging is a very big priority for Linus Torvalds. He says, "I merge 22,000
 files several times a day, and I get unhappy if a merge takes more than 5
@@ -115,7 +115,7 @@ first 2 years of git, the Linux kernel has "averaged
 
 The idea behind this is simple: making many small merges at regular intervals
 (and resolving any conflicts if needed) is much easier than dealing with all
-of them together – you //have to// divide and conquer.
+of them together -- you //have to// divide and conquer.
 
 Another situation in which good branching and merging helps is, for instance,
 when a relatively stable product needs to have more than one major "feature"
@@ -147,13 +147,13 @@ make the history look like Figure 3 (note: this is not a real project!). When
 this branch is eventually merged into the mainline (like when it is deemed
 stable enough), this "stitching pattern" remains.
 
-Figure 3: Stitching pattern
+{{images/gitlfy-fig3-stitching-pattern.gif|Figure 3: Stitching pattern}}
 
 For some projects it may be easier to make all the branch work look as if it
 was done //on top of// the current mainline commit. This is called
 //rebasing//.  While the branch is under development, instead of doing a
 {{{git pull}}} (this is somewhat like a {{{cvs update}}}) from the mainline,
-you'd do a {{{git pull –rebase}}} (there are other ways to do this; this is
+you'd do a {{{git pull --rebase}}} (there are other ways to do this; this is
 just the simplest). Each time you do that, git re-applies all your commits on
 top of the new tip of the mainline, and the history remains linear.  When your
 branch is finally stable enough to be merged into the mainline, your changes
@@ -163,14 +163,14 @@ than a parallel set of updates followed by a merge.
 The biggest advantage of rebasing instead of normal merging is when you try
 and track down a bug using {{{git bisect}}}, which we will discuss later.
 
-=== Speed – git's second big feature
+=== Speed -- git's second big feature
 
 The other explicit design goal was speed, which has been one of the pain
 points of earlier VCSs. Centralised VCSs can take minutes to do a simple
 //diff//, or tens of minutes to create a branch. It is also quite frustrating
 to have to schedule a code-freeze and set aside a day or two to do a merge. (I
 believe this is quite normal in centralised VCSs, especially the more
-mainframe-ish ones – consider yourself lucky if you don't know which one I am
+mainframe-ish ones -- consider yourself lucky if you don't know which one I am
 talking about!) With git, on the other hand, it's common to hear people say
 that it's so fast they sometimes wonder if it did anything at all!
 
@@ -184,7 +184,7 @@ etc), it is not optimised for the case where you wish to view history in a
 depth-first manner (meaning all revisions for one file first, then all
 revisions for perhaps some other file).  The logic is that we're more likely
 to want to examine the entire tree for the current and the previous few
-revisions – the further a revision is from our current one, the less
+revisions -- the further a revision is from our current one, the less
 interesting it usually is for normal work.
 
 === Distributed and disconnected
@@ -194,7 +194,7 @@ on your machine. Coupled with the excellent branch/merge in git, this allows
 you, for instance, to quickly create a branch for some experimental code that
 may or may not work, test things out, and either discard or reuse the changes
 later. With a centralised system, you are much more limited in what you can do
-in these situations – you usually resort to the classic "tar/zip" method of
+in these situations -- you usually resort to the classic "tar/zip" method of
 saving and restoring your work.
 
 If you work offline a lot, it's a lot more useful to be able to commit each
@@ -205,12 +205,12 @@ important, finding the source of a bug becomes much easier, as we will see
 later.
 
 The reason git is good at distributed operation is because, when you do a
-{{{git clone}}}, it brings down and caches the entire repository – the full
+{{{git clone}}}, it brings down and caches the entire repository -- the full
 history of all the branches is now available on your machine. Even Mercurial,
 the next best among the new breed of VCSs, brings down only the current
 branch.
 
-(This might lead you to worry that disk space is an issue. It is not – git's
+(This might lead you to worry that disk space is an issue. It is not -- git's
 pack format is quite efficient, and many months of revisions often end up
 taking little more than the space that a full checkout takes.)
 
@@ -218,7 +218,7 @@ A good analysis of how much each VCS caches on a checkout, and its
 implications, is at
 http://blogs.gnome.org/newren/2007/11/24/local-caching-a-major-distinguishing-difference-between-vcses/
 
-=== Cool features – git bisect
+=== Cool features -- git bisect
 
 Git has a command called {{{bisect}}} (this is one of those "aaaah, why didn't
 I think of it?" things!) that is very nice. The idea is this: say you find a
@@ -270,3 +270,7 @@ focused on open source collaboration solutions (they make //Spicebird//), who
 swear by Hg, and I anticipate many good-natured arguments with them about
 git/Hg, sort of like vim/emacs or perl/python!  As long as they're all open
 source, the more the merrier, I say...]
+
+This article first appeared in Linux For You, an Indian magazine for open
+source enthusiasts, in July 2008.  It is released under the Creative Commons
+Attribution Sharealike license.
