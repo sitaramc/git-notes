@@ -8,12 +8,26 @@ also.
 
 == What do these files have?
 
-  * "git-tasks.notes" is probably the most important and best organised of
-    these files, at present.
   * "git-bp" is a set of best practices I wrote up for my $DAYJOB internal
-    use, but they have not been field tested yet.
+    use, but **they have not been field tested yet**, so I suggest you ignore
+    this for now.
   * "git.lfy" is the text of an article I wrote on git for "Linux For You", a
     magazine in India.  It appeared in the June 2008 issue.
-    "git-article-figures.zip", the only binary file in this repo so far,
-    contains the figures used in that article.
-  * "git.notes" contains misc stuff that didn't seem to fit anywhere else.
+  * "git" contains misc stuff that didn't seem to fit anywhere else, but the
+    first section inside (basic concepts and simple tips) may be interesting
+    -- glance through it quickly if you can
+  * "gittalk" is a presentation; I use this when I teach git internally.  The
+    demos inside are not available online -- most of it is me doing stuff and
+    showing what various commands etc can do -- but you should be able to go
+    through the presentation even without them
+
+**Overall, "git-tasks" is probably the most important and best organised of
+these files**, and is the one I intend to maintain for most purposes; the
+others are more static.  Once you have some bare minimum basics go through
+this one.  Parts of it do look like a cheatsheet, but if it's too cryptic let
+me know.
+
+----
+
+(c) Copyright Sitaram Chamarty, sitaramc@gmail.com, licensed under the
+Creative Commons Attribution Sharealike license.
