@@ -1,0 +1,97 @@
+= How to use git over an HTTP proxy, with socat
+
+[[TOC]]
+
+    Corporate firewalls and proxy typically block both of these (and often a
+    lot more); here's how to get around them.  
+
+    If you're tracking a public repo, you will need to use the "git" protocol,
+    because the "http" protocol is not very efficient, and/or requires some
+    special handling on the server side.  If you're pushing code to a public
+    repo, you **definitely** need to use the "ssh" protocol.
+
+=== a word about socat
+
+    I will be using "socat", an absolute corker of a program that does so many
+    things it's incredible!  Other people use corkscrew, ssh-https-tunnel,
+    etc., which are all specialised for just one purpose.  I prefer socat, and
+    once you spend the 2-3 years :-) needed to read the man page, you will see
+    why!
+
+    The basic idea is that you will tell somehow invoke socat, which will
+    negotiate with the HTTP(S) proxy server using the CONNECT method to get
+    you a clean pipe to the server on the far side.
+
+    However, do note that socat does have one disadvantage: the passwords to
+    your proxy server are visible in to local users running {{{ps -ef}}} or
+    something.  I don't care since I don't have anyone else logging into my
+    desktop, and the ability to use a program I already have anyway (socat) is
+    more important.
+
+=== proxying the **git** protocol
+
+    When I want to download a public repo, I just type
+        proxied_git clone ...repo...
+        proxied_git pull
+    and so on, instead of
+        git clone ...repo...
+        git pull
+
+    Here's the how and why of it.
+
+    To proxy the git protocol, you need to export an environment variable
+    called {{{GIT_PROXY_COMMAND}}}, which contains the command that is to be
+    invoked.  I have a shell function in my {{{.bashrc}}} that looks like
+    this:
+
+        proxied_git () 
+        ( 
+            export GIT_PROXY_COMMAND=/tmp/gitproxy;
+
+            cat  > $GIT_PROXY_COMMAND <<EOF
+        #!/bin/bash
+        /usr/bin/socat - PROXY:172.25.149.2:\$1:\$2,proxyport=3128
+        EOF
+            chmod +x $GIT_PROXY_COMMAND;
+
+            git "$@"
+        )
+
+    Possible variations are:
+  * you could give {{{/tmp/gitproxy}}} a more permanent name and remove the
+    middle pararaph completely.  I don't do this because that's too small a
+    file to bother with; it just seems cleaner this way)
+  * you could permanently set the environment variable if **all** your git
+    repos are remote (very unlikely)
+
+    One thing you //cannot// do is to roll the entire socat command into the
+    environment variabl.  Git passes the host and port as two arguments to the
+    proxy command, but socat expects them in the syntax you see above, so you
+    //will//need to wrap it in a script as I have done.  I guess you could
+    argue that this is a point in favour of corkscrew etc. ;-)
+
+=== proxying the **ssh** protocol
+
+    The git protocol is handled directly by git (duh!), but if you use the ssh
+    protocol, it invokes ssh explicitly (again, duh!).
+
+    Ssh already has this sort of stuff built-in, so you simply add a few lines
+    to your {{{~/.ssh/config}}}
+
+        host gh
+            user git
+            hostname github.com
+            port 22
+            proxycommand socat - PROXY:your.proxy.ip:%h:%p,proxyport=3128,proxyauth=user:pwd
+
+    Now you can just say (for example):
+
+        git clone gh:sitaramc/git-notes.git
+
+==== extra coolness for github
+
+    Noting that many corporate firewalls block access to the CONNECT method on
+    ports other than 443, the good folks at github have an ssh server
+    listening on 443 if you use the host "ssh.github.com", so you can replace
+    the hostname and the port in the above ssh config stanza as appropriate,
+    and you're all set
