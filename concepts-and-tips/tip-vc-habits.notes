@@ -1,0 +1,74 @@
+= version control habits of good developers
+
+This article is based on http://blog.bstpierre.org/version-control-habits -- a
+blog post that is well worth checking out, especially if you want more
+details.  However, this article represents my priorities on this matter, and
+most of the words are mine.
+
+  * **USE IT**!  If you don't use version control you should get out of the
+    software development profession!
+
+  * **check-in often**: check-in when some logical unit of work is done
+    (compiles OK after major changes, or some feature is complete, or some
+    test was passed, etc.).  "going home for the day" is NOT a logical unit of
+    work; ideally you should not treat the version control system as a "backup
+    mechanism".  If you do this sort of time-based check-in, "//the danger is
+    that if you have to revert because you've made some disastrous changes,
+    you won't have a sane state to revert to//."
+
+  * **check-in bite sized chunks**: large check-ins are hard to review, and
+    harder to revert
+    ** if you check-in 20 "logical units of work" in one shot, and the 3rd and
+       the 14th are bad, you'll have to revert the entire check-in, remove
+       changes 3 and 14, and then check-in again.  If you checked them all in
+       separately, you can revert just the changes that were not acceptable,
+       while retaining all the other stuff
+    ** if the "feature" is too large, create a branch and check-in locally
+    ** however, check-ins should be **atomic** -- for instance, a related
+       change in 2 ".c" files and a ".h" file should not become 3 check-ins if
+       those changes all depend on each other.
+
+  * **make sure you include everything that is needed to rebuild the
+    project**: (this is more for single-developer projects) since we don't
+    want to check-in binary files like executables and libraries, we normally
+    set up the VCS to ignore some files based on extension or whatever.  This
+    list has to be made carefully, and reviewed once in a while, otherwise
+    something that is important to the build may get left out!
+    ** in git, you can temporarily rename the .gitignore file and then do a
+       "git status" (or run "gut gui") to see the files that git is ignoring
+    ** or you can clone the entire project into a new directory and see if it
+       compiles
+    ** or you can run:
+        git ls-files --exclude-standard -o -i
+
+  * **take backups**!  Don't use the version control system as a backup
+    medium
+
+  * **keep "data" outside the "source" tree**: putting data in the same
+    directory as the source tree is a very bad practice, and in fact I expect
+    seasoned programmers who are reading this to go "huh?  somebody actually
+    does stupid things like that?" :-)  Small amounts of textual data used to
+    trigger specific tests are OK, and may even benefit from version control
+    in the sense that a test suite is an integral part of any software with
+    longevity.  But anything larger than that, and more so if they are binary
+    blobs, should NOT be in the repository.
+
+  * **don't break the build**!
+
+  * **update ("git pull") regularly**: otherwise, you risk a large effort in
+    resolving conflicts when you eventually do pull
+
+  * **write good check-in comments**: this helps people understand the
+    evolution of the project much better over a long period of time.  Don't
+    forget the second purpose of a VCS is annotation: who changed it, what did
+    they change, and **why**?
+
+  * **use branches or holding areas**: branching and merging is cheap and
+    easy, and helps you keep things separate in your own mind too.  Having a
+    hierarchy of branches is very useful.  For instance:
+    ** "master" is what is pulled from/pushed to the repository, "work" is
+       where you do the day-to-day development, "ut" is where you unit test,
+       pulling specific commits from "work" for a build and a test, "st-it" is
+       for integration test/system test, and so on.
+    ** in git, it's easy to use the "gitk" gui to pick individual changes from
+       another branch into the current one
