@@ -1,69 +1,134 @@
-= installing and using git on Windows (or Linux)
+= installing git and setting it up to use a gitosis server
 
 [[TOC]]
 
 ----
 
+^^These are generic instructions that may also eventually go on a public
+website somewhere.  Anything that is CAPITALISED in the notes below must be
+replaced as appropriate to our internal environment.  Contact me for details.
+-- Sitaram Chamarty^^
+
+----
+
 **A note to Linux users**:
 
-    The following document is written for Windows.  Linux people can do the
-    equivalent quite easily -- they can install git using the GUI install tool
-    their distribution provides, and running bash commands is easy as pie, so
-    I'm not going to handhold you lot :-)
+    Most of the following document is written for Windows.  If you're using
+    Linux, you ought to be able to read it and just do the equivalent -- Linux
+    has GUI installers that even //find// the software for you, and running
+    bash commands is easy as pie, so I'm not going to handhold you lot :-)
+
+----
 
 === installing git
 
-  * go to scratch-pad/Sita/software/git-msysgit
-  * get the latest version (there may be more than one)
+  * go to http://code.google.com/p/msysgit/ and look for a "download" link
+    ** or get it from an INTERNAL_URL
+    ** get the latest version you can find
   * install it
 
 The install is pretty simple; take the defaults everywhere.  If in doubt,
-remember that only 2 of the install choices are important to how we work:
+remember that only 2 of the install choices are important:
   * "Use Git Bash only"
   * "Use OpenSSH"
 
 These choices will come after the first 3-4 normal stuff that you will see for
 pretty much any installation.
 
-=== setting up git -- part 1
+=== setting up git
 
   * double click on the "Git bash" icon on your desktop to open a bash
     terminal
 
-  * type in the following command (substituting your real email address inside
-    the quotes of course):
+  * you need to generate an RSA key pair (a public key and a private key) for
+    yourself.  Before we do that, a brief security note:
+    ** your //private// key should be kept really safe; anyone who can access
+       that can impersonate you.  Lock your desktop when you leave it for
+       longer than a few minutes, etc.  If your machine is not on the public
+       internet, you may be relatively safe.
+    ** you can protect your private key with a pass-phrase -- please do this
+       only if you know how to use ssh-agent.  Contact me if you need help.
+
+  * with that out of the way, type in the following command:
         ssh-keygen -t rsa
-    enter a passphrase **only** if you know about ssh-agent etc; most people
-    should just keep hitting enter until it comes back to the command prompt!
+    enter a passphrase **only** if you know about ssh-agent etc, otherwise
+    just keep hitting enter until it comes back to the command prompt!
 
   * the output of that command will be two files: a private key and a public
-    key.  You need to send me the **public** key by email
+    key.  You need to send your GITOSIS_ADMIN the **public** key by email
     ** the program will clearly say "you public key has been saved in ..." and
-       give a long filename.  Email me that file.
-    ** **DO NOT EMAIL ME THE PRIVATE KEY!**  Make sure the file name ends in
+       give a long filename.  Send only that file
+    ** **do NOT send the private key!!**  Make sure the file name ends in
        {{{.pub}}}
 
-  * identify yourself to git, so that your commits are tagged correctly.  Type
-    in the following commands:
+  * identify yourself to git, so that your name and email show up correctly in
+    commits.  Type in the following commands:
 
         git config --global user.name "Your Name Here"
         git config --global user.email your@email.here
 
-    This will set the info stored when you commit to a git repository.
+=== cloning an existing project
 
-=== setting up git -- part 2
+Once you've received confirmation from your GITOSIS_ADMIN that he has added
+your public key to the server and told you what project(s) you can push and
+pull, you can start work.  You may want to practice git using the "testing"
+repository, if your admin has set one up, or directly work on your project if
+it was already ready to be cloned:
+  * create an empty folder somewhere
+  * right-click the folder name and choose "git bash here"
+  * in the resulting command prompt, type in git clone
+    git@YOUR_GITOSIS_SERVER:testing.git
+        # (or maybe) git clone git@YOUR_GITOSIS_SERVER:MYPROJ.git
 
-Once you've received confirmation from me that I have added your public key to
-the server and you can push and pull, start by retrieving the "testing"
-repository.
+If that worked, you can {{{cd testing}}} or {{{cd MYPROJ}}} and:
+  * run some git commands from the command line
+  * run {{{git gui}}} to stage and unstage files, commit, and push
+  * run {{{gitk --all}}} to get a bird's eye view of all your branches, both
+    local and remote
 
-You need to do the following in each of your repositories:
+These two GUI tools are very powerful; if you don't like the command line, you
+can quite easily stick to them and get by.
 
-  * in file explorer, go to the parent of the project directory
-  * right click on the name of the project directory and choose "git bash
-    here"
-  * when the command window opens, type in the following (but change
-    PROJECTNAME to the actual project name)
-        git config remote.origin.url git@172.25.149.95:PROJECTNAME.git
+=== creating a new project
 
-  * if you're not 100% sure what the project name is, ask...
+If you want to create a new project from an existing code base, and add it to
+the gitosis server for others to start collaborating on, you need to do the
+following:
+
+  * discuss with the GITOSIS_ADMIN what the name of the project should be and
+    pick one.  We'll assume it's called MYPROJ in the description below
+    ** you'll have to wait till the GITOSIS_ADMIN gives you permission to
+       create a project called MYPROJ, and (optionally) adds your future team
+       members to the access list.  If any of those team members do not
+       already have access to the system, you can help them create and send
+       their public keys to the GITOSIS_ADMIN
+  * go to the directory containing the latest and best version of your current
+    project files
+    ** if you're doing this via file explorer, right click on the folder and
+       choose "git bash here"
+
+Now brace yourself for some commands (don't worry, this is only once per
+project -- even if it is a large team, only one person has to do this, and
+that too only once).
+
+  * run {{{git init}}}
+  * edit a new text file called {{{.gitignore}}} and enter patterns that the
+    checkin process should ignore, for example
+        *.exe
+        *.dll
+        *.ocx
+  * run the following commands (or you can do this from the GUI)
+        git add .gitignore
+        git commit -m "first commit, just the ignore file"
+
+  * the following commands are very important.  Note that all this happens
+    implicitly for someone cloning an existing project -- this is only for the
+    person who is seeding the gitosis server with the first commit
+        # name the remote called "origin"
+        git remote add origin git@YOUR_GITOSIS_SERVER:MYPROJ.git
+        # push your stuff to the remote
+        git push origin master
+        # make yours look like a clone of the remote, to make future
+        # operations easier
+        git config branch.master.remote origin
+        git config branch.master.merge refs/heads/master
