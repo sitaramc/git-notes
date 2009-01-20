@@ -18,42 +18,8 @@ This document describes stuff that's not necessarily done every day.
 
 ==== most useful stuff in {{{$HOME/.gitconfig}}}
 
-    My {{{.gitconfig}}}, as of 2008-12-07, is below.  Parts of this document
-    assume some of these aliases.
-
-        [user]
-                name = Sitaram Chamarty
-        # [core]
-        # 	pager = cat
-        [color]
-                ui = true
-        [core]
-                pager = less -R
-                compression = 6
-        [alias]
-                s   = status
-                b   = branch
-                ba  = branch -a -v
-
-                ci  = commit
-                co  = checkout
-
-                d   = diff  -C
-                ds  = diff  -C --stat
-                dsp = diff  -C --stat -p
-                dw  = diff  -C --color-words
-
-                l   = log   -C --decorate
-                lg  = log   --graph --pretty=oneline --abbrev-commit --decorate
-                lga = log   --graph --pretty=oneline --abbrev-commit --decorate --all
-                ls  = log   -C --stat --decorate
-                lsp = log   -C --stat -p --decorate
-
-                ru  = remote update
-
-                sba = show-branch -a
-        [rerere]
-                enabled = 1
+    My {{{.gitconfig}}} is [[tools/my.gitconfig | here]].  Parts of this
+    document assume some of these aliases.
 
 === working with others
 
