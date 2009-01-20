@@ -44,7 +44,8 @@ This document describes stuff that's not necessarily done every day.
                 dw  = diff  -C --color-words
 
                 l   = log   -C --decorate
-                lg  = log   --graph --pretty=oneline --abbrev-commit --decorate --all
+                lg  = log   --graph --pretty=oneline --abbrev-commit --decorate
+                lga = log   --graph --pretty=oneline --abbrev-commit --decorate --all
                 ls  = log   -C --stat --decorate
                 lsp = log   -C --stat -p --decorate
 
@@ -156,7 +157,7 @@ See the program "mk.gitmaster"
 
 ==== log and show
 
-  * {{{git lg}}} is pretty cool; lg is an alias in my config for
+  * {{{git lga}}} is pretty cool; lga is an alias in my config for
         log --graph --pretty=oneline --abbrev-commit --decorate --all
 
   * Check the logs to see what's happened recently
@@ -206,6 +207,8 @@ See the program "mk.gitmaster"
         git ls-files -d -m
         # what's in the index; includes files that were "git add"ed
         git ls-files -s
+        # conflicted files
+        git ls-files -u
         # "other files"; includes EVERYthing not in c/d/m/s, I think
         git ls-files -o
         # untracked files only

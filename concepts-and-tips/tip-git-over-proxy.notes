@@ -18,9 +18,9 @@
     once you spend the 2-3 years :-) needed to read the man page, you will see
     why!
 
-    The basic idea is that you will tell somehow invoke socat, which will
-    negotiate with the HTTP(S) proxy server using the CONNECT method to get
-    you a clean pipe to the server on the far side.
+    The basic idea is that you will somehow invoke socat, which will negotiate
+    with the HTTP(S) proxy server using the CONNECT method to get you a clean
+    pipe to the server on the far side.
 
     However, do note that socat does have one disadvantage: the passwords to
     your proxy server are visible in to local users running {{{ps -ef}}} or

@@ -21,7 +21,8 @@
         dw  = diff  -C --color-words
 
         l   = log   -C --decorate
-        lg  = log   --graph --pretty=oneline --abbrev-commit --decorate --all
+        lg  = log   --graph --pretty=oneline --abbrev-commit --decorate
+        lga = log   --graph --pretty=oneline --abbrev-commit --decorate --all
         ls  = log   -C --stat --decorate
         lsp = log   -C --stat -p --decorate
 
