@@ -1,0 +1,69 @@
+= installing and using gitosis -- NOT FOR ORDINARY USERS!
+
+[[TOC]]
+
+----
+
+=== installing git
+
+  * install git using your system's normal install mechanisms
+  * (optional) upgrade git to the latest by downloading and compiling it from
+    git://git.kernel.org/pub/scm/git/git.git
+    ** bypassing the proxy to do this is outside the scope of this document,
+       at least for now
+    ** installing git from sources must be done after installing //some//
+       version of git, otherwise the version number does not get picked up
+       properly -- long story!
+    ** make sure you {{{git checkout v1.6.1}}} or whatever is the latest
+       version that {{{git tag}}} shows you before you start
+    ** installing the dependencies required to compile git (like libcurl,
+       libexpat, tcl -- even though you don't really need the GUI tools on a
+       server install, ) is
+       also out of scope!
+    ** after installing this, remove the distro-installed git using
+       {{{urpme}}} or {{{aptitude remove}}}.  If this automatically removes
+       anything else (like libdigest-sha1-perl and liberror-perl on ubuntu),
+       install them back manually -- just in case!
+
+==== a word on cloning external repos
+
+    Bypassing the proxy to clone external repos (git, gitosis) is out of the
+    scope of this document, but if you can't bypass it, and you have the clone
+    somewhere else, you can do the following:
+
+        # on the machine where you have the clone
+        git checkout master
+        # make sure it is the right version etc
+        git bundle create /tmp/temp.bdl master
+
+        # now carry that file across from that machine to the one where you
+        # want to install (somehow), then
+        mkdir project       # git, gitosis, whatever
+        cd project
+        git init
+        git pull /tmp/temp.bdl master:master
+
+    That's it!
+
+=== installing gitosis
+
+  * clone gitosis: {{{git clone git://eagain.net/gitosis.git}}}
+    ** again, bypassing the proxy is out of scope here ;-)
+  * install python-setuptools using your distro mechanism
+  * in the gitosis directory, run the
+    [[../tools/install.gitosis | install.gitosis]] command
+    ** pre-requisites: the public key corresponding to the private key on your
+       **desktop** or **laptop** (usually found in {{{~/.ssh/id_rsa.pub}}})
+       needs to be copied over to the gitosis server
+
+=== back to your desktop -- cloning the admin repo
+
+    How do you admin gitosis?
+
+    Simple: there's a repo called {{{gitosis-admin}}} which you clone on your
+    desktop.  You are allowed to do this because your public key was used in
+    installing and initialising gitosis (see above)!
+
+    After that, maintaining/managing rights is a simple matter of adding
+    people's public keys, changing the config file (a very simple file), and
+    pushing!

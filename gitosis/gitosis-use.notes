@@ -1,0 +1,69 @@
+= installing and using git on Windows (or Linux)
+
+[[TOC]]
+
+----
+
+**A note to Linux users**:
+
+    The following document is written for Windows.  Linux people can do the
+    equivalent quite easily -- they can install git using the GUI install tool
+    their distribution provides, and running bash commands is easy as pie, so
+    I'm not going to handhold you lot :-)
+
+=== installing git
+
+  * go to scratch-pad/Sita/software/git-msysgit
+  * get the latest version (there may be more than one)
+  * install it
+
+The install is pretty simple; take the defaults everywhere.  If in doubt,
+remember that only 2 of the install choices are important to how we work:
+  * "Use Git Bash only"
+  * "Use OpenSSH"
+
+These choices will come after the first 3-4 normal stuff that you will see for
+pretty much any installation.
+
+=== setting up git -- part 1
+
+  * double click on the "Git bash" icon on your desktop to open a bash
+    terminal
+
+  * type in the following command (substituting your real email address inside
+    the quotes of course):
+        ssh-keygen -t rsa
+    enter a passphrase **only** if you know about ssh-agent etc; most people
+    should just keep hitting enter until it comes back to the command prompt!
+
+  * the output of that command will be two files: a private key and a public
+    key.  You need to send me the **public** key by email
+    ** the program will clearly say "you public key has been saved in ..." and
+       give a long filename.  Email me that file.
+    ** **DO NOT EMAIL ME THE PRIVATE KEY!**  Make sure the file name ends in
+       {{{.pub}}}
+
+  * identify yourself to git, so that your commits are tagged correctly.  Type
+    in the following commands:
+
+        git config --global user.name "Your Name Here"
+        git config --global user.email your@email.here
+
+    This will set the info stored when you commit to a git repository.
+
+=== setting up git -- part 2
+
+Once you've received confirmation from me that I have added your public key to
+the server and you can push and pull, start by retrieving the "testing"
+repository.
+
+You need to do the following in each of your repositories:
+
+  * in file explorer, go to the parent of the project directory
+  * right click on the name of the project directory and choose "git bash
+    here"
+  * when the command window opens, type in the following (but change
+    PROJECTNAME to the actual project name)
+        git config remote.origin.url git@172.25.149.95:PROJECTNAME.git
+
+  * if you're not 100% sure what the project name is, ask...
