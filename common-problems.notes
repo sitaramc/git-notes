@@ -1,5 +1,15 @@
 = common mistakes to avoid
 
+=== keeping files open in an editor
+
+    Windows does not allow you to overwrite or delete a file that is open in
+    an editor.  As a result, operations such as {{{git pull}}}, {{{merge}}},
+    {{{rebase}}}, etc., may experience weird problems if they attempt to
+    update one of the files you have kept open.
+
+    If you get funky errors while doing any git operations, close all editors
+    and try again!
+
 === "Not currently on any branch"?
 
   * in the graphical tool {{{gitk}}}, any "branch" that has a leading part in
