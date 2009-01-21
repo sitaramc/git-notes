@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# without args, just prints daily use commands for pushing an empty repo to an
+# existing gitosis host
+
+# with args
+
+# NOTES: you may want to make the email address in the pubkey file ($2)
+# canonical if you care.
+
+# $1
+#   is MDV or DEB
+# $2
+#   is the filename containing the pubkey corresponding to the private key on
+#   your (the git admin's) desktop/laptop
+
+usage()
+{
+    [[ $1 == "" ]] || cat <<EOF
+# usage: $0 MDV|DEB my-id_rsa.pub
+
+# instructions for making and pushing
+#   an empty repo called "$1"
+#   to a gitosis server called "$2"
+mkdir $1 &&
+cd $1 &&
+git init &&
+git commit --allow-empty -m start &&
+git remote add origin git@$2:$1.git &&
+git push origin master &&
+cd -
+EOF
+    exit 1
+}
+
+[[ $1 =~ ^(MDV|DEB)$ ]] || usage ${1:-repo} ${2:-your.git.server}
+
+# references:
+# http://scie.nti.st/2007/11/14/hosting-git-repositories-the-easy-and-secure-way
+
+set -e
+
+die() { echo "$@" >&2; exit 1; }
+
+[[ -f $2 ]] || die arg2 should be your public key file
+
+[[ -f /usr/bin/easy_install ]] || [[ -f /usr/local/bin/easy_install ]] ||
+    die "# do one of these
+        urpmi python-setuptools
+        apt-get install python-setuptools"
+
+[[ -f setup.py ]] ||
+die "# do these first
+        git clone git://eagain.net/gitosis.git
+        cd gitosis"
+
+sudo python setup.py install
+
+# XXX -- $1 is the system: currently MDV or DEB
+
+[[ $1 == MDV ]] && {
+    sudo useradd -c 'git master user' -m -r -s /bin/sh git
+    sudo usermod -U git
+    sudo usermod -U git     # yes, twice -- don't ask!
+    # or maybe "useradd -p somejunk"?
+}
+
+[[ $1 == DEB ]] && {
+    sudo adduser \
+        --system \
+        --shell /bin/sh \
+        --gecos 'git master user' \
+        --group \
+        --disabled-password \
+        git
+}
+
+# XXX -- $2 is your your pub key
+sudo -H -u git gitosis-init < $2
+
+# this is needed, at least on MDV as of 2009-01-19
+sudo chmod 755 /home/git/repositories/gitosis-admin.git/hooks/post-update

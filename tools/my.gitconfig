@@ -21,12 +21,19 @@
         dw  = diff  -C --color-words
 
         l   = log   -C --decorate
-        lg  = log   --graph --pretty=oneline --abbrev-commit --decorate --all
         ls  = log   -C --stat --decorate
         lsp = log   -C --stat -p --decorate
+        lg  = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s'
+        lga = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all
 
         ru  = remote update
 
         sba = show-branch -a
+
+        ls-del  = ls-files -d
+        ls-mod  = ls-files -m   # this will include deleted files also
+        ls-new  = ls-files --exclude-standard -o
+        # this one is a MUST have
+        ls-ign  = ls-files --exclude-standard -o -i
 [rerere]
 	enabled = 1

@@ -1,7 +1,15 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -w -s
 use strict;
 use Text::WikiCreole;
 
+our $css;       # use "-css" if you need css
+our $css_block="
+    <head><style>
+        body    { font-size: 0.9em; font-family: sans-serif; }
+        tt      { font-size: 1.3em; background:  #cff;   }
+        pre     { font-size: 1.1em; }
+    </style></head>
+    ";
 my $markup;
 { local $/; $markup = <>; }
 
@@ -100,4 +108,5 @@ my $html = my_creole_markup($markup, exists $ENV{D});
 # marc-andre
 $html =~ s/é/&eacute;/;
 $html =~ s/è/&egrave;/;
+$html = $css_block . $html if $css;
 print $html;
