@@ -1,0 +1,22 @@
+= common mistakes to avoid
+
+=== "Not currently on any branch"?
+
+  * in the graphical tool {{{gitk}}}, any "branch" that has a leading part in
+    yellow is a **remote** branch.  Do not checkout such a branch until you
+    get a little more familiar with git.
+
+  * you will recognise you are in such a branch by one of these symptoms
+    ** {{{gitk}}} does not show any branch name in **bold** when you quit and
+       restart it
+    ** {{{git gui}}} says {{{current branch: HEAD}}} at the top left
+    ** {{{git status}}} says {{{Not currently on any branch}}}
+    ** you are able to commit your changes but when you push them to the
+       remote server nothing seems to happen
+
+  * to fix this:
+    ** first give that branch a name to better deal with it for later
+       troubleshooting: {{{git checkout -b some_new_name}}}
+    ** then you figure out how to merge those changes into one of the main
+       branches
+    ** then you push
