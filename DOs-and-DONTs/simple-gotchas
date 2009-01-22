@@ -1,0 +1,24 @@
+=== simple gotchas
+
+  * **gotcha** {{{git log rev}}} and {{{git diff rev}}} go in different
+    directions.  Log shows backward from the rev given, while diff goes
+    forward from rev to the working directory.
+  * many commands inherit options from lower level programs and their man
+    pages will appear incomplete.  Read carefully to see what other commands'
+    options are applicable to this one.  For example, {{{git-log}}} inherits
+    from {{{git-rev-list}}} and {{{git-diff-tree}}}.
+  * using {{{cp -a}}} copy instead of {{{git clone}}} will screw the
+    timestamps.  A subsequent {{{git add .}}} will make it look like every
+    file has changed, in terms of just the time stamp.  //Fix this by using
+    {{{git status}}}, which updates the index for such cases as a side
+    effect.//
+  * confused by {{{HEAD^}}}, {{{HEAD~1}}}, etc.?  {{{man git-rev-parse}}} has
+    a good diagram.  And remember the reflog is quite different and has a
+    different syntax ({{{HEAD@{2}}}}).
+  * cloning a repo: the following two commands are different; see
+    http://kerneltrap.org/mailarchive/git/2007/10/1/326757 (summary: the
+    second one uses the git protocol, and makes no assumptions about the
+    original and the clone being on the same file system or even machine)
+        git clone foo bar           # versus
+        git clone file:///foo bar
+

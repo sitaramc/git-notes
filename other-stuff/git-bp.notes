@@ -1,44 +1,15 @@
-= git -- best practices for projects
+= git -- suggested workflow for large projects
 
 [[TOC]]
 
 ----
 
     **WARNING: I have not checked out all the commands -- there could be
-    errors!  The first time you use it, please try them on a sandbox!**
-
-    This is written from a git perspective, but it translates equally well to
-    any project that uses a DVCS (like Mercurial, for instance).
+    errors!  The first time you use it, please try them on a sandbox!**  Also,
+    note that a lot of this can be done from the GUI also, if you wish.
 
     This is essentially a modification and simplification of the typical
     workflow that Linux and other projects using DVCSs use.
-
-=== terms used
-
-    Let's define some simple terms //in the context of version control//.
-
-  * a **project** is the minimum set of source code (and related files) that
-    need to be kept together to **build** the software.  Example: Linux
-    ** each project will have one **repository**
-    ** one **team** can work on multiple projects, so there could be multiple
-       repositories on each desktop
-  * a **branch** in a project is an active line of development
-    ** **master** is the conventional name for the main development tree of a
-       project
-    ** other conventional branches are **next** (for code that is ready to
-       come into //main//), and various maintenance branches like **v1.3** or
-       **v2.6.4** to designate released versions
-    ** these are only conventions, not rules, but they seem to work well in
-       general
-  * a **feature** is a part of a project that is large and complex enough that
-    it's day-to-day commits would be too noisy to include in the main project.
-    Example: the disk subsystem, the networking subsystem, etc., in Linux
-    ** a **feature branch** is a branch for a feature, and is usually
-       long-lived.  This means it regularly acquires changes made in the main
-       line, and -- at stable points in its development cycle -- merges its
-       changes back into the main line
-    ** small projects may not have any feature branches.  That doesn't mean
-       they don't have any features :-)
 
 === assumptions
 
@@ -58,50 +29,6 @@
   * (optional) M feature guys, one for each major "feature" in the project, if
     any.  In $COMPANY terms, this is like the ML
   * N developers
-
-=== hardware
-
-    We have no special hardware needs.  One machine needs to be the master
-    server.  (Any developer's desktop can do double duty as the team's server
-    if needed -- we don't need something very big and powerful).
-
-=== what's on...
-
-==== ...the server
-
-    The server contains "bare" repositories for each project that the team
-    develops.  This is the "definitive" or "canonical" source for the
-    project's code, and it has the following characteristics:
-
-  * does not have a "working directory" attached (that's what "bare" means)
-  * developers do not directly commit to this repository
-  * //new// developers clone from it to start work in the project
-  * //all// developers fetch or pull from it at regular intervals to acquire
-    updates from other developers into their repository
-  * only the release manager (or maybe the quality guy, or both) can **push**
-    changes to this repository
-
-==== ...the developer's desktop
-
-    If you are a developer you will have a repository on your desktop for each
-    project you are involved in.  Apart from **master**, **next**, **vX.Y**
-    etc., you will also have a set of branches called **origin/branchname**
-    (example {{{origin/master}}}).  These are your copy of the corresponding
-    branch from the master server.  You will never commit to it directly.
-
-    You can have any other branches you wish!  Go wild -- no one will stop
-    you, and it's quite difficult to lose data so have fun!
-
-==== ...the release manager's desktop
-
-    We'll assume you are doing some development also, not just integrating
-    changes from the developers.
-
-    Apart from what a developer has, you will have a set of branches called
-    **dev-feature**, named for either the developer you pulled the changes
-    from or the feature the code pertains to.  This is where you pull changes
-    from your developers or feature guys.  Name it consistently, either with
-    the dev's name, or the feature, or both.
 
 === typical workflow
 

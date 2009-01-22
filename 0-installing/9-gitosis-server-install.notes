@@ -1,10 +1,10 @@
-= (admins) installing and using the gitosis server
+= (admin) installing and using the gitosis server
 
 [[TOC]]
 
 ----
 
-=== installing git
+=== installing git the server
 
   * install git using your system's normal install mechanisms
   * (optional) upgrade git to the latest by downloading and compiling it from

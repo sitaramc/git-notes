@@ -1,0 +1,25 @@
+=== other cool stuff
+
+  * http://www.kernel.org/pub/software/scm/git/docs/howto/rebase-from-internal-branch.txt
+    -- excellent article on rebase. This article is also available in the git
+    installs, at least on MDV.  We already knew git was smart about not
+    re-applying patches already applied, based on the SHA1 being in the chain.
+    But the **really cool** thing about rebase is that it can ignore patches
+    even when they had a different SHA1 (in the same way that git cherry does,
+    by examining the changeset) which helps when your changes may have made it
+    into the master via email.
+
+  * **cherry picking** -- another good reason to make small commits!
+
+  * cherry picking while doing a rebase; {{{man git-rebase}}} for details.  In
+    particular, you can rebase off of your own ancestor, to refactor a large
+    set of recent changes, like this:
+        git rebase -i HEAD~10
+
+::**YOU DON'T KNOW HOW COOL THIS IS UNTIL YOU TRY IT!**
+
+  * Advantages of doing a rebase: doing a {{{git bisect}}} on a merged chain
+    sometimes makes it difficult to find the specific commit that caused an
+    error.  See
+    http://www.kernel.org/pub/software/scm/git/docs/user-manual.html#bisect-merges
+

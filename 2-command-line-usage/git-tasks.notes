@@ -1,6 +1,8 @@
-= how to do some UNcommon tasks
+= git command-line usage cheatsheet/quickref
 
-This document describes stuff that's not necessarily done every day.
+This document describes stuff that's not necessarily done every day.  The bare
+minium stuff like {{{git add/commit/push/checkout/branch}}} etc is not
+covered.
 
 ----
 
@@ -10,6 +12,8 @@ This document describes stuff that's not necessarily done every day.
 
 === setting up
 
+I **strongly** recommend these settings to make life easier.
+
 ==== bash aliases for git
 
         alias g='git --no-pager'
@@ -18,27 +22,8 @@ This document describes stuff that's not necessarily done every day.
 
 ==== most useful stuff in {{{$HOME/.gitconfig}}}
 
-    My {{{.gitconfig}}} is [[tools/my.gitconfig | here]].  Parts of this
+    My {{{.gitconfig}}} is [[../tools/my.gitconfig | here]].  Parts of this
     document assume some of these aliases.
-
-=== working with others
-
-==== creating a bare repo and setting up devs (ssh)
-
-See the program "mk.gitmaster"
-
-==== publishing a repository on the web
-
-  * from http://www.cs.helsinki.fi/u/kaitanie/gittalk.pdf
-  * Prepare an empty public repository as user on machine example.org:
-        cd $HOME/public html
-        mkdir myproject.git; cd myproject.git
-        git --bare init
-        chmod a+x hooks/post-update
-        git update-server-info
-  * Push your work to that repository:
-        git remote add public ssh://user@example.org/path/to/myproject.git
-        git push public refs/heads/master:refs/heads/master
 
 === stuff you tend to forget
 
@@ -80,10 +65,10 @@ See the program "mk.gitmaster"
     seems less useful.
   * {{{FETCH_HEAD}}}: similar, for fetch
 
-==== oopsies!
+==== oopsies! (recovering from mistakes)
 
     The following are useful to undo **before a commit**.  Note that these
-    usages of "checkout" (with a **specific** files/paths) do not result in
+    usages of "checkout" (with **specific** files/paths) do not result in
     switching branches but in updating the files/paths given.
 
   * bad working copy, want to make working <= staged

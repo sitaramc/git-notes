@@ -1,0 +1,27 @@
+== Working with gitosis
+
+Although {{{git}}} is a //distributed// version control system (DVCS) and
+every developer thus has his/her own repository, it is necessary, in a
+corporate environment, to have a central server to which everything is
+{{{push}}}ed.
+
+A central "git server" can do this job for many projects with many users.
+However, git by itself does not do this, so we install {{{gitosis}}} the
+server.
+
+Gitosis manages an arbitrary number of repositories, users, and groups.  You
+can specify who has access to what repository, (read/write, read, or no
+access) with a simple configuration file.  All access is by SSH public key
+authentication -- no passwords here!
+
+----
+
+**A note to Linux users**:
+
+    Most of the following document is written for Windows.  If you're using
+    Linux, you ought to be able to read it and just do the equivalent -- Linux
+    has GUI installers that even //find// the software for you, and running
+    bash commands is easy as pie, so I'm not going to handhold you lot :-)
+
+----
+

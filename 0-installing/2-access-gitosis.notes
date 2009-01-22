@@ -1,41 +1,14 @@
-= (users) installing git and setting it up to use a gitosis server
+= (user) installing git and setting it up to use a gitosis server
 
 [[TOC]]
 
 ----
 
-^^These are generic instructions that may also eventually go on a public
-website somewhere.  Anything that is CAPITALISED in the notes below must be
-replaced as appropriate to our internal environment.  Contact me for details.
--- Sitaram Chamarty^^
+=== generating a public key
 
-----
-
-**A note to Linux users**:
-
-    Most of the following document is written for Windows.  If you're using
-    Linux, you ought to be able to read it and just do the equivalent -- Linux
-    has GUI installers that even //find// the software for you, and running
-    bash commands is easy as pie, so I'm not going to handhold you lot :-)
-
-----
-
-=== installing git
-
-  * go to http://code.google.com/p/msysgit/ and look for a "download" link
-    ** or get it from an INTERNAL_URL
-    ** get the latest version you can find
-  * install it
-
-The install is pretty simple; take the defaults everywhere.  If in doubt,
-remember that only 2 of the install choices are important:
-  * "Use Git Bash only"
-  * "Use OpenSSH"
-
-These choices will come after the first 3-4 normal stuff that you will see for
-pretty much any installation.
-
-=== setting up git
+Gitosis uses RSA public keys to authenticate users -- there are no passwords.
+You have to generate a public/private "key pair" and send the GITOSIS_ADMIN
+the public key so that he can add it to the server.
 
   * double click on the "Git bash" icon on your desktop to open a bash
     terminal
@@ -46,13 +19,19 @@ pretty much any installation.
        that can impersonate you.  Lock your desktop when you leave it for
        longer than a few minutes, etc.  If your machine is not on the public
        internet, you may be relatively safe.
-    ** you can protect your private key with a pass-phrase -- please do this
-       only if you know how to use ssh-agent.  Contact me if you need help.
+    ** you can protect your private key with a pass-phrase -- and if you can
+       use ssh-agent you can avoid typing in the passphrase for every
+       operation that involves the repository, which you only need to do once
+       or twice in a day, really.  Contact me if you need help doing this
+       painlessly.
 
   * with that out of the way, type in the following command:
         ssh-keygen -t rsa
-    enter a passphrase **only** if you know about ssh-agent etc, otherwise
-    just keep hitting enter until it comes back to the command prompt!
+
+  * apart from asking you what files to place the keypair in, it will also ask
+    if you want to store a pass-phrase.  If you want a passphrase, enter it
+    (twice) when prompted, otherwise keep hitting enter until it comes back to
+    the command prompt!
 
   * the output of that command will be two files: a private key and a public
     key.  You need to send your GITOSIS_ADMIN the **public** key by email
@@ -67,6 +46,9 @@ pretty much any installation.
         git config --global user.name "Your Name Here"
         git config --global user.email your@email.here
 
+    Now wait until the GITOSIS_ADMIN does his part and confirms that your
+    public key has been stored in the server.
+
 === cloning an existing project
 
 Once you've received confirmation from your GITOSIS_ADMIN that he has added
@@ -74,10 +56,11 @@ your public key to the server and told you what project(s) you can push and
 pull, you can start work.  You may want to practice git using the "testing"
 repository, if your admin has set one up, or directly work on your project if
 it was already ready to be cloned:
+
   * create an empty folder somewhere
   * right-click the folder name and choose "git bash here"
-  * in the resulting command prompt, type in git clone
-    git@YOUR_GITOSIS_SERVER:testing.git
+  * in the resulting command prompt, type in
+        git clone git@YOUR_GITOSIS_SERVER:testing.git
         # (or maybe) git clone git@YOUR_GITOSIS_SERVER:MYPROJ.git
 
 If that worked, you can {{{cd testing}}} or {{{cd MYPROJ}}} and:
@@ -87,7 +70,8 @@ If that worked, you can {{{cd testing}}} or {{{cd MYPROJ}}} and:
     local and remote
 
 These two GUI tools are very powerful; if you don't like the command line, you
-can quite easily stick to them and get by.
+can quite easily stick to them and get by.  Please see the
+[[../1-basic-usage/1-use-git.notes | user documentation]] for more on this.
 
 === creating a new project
 
@@ -107,23 +91,26 @@ following:
     ** if you're doing this via file explorer, right click on the folder and
        choose "git bash here"
 
-Now brace yourself for some commands (don't worry, this is only once per
-project -- even if it is a large team, only one person has to do this, and
+Now brace yourself for some commands (don't worry, this is **only once per
+project** -- even if it is a large team, only one person has to do this, and
 that too only once).
 
   * run {{{git init}}}
-  * edit a new text file called {{{.gitignore}}} and enter patterns that the
-    checkin process should ignore, for example
+  * create and edit a new text file called {{{.gitignore}}} and enter patterns
+    that the checkin process should ignore, for example
         *.exe
         *.dll
         *.ocx
+        Debug/
+        tmp/
   * run the following commands (or you can do this from the GUI)
         git add .gitignore
         git commit -m "first commit, just the ignore file"
 
   * the following commands are very important.  Note that all this happens
     implicitly for someone cloning an existing project -- this is only for the
-    person who is seeding the gitosis server with the first commit
+    person who is seeding the gitosis server with the first push:
+
         # name the remote called "origin"
         git remote add origin git@YOUR_GITOSIS_SERVER:MYPROJ.git
         # push your stuff to the remote
