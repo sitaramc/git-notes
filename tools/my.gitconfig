@@ -25,10 +25,12 @@
         lsp = log   -C --stat -p --decorate
         lg  = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s'
         lga = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all
+        l19 = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all -19
 
         ru  = remote update
 
         sba = show-branch -a
+        sbg = show-branch -g --sha1-name
 
         ls-del  = ls-files -d
         ls-mod  = ls-files -m   # this will include deleted files also
