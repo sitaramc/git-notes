@@ -65,7 +65,7 @@ I **strongly** recommend these settings to make life easier.
     seems less useful.
   * {{{FETCH_HEAD}}}: similar, for fetch
 
-==== oopsies! (recovering from mistakes)
+==== **oopsies! (recovering from mistakes)**
 
     The following are useful to undo **before a commit**.  Note that these
     usages of "checkout" (with **specific** files/paths) do not result in

@@ -1,8 +1,5 @@
 = presentation on git, a DVCS
 
-== this version for Mahendra's team
-  * blank
-
 = why use a VCS
   * reversibility or rollback@@, aka C-Y-A!
     ** linear@@, simple to implement
