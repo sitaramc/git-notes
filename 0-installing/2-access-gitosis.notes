@@ -71,7 +71,7 @@ If that worked, you can {{{cd testing}}} or {{{cd MYPROJ}}} and:
 
 These two GUI tools are very powerful; if you don't like the command line, you
 can quite easily stick to them and get by.  Please see the
-[[../1-basic-usage/1-use-git.notes | user documentation]] for more on this.
+[[../1-basic-usage/use-git.html | user documentation]] for more on this.
 
 === creating a new project
 

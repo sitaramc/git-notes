@@ -4,7 +4,7 @@
 
 ----
 
-=== installing git the server
+=== installing git on the server
 
   * install git using your system's normal install mechanisms
   * (optional) upgrade git to the latest by downloading and compiling it from
@@ -67,3 +67,41 @@
     After that, maintaining/managing rights is a simple matter of adding
     people's public keys, changing the config file (a very simple file), and
     pushing!
+
+=== setting up gitweb
+
+To allow web access to the git repositories, do the following:
+
+  * add the following lines to {{{gitosis.conf}}} for each project you want
+    visible on the web page and push the changes to the server
+        [repo foo]
+        gitweb = yes
+        description = whatever you want
+
+  * (note) setting {{{gitweb=yes}}} adds the project to a file called
+    {{{gitosis/projects.list}}}.  The full path of this file then must be
+    given to the {{{$projects_list}}} in {{{/etc/gitweb.conf}}}, so gitweb can
+    use it to decide what projects to show on the front page.
+
+    As an aside, setting {{{daemon=yes}}} makes gitosis create a file called
+    {{{git-daemon-export-ok}}} in the project.git directory.  This is for git
+    daemon access, which we don't use.
+
+  * on the server, you have to do these things:
+    ** install apache or lighttpd
+    ** make it able to execute the "gitweb.cgi" that git created for you
+    ** copy {{{gitweb.css}}} and the two PNG files to wherever
+       {{{/etc/gitweb.conf}}} is expecting them (or change the conf to where
+       the files are)
+    ** and finally make the following changes/additions in
+       {{{/etc/gitweb.conf}}}:
+        $projects_list = "/home/git/gitosis/projects.list";
+        $export_ok = "";
+        $strict_export = "true";
+
+==== Gotchas!
+
+  * once you set gitweb=yes for a project and push, it's accessible forever
+    after that, even if you remove that line.  You have to explicitly set
+    {{{gitweb=no}}} and push before the project gets removed from the
+    {{{gitosis/projects.list}}} file.

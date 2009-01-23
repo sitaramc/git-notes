@@ -6,7 +6,7 @@ corporate environment, to have a central server to which everything is
 {{{push}}}ed.
 
 A central "git server" can do this job for many projects with many users.
-However, git by itself does not do this, so we install {{{gitosis}}} the
+However, git by itself does not do this, so we install {{{gitosis}}} on the
 server.
 
 Gitosis manages an arbitrary number of repositories, users, and groups.  You
