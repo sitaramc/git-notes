@@ -29,8 +29,8 @@
 
         ru  = remote update
 
-        sba = show-branch -a
-        sbg = show-branch -g --sha1-name
+        sb  = show-branch --sha1-name
+        sba = show-branch --sha1-name -a
 
         ls-del  = ls-files -d
         ls-mod  = ls-files -m   # this will include deleted files also

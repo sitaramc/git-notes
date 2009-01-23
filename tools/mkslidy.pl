@@ -15,7 +15,7 @@ not @ARGV and -t and do {
 # wiki_creole is done
 # - images; 
 
-my $SLIDYPATH="../tools";
+my $SLIDYPATH="tools";
 
 my $preamble = `cat $SLIDYPATH/slidy.preamble`;
 

@@ -4,6 +4,17 @@ This repo contains all my notes about git.  I started writing them for my
 own understanding, almost like cheat sheets, but they may be useful for others
 also.
 
+Git is a **Distributed** Version Control System.  Most VCSs you know (like
+CVS, Subversion, Clearcase, Perforce, and VSS) are centralised.
+
+If you haven't heard of git till now, you may want to start with a
+[[other-stuff/gittalk.html|presentation]] I do on git sometimes.  Although it
+is meant to be interactive and you'll be missing the demos, it may still be
+useful.
+
+If you know a little about git and/or have attended one of my talks, you can
+follow the links at the top.
+
 ----
 
 (c) Copyright Sitaram Chamarty, sitaramc@gmail.com, licensed under the
