@@ -58,14 +58,6 @@ things.  Here's how to launch them:
 
 You might be wondering why there are two GUIs...
 
-==== where you //really// need the command line
-
-One common task that is needlessly complex in both the GUIs is {{{git pull}}}.
-In a properly setup repository that has been cloned from the project master or
-something like that, getting the latest changes is just a matter of typing
-{{{git pull}}}.  In {{{git gui}}}, described below, this takes 4 steps,
-although there is a reason for that complexity :-)
-
 ==== {{{git gui}}}
 
 {{{git gui}}}) shows you the current state of your work area with respect to
@@ -114,3 +106,11 @@ sense.  Ideally, the GUI should prevent this, but it doesn't, so I'm
 mentioning it explicitly.  (Think of it like a link to an XLS on a website --
 you can click the link and open it and edit it, but you can't save it back to
 where it came from!)
+
+==== where you //really// need the command line
+
+One common task that is needlessly complex in both the GUIs is {{{git pull}}}.
+In a properly setup repository that has been cloned from the project master or
+something like that, getting the latest changes is just a matter of typing
+{{{git pull}}}.  In {{{git gui}}}, described below, this takes 4 steps,
+although there is a reason for that complexity :-)

@@ -126,6 +126,29 @@ I **strongly** recommend these settings to make life easier.
         git show 7a8b9c     # or some hex number; shows you the object
         git show HEAD~3:file.c  # get file.c from 3 versions back
 
+==== reflog
+
+  * useful reflog commands
+        # activity on current branch, including timestamp
+        git reflog show @{now}
+        # same, on some_branch
+        git reflog show some_branch@{now}
+        # activity on all branches, including branch switches
+        git reflog show HEAD@{now}
+
+==== show-branch
+
+  * {{{git show-branch -a}}} is useful to get a bird's eye view of all your
+    branches and their topological relationships.
+  * {{{git show-branch -g=N}}} shows you reflog info for the current branch,
+    including topological relationships and relative time.  This is useful if
+    you had a lot of rebases or amended commits and you think you might need
+    one of them back :-)
+  * if you need serious troubleshooting with branches, use the following.  It
+    may be useful in some contexts where {{{git lg}}} is too complex to figure
+    out what tip contains what commit
+        git show-branch $(git show-ref -h |cut -c41-)
+
 ==== cat-file (repo object) and ls-tree (tree object)
 
     Note: I'm not sure what, if any, is the difference between {{{show}}} and
@@ -160,20 +183,13 @@ I **strongly** recommend these settings to make life easier.
         git ls-files -s
         # conflicted files
         git ls-files -u
-        # "other files"; includes EVERYthing not in c/d/m/s, I think
+        # "other files"; includes EVERYthing not in d/m/s, I think
+        # seems to be equal to untracked + ignored
         git ls-files -o
         # untracked files only
         git ls-files --exclude-standard -o
         # ignored files only
         git ls-files --exclude-standard -o -i
-
-==== show-branch
-
-  * best use is through {{{git show-branch -a}}}
-  * if you need serious troubleshooting with branches, use the following.  It
-    may be useful in some contexts where {{{git lg}}} is too complex to figure
-    out what tip contains what commit
-        git show-branch $(git show-ref -h |cut -c41-)
 
 === the bleeding edge
 

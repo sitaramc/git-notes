@@ -1,0 +1,50 @@
+= blame detection
+
+Git tracks content, not files.  As a result, the {{{git blame}}} and the
+{{{git gui blame}}} commands can detect code moved or copied from elsewhere in
+the project.  It's a very powerful feature, accessed by specifying the
+{{{-C}}} flag one or more times, but there are some nuances.
+
+The documentation does not seem to be very clear about the effect of one or
+more {{{-C}}} options on {{{git blame}}}.  Here are my findings, experimenting
+with creating a new file as well as changing an existing one, with code
+copied, as well as moved, from some other file.  (That's 4 combinations).  I
+also tested {{{git gui blame}}}, which has a right-click option to do full
+copy detection.
+
+I notice that there are two granularities of detection too -- at what I call
+the "fine" granularity, it looks at smaller hunks of code to find maches.  I'm
+not sure how useful that is, because most of the references I got that way
+seemed to be just "ok they happened to use the same line of code" -- I mean
+how many ways //are// there to say "struct ref *refs = NULL;"?
+
+Note on {{{git gui blame}}}:
+  * behaves like {{{-C -C}}} by default
+  * can behave like {{{-C}}} if {{{gui.fastcopyblame}}} is true
+  * choosing full copy detection always acts like {{{-C -C -C}}} (this is on
+    the right click menu)
+
+So anyway here are my results:
+
+  * {{{-C}}} does "coarse" detection if you moved code, otherwise it doesn't
+    do any detection
+  * {{{-C -C}}} does "coarse" detection if you moved code or it's a new file,
+    otherwise it doesn't do any detection
+  * {{{-C -C -C}}} always does "fine" detection
+
+    ^^as of v1.6.1^^
+        copy code               move code
+        ---------               ---------
+        into new file           into new file
+            1 no                    1 coarse
+            2 coarse                2 coarse
+            3 fine                  3 fine
+        into existing file      into existing file
+            1 no                    1 coarse
+            2 no                    2 coarse
+            3 fine                  3 fine
+
+Here's something to watch out for: if you //copy// code into an //existing
+file//, there is no way to get coarse detection -- you either get a "fine"
+granularity or none at all, and since I think the fine one is less useful most
+of the time, this could be a bit of a problem sometimes.
