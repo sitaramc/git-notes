@@ -23,14 +23,16 @@
         l   = log   -C --decorate
         ls  = log   -C --stat --decorate
         lsp = log   -C --stat -p --decorate
+
         lg  = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s'
         lga = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all
+        # this is the most commonly used one, it turns out!
         l19 = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all -19
 
         ru  = remote update
 
+        # "show-branch -g=N" can't be aliased for N easily, so we stop here:
         sb  = show-branch --sha1-name
-        sba = show-branch --sha1-name -a
 
         ls-del  = ls-files -d
         ls-mod  = ls-files -m   # this will include deleted files also
