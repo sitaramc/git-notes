@@ -21,8 +21,12 @@
   * who says git is harder than SVN?  Try http://git.or.cz/course/svn.html
   * very nice, pictorial, explanation at
     http://www.kernel.org/~junio/200607-ols.pdf
+  * release engineering, branches never-merged-back, etc.,
+    http://gitster.livejournal.com/2009/01/14/
 
 === some advocacy URLs :-)
+
+  * features unique to git: http://gitster.livejournal.com/16077.html
 
   * http://tech.slashdot.org/comments.pl?sid=499412&cid=22866970
   * http://cubist.cs.washington.edu/Security/category/security-reviews/
