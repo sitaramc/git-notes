@@ -13,3 +13,20 @@
 
 ----
 
+For a much better introduction to the GUI tools, including lots of
+screenshots, go to http://nathanj.github.com/gitguide/
+
+The page has an excellent example "project" that is simple enough that you can
+concentrate on the git features being demonstrated, and the author goes into
+quite a few things you can do with the GUI tools.  I am very impressed by the
+page, and pointing to it saves me a lot of work :-)
+
+However, note these two minor points:
+  * I find it easier to stick to the ssh that comes with git.  So please
+    ignore the parts that mention "putty" or "plink".  Of course if you know
+    what you are doing (for example, if you already know ssh and/or PKI very
+    well!) you can do it any way you please; this is only for new users that I
+    might have to support ;-)
+  * some of the stuff dealing with other servers (like adding a remote,
+    pulling from someone's IP address, etc.), may work differently in a
+    corporate environment.
