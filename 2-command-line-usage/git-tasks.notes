@@ -51,6 +51,19 @@ I **strongly** recommend these settings to make life easier.
         # other coolness
         git diff "@{yesterday}"
 
+==== conflicts on pull/merge
+
+  * try {{{gitk --merge conflicted_path}}}
+  * {{{git diff MERGE_HEAD...HEAD}}} (note the //three// dots) shows you
+    differences between the common ancestor and your HEAD.
+  * similarly {{{git diff HEAD...MERGE_HEAD}}} shows you differences between
+    the common ancestor and the branch you're trying to merge
+  * {{{git checkout --conflict=diff3 conflicted_path}}} is a novel way of
+    getting all 3 versions into the file so you can hack at it in vim
+  * you can tell git blame to only show important changes, like so (pity it
+    does not work with the GUI blame)
+        git blame -C $(git merge-base HEAD MERGE_HEAD).. conflicted_path
+
 ==== log pickaxe and blame
 
   * finding out when a particular change happened or who made it
