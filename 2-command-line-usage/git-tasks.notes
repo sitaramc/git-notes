@@ -59,11 +59,14 @@ I **strongly** recommend these settings to make life easier.
 
 ==== misc
 
-  * {{{ORIG_HEAD}}}: pull or merge always leave a copy of the old head with
-    this name.  Reset can use it if needed.  (see {{{man git-reset}}}).  And
-    reset itself copies the old {{{HEAD}}} to {{{ORIG_HEAD}}}, though that
-    seems less useful.
-  * {{{FETCH_HEAD}}}: similar, for fetch
+  * {{{ORIG_HEAD}}}: pull or merge (or anything that moves HEAD drastically)
+    leave a copy of the old head with this name.  Reset can use it if needed.
+    (see {{{man git-reset}}}).  {{{reset}}} itself copies the old {{{HEAD}}}
+    to {{{ORIG_HEAD}}}, though that seems less useful
+  * {{{FETCH_HEAD}}}: records the branch you fetched from a remote repository
+    with your last 'git-fetch' invocation
+  * {{{MERGE_HEAD}}} records the commit(s) you are merging into your branch
+    when you run 'git-merge'
 
 ==== **oopsies! (recovering from mistakes)**
 
@@ -238,6 +241,12 @@ I **strongly** recommend these settings to make life easier.
     discard unreachable objects instead of keeping them as loose objects.
         git repack -adf     # kills in-pack garbage
         g prune             # kills loose garbage
+
+  * (from the do-you-really-want-to-do-this? department)
+        g reflog expire --expire=10days --all
+        # use expire-unreachable to limit it a bit
+        # use branchname(s) instead of --all
+        # units can be seconds, minutes, etc
 
 ==== remotes
 
