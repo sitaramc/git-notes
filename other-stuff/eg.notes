@@ -1,0 +1,114 @@
+= notes on "eg" (Elijah Newren's "easy git")
+
+[[http://www.gnome.org/~newren/eg/|eg]] is a single file wrapper for {{{git}}}
+that provides much more user-friendly options and more sensible defaults for
+many commands.  It's a great tool, the documentation is top class, the focus
+on consistency and layering etc., is very nice, and clearly a lot of TLC has
+gone into making it.
+
+I'm not sure I like the whole package, but the nice thing is that eg co-exists
+quite happily with normal git, so you can mix and match -- use only those eg
+commands that you like, and ignore the others.
+
+In this note, I explain some of the eg commands, and their advantages (or
+lack) compared to plain git.  This is essentially my personal notes on "eg",
+describing what I like, what I don't, etc., focusing mainly on commands where
+the behaviour is //significantly// different from plain git.
+
+[[TOC]]
+
+----
+
+=== really useful commands
+
+==== {{{eg revert}}} and {{{eg cherry-pick}}}
+
+{{{eg revert}}} eliminates a lot of the confusion between plain git's various
+ways of getting at old content.  This command's help text has the longest
+description of the differences from plain git.  At the same time, git's own
+"revert" command is done in eg by {{{eg cherry-pick -R}}}, which actually
+makes a lot of sense.
+
+The most important feature that "eg revert" provides is {{{eg revert --in REV
+FILE}}}.  This reverts the change to FILE made in revision REV.  It's a
+partial revert of an earlier commit.  This does not actually have a single
+command equivalent in plain git, and it is done by piping a suitable {{{git
+diff}}} to {{{git apply -R}}}.
+
+The second variation is {{{eg revert --since REV FILE}}}, which reverts FILE
+to the content it had in revision REV.  This is plain git's checkout paths
+mode.
+
+==== other commands
+
+  * {{{eg info}}} is pretty cool :-)
+
+  * {{{eg publish}}} is neat too; as the man page says, normal git makes it
+    quite annoying (I wish you could clone from an empty repo -- that by
+    itself would make things a lot easier)
+
+  * {{{eg bundle create}}} adds {{{--all HEAD}}} to the normal command.  eg
+    also provides {{{eg bundle create-update new.bdl old.bdl}}} which is
+    functionally the same as
+        git bundle create new.bdl --all HEAD --not \
+            $(git ls-remote old.bdl | cut -f1)
+
+=== not (so) useful commands
+
+==== {{{eg diff}}}
+
+    {{{eg diff}}} shows changes against HEAD, not the index.  I prefer the
+    normal git behaviour, for reasons cited in
+    [[../concepts-and-tips/uses-of-index.html|uses of index]]
+
+    {{{eg diff}}}'s second change from normal git (see
+    http://www.gnome.org/~newren/eg/documentation/diff.html ) seems logical on
+    the face of it, but I'm not buying.  {{{diff}}} and {{{log}}} are
+    inherently different commands with different purposes and outputs, and
+    it's meaningless to try and synchronise their syntax.
+
+    To start with, these points are fundamental:
+
+  * the older revision is (normally) specified on the left side (LHS)
+  * "diff" only works on two //endpoint// commits, regardless of how many
+    commits exist in between those endpoints
+  * however, "log" works on all the in between commits also
+  * normal, everyday, usage is {{{git diff A..B}}}, meaning "changes from A to
+    B", and {{{git log A..B}}}, meaning "commits in B but not in A".
+
+    To those simple rules, add just one more (easy enough to remember): the
+    "{{{...}}}" operator always involves the common ancestor somehow.
+
+    With those very simple rules in mind, you can keep track of what the
+    double-dot and triple-dot mean very easily.
+
+    Consider {{{git diff A...B}}}:
+  * since the "{{{...}}}" is used, the common ancestor is involved
+  * since diff can only deal with 2 end points, one of A or B has to make way
+    for the common ancestor
+  * since the common ancestor is older than A and B, clearly it has to appear
+    on the left side, so A loses :-)
+
+    And this becomes {{{git diff CA(A,B)..B}}}, where CA(A,B) is the common
+    ancestor of A and B.  Easy enough?
+
+    Now look at {{{git log A...B}}}
+  * again, the "{{{...}}}" is used, so the common ancestor is involved
+  * since log is not constrained to only 2 endpoints like diff is, you don't
+    have to discard A or B
+  * so you show the commits between the common ancestor and A, //as well as//
+    between the common ancestor and B
+
+    So: {{{git log CA(A,B)..A}}} PLUS {{{git log CA(A,B)..B}}}
+
+==== other commands
+
+  * {{{eg log}}} doesn't seem to add much value compared to {{{--decorate}}},
+    plus it eats up the colors
+
+  * {{{eg commit}}} attempts to simplify the many combinations you can have
+    (untracked, tracked+changed, tracked+changed+staged, etc) but I don't
+    think it succeeds very well (this is a subjective opinion, not fact!).
+    But really, if the command line options to stage and unstage confuse you,
+    just use {{{git gui}}}, where the icons and the two panes on the left tell
+    you all you want to know.  Couldn't be simpler than that.
