@@ -67,7 +67,7 @@
 
     A "bare" repo, as the git
     [[http://www.kernel.org/pub/software/scm/git/docs/gitglossary.html|glossary]]
-    says, is a repository that does not contains a "working tree" at all.  It
+    says, is a repository that does not contain a "working tree" at all.  It
     doesn't contain the special {{{.git}}} sub-directory either; instead, it
     contains all the contents of the {{{.git}}} subdirectory right in the main
     directory itself.

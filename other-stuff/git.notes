@@ -11,6 +11,8 @@
 
 === some URLs
 
+  * http://article.gmane.org/gmane.comp.version-control.git/46609 -- how
+    {{{git am -3}}} works
   * http://cworth.org/hgbook-git/tour/ -- I cannot emphasise how useful this
     URL has been in getting started!
   * http://www.kernel.org/pub/software/scm/git/docs/everyday.html is also a

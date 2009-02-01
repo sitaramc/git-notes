@@ -35,8 +35,8 @@ the public key so that he can add it to the server.
 
   * the output of that command will be two files: a private key and a public
     key.  You need to send your GITOSIS_ADMIN the **public** key by email
-    ** the program will clearly say "you public key has been saved in ..." and
-       give a long filename.  Send only that file
+    ** the program will clearly say "your public key has been saved in ..."
+       and give a long filename.  Send only that file
     ** **do NOT send the private key!!**  Make sure the file name ends in
        {{{.pub}}}
 
