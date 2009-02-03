@@ -1,4 +1,4 @@
-= How to use git over an HTTP proxy, with socat
+# How to use git over an HTTP proxy, with socat
 
 [[TOC]]
 
@@ -10,7 +10,7 @@ because the "http" protocol is not very efficient, and/or requires some
 special handling on the server side.  If you're pushing code to a public repo,
 you **definitely** need to use the "ssh" protocol.
 
-=== a word about socat
+### a word about socat
 
 I will be using "socat", an absolute corker of a program that does so many
 things it's incredible!  Other people use corkscrew, ssh-https-tunnel, etc.,
@@ -22,11 +22,11 @@ with the HTTP(S) proxy server using the CONNECT method to get you a clean pipe
 to the server on the far side.
 
 However, do note that socat does have one disadvantage: the passwords to your
-proxy server are visible in to local users running {{{ps -ef}}} or something.
+proxy server are visible in to local users running `ps -ef` or something.
 I don't care since I don't have anyone else logging into my desktop, and the
 ability to use a program I already have anyway (socat) is more important.
 
-=== proxying the **git** protocol
+### proxying the **git** protocol
 
 When I want to download a public repo, I just type
 
@@ -41,8 +41,8 @@ and so on, instead of
 Here's the how and why of it.
 
 To proxy the git protocol, you need to export an environment variable
-called {{{GIT_PROXY_COMMAND}}}, which contains the command that is to be
-invoked.  I have a shell function in my {{{.bashrc}}} that looks like
+called `GIT_PROXY_COMMAND`, which contains the command that is to be
+invoked.  I have a shell function in my `.bashrc` that looks like
 this:
 
     proxied_git () 
@@ -60,25 +60,25 @@ this:
 
 Possible variations are:
 
-  * you could give {{{/tmp/gitproxy}}} a more permanent name and remove the
+  * you could give `/tmp/gitproxy` a more permanent name and remove the
     middle pararaph completely.  I don't do this because that's too small a
     file to bother with; it just seems cleaner this way)
   * you could permanently set the environment variable if **all** your git
     repos are remote (very unlikely)
 
-One thing you //cannot// do is to roll the entire socat command into the
+One thing you *cannot* do is to roll the entire socat command into the
 environment variable.  Git passes the host and port as two arguments to the
 proxy command, but socat expects them in the syntax you see above, so you
-//will//need to wrap it in a script as I have done.  I guess you could argue
-//that this is a point in favour of corkscrew etc. ;-)
+*will*need to wrap it in a script as I have done.  I guess you could argue
+*that this is a point in favour of corkscrew etc. ;-)
 
-=== proxying the **ssh** protocol
+### proxying the **ssh** protocol
 
 The git protocol is handled directly by git (duh!), but if you use the ssh
 protocol, it invokes ssh explicitly (again, duh!).
 
 Ssh already has this sort of stuff built-in, so you simply add a few lines to
-your {{{~/.ssh/config}}}
+your `~/.ssh/config`
 
     host gh
         user git
@@ -90,7 +90,7 @@ Now you can just say (for example):
 
     git clone gh:sitaramc/git-notes.git
 
-==== ssh proxy using corkscrew instead of socat
+#### ssh proxy using corkscrew instead of socat
 
   * download and install corkscrew (<http://www.agroman.net/corkscrew/>)
   * create a file (eg., ~/.ssh/myauth) and put your http proxy
@@ -109,7 +109,7 @@ Now you can just say (for example):
             port 22
             proxycommand corkscrew your.proxy.ip 3128 %h %p ~/.ssh/myauth
 
-==== extra coolness for github
+#### extra coolness for github
 
 Noting that many corporate firewalls block access to the CONNECT method on
 ports other than 443, the good folks at github have an ssh server listening on

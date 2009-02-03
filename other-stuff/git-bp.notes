@@ -1,4 +1,4 @@
-= git -- suggested workflow for large projects
+# git -- suggested workflow for large projects
 
 [[TOC]]
 
@@ -11,7 +11,7 @@
 >   This is essentially a modification and simplification of the typical
     workflow that Linux and other projects using DVCSs use.^^
 
-=== assumptions
+### assumptions
 
   * the team needs to manage multiple projects
   * the team has one "server", in the sense that it is "on" most of the time
@@ -19,7 +19,7 @@
   * each developer has a copy of git on his desktop, and knows some basic
     commands or at least the GUI stuff
 
-=== roles
+### roles
 
 Every project has the following loosely defined roles.  If it's a small
 project the same person may take on multiple roles.
@@ -30,14 +30,14 @@ project the same person may take on multiple roles.
     any.  In $COMPANY terms, this is like the ML
   * N developers
 
-=== typical workflow
+### typical workflow
 
 Here's a typical workflow, assuming a starting point from the "master" branch
 on the master server.  This assume that the people on the project have ssh
 (write) access to the repo -- it is not the "please pull..." mode that
 internet projects use.
 
-==== developer
+#### developer
 
 One-time:
 
@@ -100,12 +100,12 @@ Irregular:
         # get rid of temp branch
         git branch -d wildidea
 
-==== feature guy
+#### feature guy
 
 This will be a mix between the developers workflow and the release manager's
 workflow.
 
-==== release manager
+#### release manager
 
 When doing your own development, you do the same thing as the developer
 described above

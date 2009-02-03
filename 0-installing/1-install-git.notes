@@ -1,12 +1,12 @@
-= (user) installing git
+# (user) installing git
 
 [[TOC]]
 
-=== installing git
+### installing git
 
-  * go to http://code.google.com/p/msysgit/ and look for a "download" link
-    ** or get it from an INTERNAL_URL
-    ** get the latest version you can find.  (As of 2009-01-18 this is version
+  * go to <http://code.google.com/p/msysgit/> and look for a "download" link
+    * or get it from an INTERNAL_URL
+    * get the latest version you can find.  (As of 2009-01-18 this is version
        1.6.1)
   * install it
 

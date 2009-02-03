@@ -1,8 +1,8 @@
-= (user) installing git and setting it up to use a gitosis server
+# (user) installing git and setting it up to use a gitosis server
 
 [[TOC]]
 
-=== generating a public key
+### generating a public key
 
 Gitosis uses RSA public keys to authenticate users -- there are no passwords.
 You have to generate a public/private "key pair" and send the GITOSIS_ADMIN
@@ -13,12 +13,12 @@ the public key so that he can add it to the server.
 
   * you need to generate an RSA key pair (a public key and a private key) for
     yourself.  Before we do that, a brief security note:
-    ** your //private// key should be kept really safe; anyone who can access
+    * your *private* key should be kept really safe; anyone who can access
        that can impersonate you.  Lock your desktop when you leave it for
        longer than a few minutes, etc.  In terms of remote hacks, if your
        machine is not on the public internet (which is typical for most
        corporate desktops), you may be relatively safe.
-    ** you can protect your private key with a pass-phrase -- and if you can
+    * you can protect your private key with a pass-phrase -- and if you can
        use ssh-agent you can avoid typing in the passphrase for every
        operation that involves the repository, which you only need to do once
        or twice in a day, really.  Contact me if you need help doing this
@@ -35,10 +35,10 @@ the public key so that he can add it to the server.
 
   * the output of that command will be two files: a private key and a public
     key.  You need to send your GITOSIS_ADMIN the **public** key by email
-    ** the program will clearly say "your public key has been saved in ..."
+    * the program will clearly say "your public key has been saved in ..."
        and give a long filename.  Send only that file
-    ** **do NOT send the private key!!**  Make sure the file name ends in
-       {{{.pub}}}
+    * **do NOT send the private key!!**  Make sure the file name ends in
+       `.pub`
 
   * identify yourself to git, so that your name and email show up correctly in
     commits.  Type in the following commands:
@@ -49,7 +49,7 @@ the public key so that he can add it to the server.
     Now wait until the GITOSIS_ADMIN does his part and confirms that your
     public key has been stored in the server.
 
-=== cloning an existing project
+### cloning an existing project
 
 Once you've received confirmation from your GITOSIS_ADMIN that he has added
 your public key to the server and told you what project(s) you can push and
@@ -64,18 +64,18 @@ it was already ready to be cloned:
         git clone git@YOUR_GITOSIS_SERVER:testing.git
         # (or maybe) git clone git@YOUR_GITOSIS_SERVER:MYPROJ.git
 
-If that worked, you can {{{cd testing}}} or {{{cd MYPROJ}}} and:
+If that worked, you can `cd testing` or `cd MYPROJ` and:
 
   * run some git commands from the command line
-  * run {{{git gui}}} to stage and unstage files, commit, and push
-  * run {{{gitk --all}}} to get a bird's eye view of all your branches, both
+  * run `git gui` to stage and unstage files, commit, and push
+  * run `gitk --all` to get a bird's eye view of all your branches, both
     local and remote
 
 These two GUI tools are very powerful; if you don't like the command line, you
 can quite easily stick to them and get by.  Please see the
-[[../1-basic-usage/use-git.html | user documentation]] for more on this.
+[user documentation](../1-basic-usage/use-git.html) for more on this.
 
-=== creating a new project
+### creating a new project
 
 If you want to create a new project from an existing code base, and add it to
 the gitosis server for others to start collaborating on, you need to do the
@@ -83,22 +83,22 @@ following:
 
   * discuss with the GITOSIS\_ADMIN what the name of the project should be and
     pick one.  We'll assume it's called MYPROJ in the description below
-    ** you'll have to wait till the GITOSIS\_ADMIN gives you permission to
+    * you'll have to wait till the GITOSIS\_ADMIN gives you permission to
        create a project called MYPROJ, and (optionally) adds your future team
        members to the access list.  If any of those team members do not
        already have access to the system, you can help them create and send
        their public keys to the GITOSIS\_ADMIN
   * go to the directory containing the latest and best version of your current
     project files
-    ** if you're doing this via file explorer, right click on the folder and
+    * if you're doing this via file explorer, right click on the folder and
        choose "git bash here"
 
 Now brace yourself for some commands (don't worry, this is **only once per
 project** -- even if it is a large team, only one person has to do this, and
 that too only once).
 
-  * run {{{git init}}}
-  * create and edit a new text file called {{{.gitignore}}} and enter patterns
+  * run `git init`
+  * create and edit a new text file called `.gitignore` and enter patterns
     that the checkin process should ignore, for example
 
         *.exe

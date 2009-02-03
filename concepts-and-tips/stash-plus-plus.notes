@@ -1,4 +1,4 @@
-= better than stash
+# better than stash
 
 This is better than stash -- you can backup everything on your local repo that
 is not already on one of your remotes, plus it includes all untracked files

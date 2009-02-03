@@ -1,18 +1,18 @@
-= Easy way to remember what git reset's soft/hard/mixed do
+# Easy way to remember what git reset's soft/hard/mixed do
 
-^^loosely based on http://gitster.livejournal.com/25150.html^^
+^^loosely based on <http://gitster.livejournal.com/25150.html>^^
 
 Assume you start from a "everything is committed and golden" state.  Let's
-pretend you came to this starting point via a {{{git checkout}}}: and then you
-edit a bunch of stuff, compile/test, and then {{{git add}}} and {{{git
-commit}}}:
+pretend you came to this starting point via a `git checkout`: and then you
+edit a bunch of stuff, compile/test, and then `git add` and `git
+commit`:
 
     $ git checkout mywork
     ...edit edit edit...
     $ git add ...
     $ git commit
 
-If at this point you do a {{{git reset}}}, here's how the type of reset
+If at this point you do a `git reset`, here's how the type of reset
 ("soft", "hard", or the default, which is "mixed") affects things:
 
     $ git checkout mywork
@@ -23,5 +23,5 @@ If at this point you do a {{{git reset}}}, here's how the type of reset
                 # --soft resets to this point
     $ git commit
 
-Also note, as gitster says, that {{{git commit --amend}}} makes the {{{git
-reset --soft}}} mostly redundant.
+Also note, as gitster says, that `git commit --amend` makes the `git
+reset --soft` mostly redundant.

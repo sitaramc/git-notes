@@ -1,4 +1,4 @@
-= common mistakes to avoid
+# common mistakes to avoid
 
 ----
 
@@ -6,19 +6,19 @@
 
 ----
 
-=== (windows) keeping files open in an editor
+### (windows) keeping files open in an editor
 
 Windows does not allow you to overwrite or delete a file that is open in an
-editor.  As a result, operations such as {{{git pull}}}, {{{merge}}},
-{{{rebase}}}, etc., may experience weird problems if they attempt to update
+editor.  As a result, operations such as `git pull`, `merge`,
+`rebase`, etc., may experience weird problems if they attempt to update
 one of the files you have kept open.
 
 If you get funky errors while doing any git operations, close all editors and
 try again!
 
-=== "Not currently on any branch"?
+### "Not currently on any branch"?
 
-In the graphical tool {{{gitk}}}, any "branch" that has a leading part in
+In the graphical tool `gitk`, any "branch" that has a leading part in
 yellow is a **remote** branch.  Do not checkout such a branch until you get a
 little more familiar with git.  It is **not a local branch**, so checking it
 out makes no sense.  For normal users, the GUI should prevent this, but it
@@ -27,16 +27,16 @@ website -- you can click the link and open it and edit it, but you can't save
 it back to where it came from!)
 
   * you will recognise you are in such a branch by one of these symptoms
-    ** {{{gitk}}} does not show any branch name in **bold** when you quit and
+    * `gitk` does not show any branch name in **bold** when you quit and
        restart it
-    ** {{{git gui}}} says {{{current branch: HEAD}}} at the top left
-    ** {{{git status}}} says {{{Not currently on any branch}}}
-    ** you are able to commit your changes but when you push them to the
+    * `git gui` says `current branch: HEAD` at the top left
+    * `git status` says `Not currently on any branch`
+    * you are able to commit your changes but when you push them to the
        remote server nothing seems to happen
 
   * to fix this:
-    ** first give that branch a name to better deal with it for later
-       troubleshooting: {{{git checkout -b some_new_name}}}
-    ** then you figure out how to merge those changes into one of the main
+    * first give that branch a name to better deal with it for later
+       troubleshooting: `git checkout -b some_new_name`
+    * then you figure out how to merge those changes into one of the main
        branches
-    ** then you push
+    * then you push

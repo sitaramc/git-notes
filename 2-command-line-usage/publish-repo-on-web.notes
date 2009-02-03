@@ -1,6 +1,6 @@
-= publishing a repository on the web
+# publishing a repository on the web
 
-^^from http://www.cs.helsinki.fi/u/kaitanie/gittalk.pdf^^
+^^from <http://www.cs.helsinki.fi/u/kaitanie/gittalk.pdf>^^
 
 In order to push your repository to a web server so others can get it via
 http, do this:

@@ -1,4 +1,4 @@
-= git -- a distributed version control system
+# git -- a distributed version control system
 
 Git is a distributed version control system that has been around for 3 years
 now. It is fast, stable, and, best of all, quite unobtrusive. While early
@@ -10,23 +10,23 @@ will instead illustrate the concepts behind git, and give you a sense of why
 it is so exciting.
 
 Here's a taste: Figure 1 is a screenshot from the GUI version of what SVN
-folks would know as //svn blame//.
+folks would know as *svn blame*.
 
 ![Figure 1](../images/gitlfy-fig1-gui-blame.gif "Figure 1: Git GUI blame")
 
-As you can see, git says that the function called {{{find_tree_entry}}} was
-originally written in {{{sha1_name.c}}} and later moved to {{{tree-walk.c}}}
-(this file).  However, no programmer //told// git all this -- it inferred it by
+As you can see, git says that the function called `find_tree_entry` was
+originally written in `sha1_name.c` and later moved to `tree-walk.c`
+(this file).  However, no programmer *told* git all this -- it inferred it by
 looking at the revisions.  That's an amazing level of traceability in a world
 where most current VCSs can't handle even a simple file-rename without being
-explicitly told, such as with the {{{svn rename}}} command!
+explicitly told, such as with the `svn rename` command!
 
-=== Some history and background
+### Some history and background
 
 The reason git is able to work this, and many other, bits of magic is because
 it tackles the problem from the point of view of a file system designer.
-Git's object store was designed to be a //content-addressable// file system
-(git even has an //fsck// command!), and the data model actually tracks
+Git's object store was designed to be a *content-addressable* file system
+(git even has an *fsck* command!), and the data model actually tracks
 content, not files.
 
 Git was created in April 2005, by Linus Torvalds, due to a frustrating state
@@ -41,7 +41,7 @@ it was helping Linus manage Linux kernel development.  Currently, apart from
 the Linux kernel and related projects, it is used by several projects, for
 example Wine, x.org, OLPC, Ruby on Rails, VLC, and Samba.
 
-Git has two really //key// strengths: it is very smart at merging, so that the
+Git has two really *key* strengths: it is very smart at merging, so that the
 developers can do as much parallel development as they wish to, and it is
 extremely fast, so it never gets in your way.
 
@@ -51,7 +51,7 @@ anything else to understand the git model quickly and easily. It is called
 http://eagain.net/articles/git-for-computer-scientists/.  I consider this
 essential reading for anyone trying to understood the git object store.
 
-=== Merging -- git's first and biggest strength
+### Merging -- git's first and biggest strength
 
 The most basic function of a VCS is to give us a way to rollback to a known
 state, should we really mess up whatever we are working on. In that sense, a
@@ -59,21 +59,21 @@ VCS is notionally the same as backup software: a check-in is like a "save" and
 a check-out is like a "restore".
 
 That function is important, but it is also boring. The real fun starts when
-you consider how well a VCS enables //parallel development//. This is where
-the project workflow changes from a long sequence of //sequential// changes,
-to a much more efficient model where many people are //simultaneously//
+you consider how well a VCS enables *parallel development*. This is where
+the project workflow changes from a long sequence of *sequential* changes,
+to a much more efficient model where many people are *simultaneously*
 working on the same set of files, and doing different things to them.
 
 Some really old VCSs solve this by not allowing any concurrency at all: you
-have to //lock// any file which you want to edit, and until you release the
+have to *lock* any file which you want to edit, and until you release the
 lock no one else can edit it.  This is horribly inefficient in terms of
 programmer time, and one wonders why such VSSs are still in use at all!
 
-To be fair, most recent VCSs do allow //branching//, with varying degrees of
+To be fair, most recent VCSs do allow *branching*, with varying degrees of
 ease of use and speed.  But as Douglas Adam's said in one of his novels, “it's
 not the fall that kills you, it's the sudden stop at the end”.  Similarly,
 branching is not the problem; the real test of a VCS is how well it manages to
-//merge// those branches later! Almost any recent/decent system can manage to
+*merge* those branches later! Almost any recent/decent system can manage to
 merge when the changes are not anywhere near each other. But what if, for
 example, one developer is making changes to a file, and another one, perhaps
 responsible for a much larger refactoring effort, renames and moves that file
@@ -86,9 +86,9 @@ that if some new strategy to handle merging is discovered, it can be added in
 very easily.
 
 The end result is a tremendous boost to a team's productivity, as people
-realise that a lot of the //manual// co-ordination and sequencing that was
+realise that a lot of the *manual* co-ordination and sequencing that was
 till now considered a necessity, is in fact not needed. Also, and this is not
-obvious, parallelism is just as useful for a //single developer// working on a
+obvious, parallelism is just as useful for a *single developer* working on a
 system: ask yourself if you've ever postponed a small, quick, change because
 you were in the middle of a much larger activity, or had to plan your work
 carefully to avoid having two separate tasks interfere with each other.
@@ -103,7 +103,7 @@ will do the right thing.
 
 In addition, git has excellent GUI tools to visualise this sort of branching
 easily. Figure 2, for example, is from the development tree of a project
-called //cobbler.//
+called *cobbler.*
 
 ![Figure 2](../images/gitlfy-fig2-branch-visual.gif "Figure 2: Branch visualisation")
 
@@ -115,7 +115,7 @@ first 2 years of git, the Linux kernel has "averaged
 
 The idea behind this is simple: making many small merges at regular intervals
 (and resolving any conflicts if needed) is much easier than dealing with all
-of them together -- you //have to// divide and conquer.
+of them together -- you *have to* divide and conquer.
 
 Another situation in which good branching and merging helps is, for instance,
 when a relatively stable product needs to have more than one major "feature"
@@ -133,14 +133,14 @@ unused.
 
 Even where merging is available, systems like SVN have quite a few problems
 with how it is implemented. For a good description of these issues take a look
-at http://git.or.cz/gitwiki/GitSvnComparsion.  Although SVN is working on
+at <http://git.or.cz/gitwiki/GitSvnComparsion.>  Although SVN is working on
 these issues, I am convinced that once the productivity gains of a
-//distributed// VCS become well known, SVN will eventually fade. SVN's aims
+*distributed* VCS become well known, SVN will eventually fade. SVN's aims
 have always been to fix the problems in CVS rather than do anything
 revolutionary, but today, in 2008, merely fixing problems in a system designed
 more than 15 years ago is too little, too late.
 
-=== Rebasing instead of merging
+### Rebasing instead of merging
 
 Merging is very nice, but for long-lived branches, the frequent merges tend to
 make the history look like Figure 3 (note: this is not a real project!). When
@@ -150,24 +150,24 @@ stable enough), this "stitching pattern" remains.
 ![Figure 3](../images/gitlfy-fig3-stitching-pattern.gif "Figure 3: Stitching pattern")
 
 For some projects it may be easier to make all the branch work look as if it
-was done //on top of// the current mainline commit. This is called
-//rebasing//.  While the branch is under development, instead of doing a
-{{{git pull}}} (this is somewhat like a {{{cvs update}}}) from the mainline,
-you'd do a {{{git pull --rebase}}} (there are other ways to do this; this is
+was done *on top of* the current mainline commit. This is called
+*rebasing*.  While the branch is under development, instead of doing a
+`git pull` (this is somewhat like a `cvs update`) from the mainline,
+you'd do a `git pull --rebase` (there are other ways to do this; this is
 just the simplest). Each time you do that, git re-applies all your commits on
 top of the new tip of the mainline, and the history remains linear.  When your
 branch is finally stable enough to be merged into the mainline, your changes
-can be pushed as a //linear// set of updates on top of the current tip, rather
+can be pushed as a *linear* set of updates on top of the current tip, rather
 than a parallel set of updates followed by a merge.
 
 The biggest advantage of rebasing instead of normal merging is when you try
-and track down a bug using {{{git bisect}}}, which we will discuss later.
+and track down a bug using `git bisect`, which we will discuss later.
 
-=== Speed -- git's second big feature
+### Speed -- git's second big feature
 
 The other explicit design goal was speed, which has been one of the pain
 points of earlier VCSs. Centralised VCSs can take minutes to do a simple
-//diff//, or tens of minutes to create a branch. It is also quite frustrating
+*diff*, or tens of minutes to create a branch. It is also quite frustrating
 to have to schedule a code-freeze and set aside a day or two to do a merge. (I
 believe this is quite normal in centralised VCSs, especially the more
 mainframe-ish ones -- consider yourself lucky if you don't know which one I am
@@ -187,7 +187,7 @@ to want to examine the entire tree for the current and the previous few
 revisions -- the further a revision is from our current one, the less
 interesting it usually is for normal work.
 
-=== Distributed and disconnected
+### Distributed and disconnected
 
 The fact that git is a distributed VCS means that you have your own repository
 on your machine. Coupled with the excellent branch/merge in git, this allows
@@ -198,14 +198,14 @@ in these situations -- you usually resort to the classic "tar/zip" method of
 saving and restoring your work.
 
 If you work offline a lot, it's a lot more useful to be able to commit each
-change separately, and have these commits //kept// separate, rather than be
+change separately, and have these commits *kept* separate, rather than be
 forced to commit all your offline work as one huge commit when you reconnect.
 Keeping commits to a fine granularity makes code reviews easier, but even more
 important, finding the source of a bug becomes much easier, as we will see
 later.
 
 The reason git is good at distributed operation is because, when you do a
-{{{git clone}}}, it brings down and caches the entire repository -- the full
+`git clone`, it brings down and caches the entire repository -- the full
 history of all the branches is now available on your machine. Even Mercurial,
 the next best among the new breed of VCSs, brings down only the current
 branch.
@@ -218,9 +218,9 @@ A good analysis of how much each VCS caches on a checkout, and its
 implications, is at
 http://blogs.gnome.org/newren/2007/11/24/local-caching-a-major-distinguishing-difference-between-vcses/
 
-=== Cool features -- git bisect
+### Cool features -- git bisect
 
-Git has a command called {{{bisect}}} (this is one of those "aaaah, why didn't
+Git has a command called `bisect` (this is one of those "aaaah, why didn't
 I think of it?" things!) that is very nice. The idea is this: say you find a
 bug in version 1.6, which didn't exist in version 1.5. If the commit history
 between these two revisions consisted of just a few large commits, you'll have
@@ -228,23 +228,23 @@ to go through all the changes in these commits manually to find the bug.  In
 the git model, however, the commit history would have a few hundred small
 commits.
 
-So you tell {{{git bisect}}} that version 1.5 is "good", and 1.6 is "bad". Git
+So you tell `git bisect` that version 1.5 is "good", and 1.6 is "bad". Git
 then finds a commit about half-way between them and checks it out for you. You
 test it, and tell git whether this was "good" or "bad", and git then finds you
 another version to test based on your answer. Essentially, git is using binary
-search to zero in on the //specific change// that caused your bug, which is
+search to zero in on the *specific change* that caused your bug, which is
 only possible and useful if commits are small.
 
-The real power of {{{git bisect}}} is that, if your testing can be automated
+The real power of `git bisect` is that, if your testing can be automated
 with a command that returns "0" for "good" and some non-zero value for "bad",
 then git will essentially do all this by itself! Who says finding the source
 of a bug is a programmer's job? Let the machines take over!
 
-=== Summary
+### Summary
 
 I hope this has whetted your interest in git.  There's not enough space in
 this article to go into all the other wonderful things about git, like git
-stash (save //unfinished// work to temporarily do something else), interactive
+stash (save *unfinished* work to temporarily do something else), interactive
 rebasing (reorder commits, combine two commits into one, split one commit into
 many, etc.), cherry picking (pick and choose specific commits from some other
 branch to apply to the current one), and so on.  I should also mention that
@@ -262,11 +262,11 @@ And for many people today, that privilege might well belong to git. I hope it
 does, for you.
 
 [Endnote: much, though not all, of what I said about git here, applies to
-//Mercurial// also. Mercurial, aka //Hg//, appears to be the closest thing to
+*Mercurial* also. Mercurial, aka *Hg*, appears to be the closest thing to
 git in terms of power and features, and was chosen by the Mozilla developers
 over git only because git did not, at that time, have good enough Windows
 support.  I have a couple of young friends at Synovel, a Hyderabad company
-focused on open source collaboration solutions (they make //Spicebird//), who
+focused on open source collaboration solutions (they make *Spicebird*), who
 swear by Hg, and I anticipate many good-natured arguments with them about
 git/Hg, sort of like vim/emacs or perl/python!  As long as they're all open
 source, the more the merrier, I say...]

@@ -1,8 +1,8 @@
-= terminology
+# terminology
 
 ^^[[TOC]]^^
 
-=== general VCS terminology
+### general VCS terminology
 
 A **project** is the minimum set of source code (and related files) that need
 to be kept together to **build** the software.  Example: Linux
@@ -16,7 +16,7 @@ A **branch** in a project is an active line of development
   * **master** is the conventional name for the main development tree of a
     project
   * other conventional branches are **next** (for code that is ready to come
-    into //main//), and various maintenance branches like **v1.3** or
+    into *main*), and various maintenance branches like **v1.3** or
     __v2.6.4__ to designate released versions
   * these are only conventions, not rules, but they seem to work well in
     general
@@ -32,25 +32,25 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
   * small projects may not have any feature branches.  That doesn't mean they
     don't have any features :-)
 
-=== git-specific terminology
+### git-specific terminology
 
-==== branch, master, head, HEAD, etc
+#### branch, master, head, HEAD, etc
 
   * a branch is "an active line of development"
-  * //master//: default branch in a project (main development tree), by
+  * *master*: default branch in a project (main development tree), by
     convention
-  * //head//: tip of a branch
+  * *head*: tip of a branch
   * a repository can track many branches, but the working tree is associated
     with only one branch at a time
-  * //HEAD//: tip of the branch associated with the working tree; this is
+  * *HEAD*: tip of the branch associated with the working tree; this is
     where commits go
-  * //index//: a staging area for the next commit; when you commit, the
+  * *index*: a staging area for the next commit; when you commit, the
     current index is turned into a real commit object
-  * //origin//: when you clone an existing project in order to start working
-    on it, the project you cloned //from// is traditionally called the
+  * *origin*: when you clone an existing project in order to start working
+    on it, the project you cloned *from* is traditionally called the
     "origin" of your clone
 
-==== what is a "bare" repository?
+#### what is a "bare" repository?
 
 A bare repository is a concept that is sort of unique to a Distributed VCS
 like git (and, I presume, other such DVCSs like Hg/Bzr/etc also).
@@ -58,28 +58,28 @@ like git (and, I presume, other such DVCSs like Hg/Bzr/etc also).
 A normal git repository is a directory that contains
 
   * project directories and files (the "working tree" mentioned above)
-  * a single directory called {{{.git}}} containing all of git's
+  * a single directory called `.git` containing all of git's
     administrative and control files; we'll call it the **magic** directory
     because git can't do any magic without it :-)
 
-When you do a {{{git status}}} inside such a directory, git looks inside the
+When you do a `git status` inside such a directory, git looks inside the
 "magic" directory, compares your current working tree with the "current
 branch" as recorded in the magic directory, and tells you what files have
 changed, etc etc.
 
 A "bare" repo, as the git
-[[http://www.kernel.org/pub/software/scm/git/docs/gitglossary.html|glossary]]
+[glossary](http://www.kernel.org/pub/software/scm/git/docs/gitglossary.html)
 says, is a repository that does not contain a "working tree" at all.  It
-doesn't contain the special {{{.git}}} sub-directory either; instead, it
-contains all the contents of the {{{.git}}} subdirectory right in the main
+doesn't contain the special `.git` sub-directory either; instead, it
+contains all the contents of the `.git` subdirectory right in the main
 directory itself.
 
-===== yeah yeah, but **why** do I need a bare repo?
+##### yeah yeah, but **why** do I need a bare repo?
 
 ok; demo time...
 
 Let's try creating a small repo, adding a file, committing, and checking
-{{{git status}}}:
+`git status`:
 
     mkdir a; cd a; git init
     echo hi > a;git add a; git commit -m a
@@ -97,7 +97,7 @@ and pushes his changes back to our repository:
     cd b; echo there >> b; git add b; git commit -m b
     git push
 
-Now you go back to the main repo and check {{{git status}}}
+Now you go back to the main repo and check `git status`
 
     cd ../a
     git status
@@ -110,7 +110,7 @@ which responds
     #
     #       deleted:    b
 
-Whoa!  What happened here?  We **added** a file called {{{b}}} in the cloned
+Whoa!  What happened here?  We **added** a file called `b` in the cloned
 repository and pushed to the "origin".  But your origin now claims you
 **deleted** that file...?
 
@@ -120,14 +120,14 @@ is compared to determine what changes you made in your working tree.
 
 So when you asked for a status, git first looked inside the magic directory.
 The magic directory said you should have two files, "a" and "b", but your work
-tree has only file "a".  So {{{git status}}} concludes that you have deleted
+tree has only file "a".  So `git status` concludes that you have deleted
 the file "b"!
 
 In other words, when someone changes the "magic" directory **behind your
 back**, your locally checked out copy (your working tree) appears to have the
 **opposite** changes made by you.
 
-All this confusion can (and //should//) be avoided by using a "bare"
+All this confusion can (and *should*) be avoided by using a "bare"
 repository to clone and pull from, and push to.  It doesn't have a checked out
 tree, so it just does what the "server" notionally does in a centralised VCS
 -- records commits, branches, etc when you push to it, and gives you the

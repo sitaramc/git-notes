@@ -1,8 +1,8 @@
-= useful aliases for the command line
+# useful aliases for the command line
 
-My {{{.gitconfig}}} is [[../tools/my.gitconfig | here]].  However, I
+My `.gitconfig` is [here](../tools/my.gitconfig).  However, I
 **strongly** recommend at least the following aliases in your
-{{{.gitconfig}}}:
+`.gitconfig`:
 
     [alias]
         s   = status

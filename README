@@ -1,4 +1,4 @@
-= (READ THIS FIRST) README for the git-notes repo
+# (READ THIS FIRST) README for the git-notes repo
 
 This repo contains all my notes about git.  I started writing them for my
 own understanding, almost like cheat sheets, but they may be useful for others
@@ -14,16 +14,16 @@ git-learning point of view this is administrivia.
 
 [[TOC]]
 
-== Reading these files
+## Reading these files
 
 All these documents are plain text, so reading them as is should be no problem
 using any text editor/viewer.
 
-==== HTML and PDF
+#### HTML and PDF
 
 If you want to format them to HTML, do this:
 
-    cd tools-etc
+    cd tools
     perl -I. ./wiki_creole.pl < ../input.notes > ../output.html
 
 Adjust the paths if you want to do this from some other directory.  If you
@@ -41,7 +41,7 @@ links in the generated Table of Contents are preserved:
 
 ----
 
-== Updating the content
+## Updating the content
 
   * Please continue to use the ".notes" extension for these files.  Some parts
     of my automated workflow (not part of this repo) use this to identify
@@ -55,9 +55,9 @@ links in the generated Table of Contents are preserved:
   * Please note that I consider HTML and PDF to be generated outputs, so
     they are listed in ".gitignore".
     
-==== Details on the WikiCreole markup and extensions
+#### Details on the WikiCreole markup and extensions
 
-Information on wikicreole can be found at http://www.wikicreole.org --
+Information on wikicreole can be found at <http://www.wikicreole.org> --
 briefly, it is an attempt to unify the many many different types of markups
 that each wiki engine seems to use.
 
@@ -83,7 +83,7 @@ Text::WikiCreole:
     the left margins to make the headings stand out a wee bit, every para
     would have to start with a colon, which is silly; hence this extension.
 
-==== Generating a TOC
+#### Generating a TOC
 
 This is a somewhat more complex extension.  Wikicreole uses
 double-square-brackets to mark URLs.  If the URL is on a line by itself and

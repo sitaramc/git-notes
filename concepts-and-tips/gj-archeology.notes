@@ -1,6 +1,6 @@
-= (from gitster.livejournal.com) the importance of archeology
+# (from gitster.livejournal.com) the importance of archeology
 
-...some quotes from http://gitster.livejournal.com/9562.html (part of
+...some quotes from <http://gitster.livejournal.com/9562.html> (part of
 <http://gitster.livejournal.com/2007/09/02/>)
 
 >   Another important aspect of SCM is archaeology, and this is especially
@@ -15,7 +15,7 @@
 
 ----
 
-Junio did not address this directly, but this is even more useful for //new//
+Junio did not address this directly, but this is even more useful for *new*
 developers.
 
 It helps space out their learning of the system, instead of being overwhelmed

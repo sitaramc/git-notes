@@ -1,4 +1,4 @@
-== Basic usage
+## Basic usage
 
 ...using mostly the GUI
 
@@ -8,13 +8,13 @@
 
 >   ^^A lot of this is written for Windows.  If you're using Linux, you ought to
     be able to read it and just do the equivalent -- Linux has GUI installers
-    that even //find// the software for you, and running bash commands is easy
+    that even *find* the software for you, and running bash commands is easy
     as pie, so I'm not going to handhold you lot :-)^^
 
 ----
 
 For a much better introduction to the GUI tools, including lots of
-screenshots, go to http://nathanj.github.com/gitguide/
+screenshots, go to <http://nathanj.github.com/gitguide/>
 
 The page has an excellent example "project" that is simple enough that you can
 concentrate on the git features being demonstrated, and the author goes into

@@ -1,4 +1,4 @@
-= what the heck is a //reflog// and why is it so important?
+# what the heck is a *reflog* and why is it so important?
 
   * a reflog is a very special "branch" since it records each position of HEAD
     in the last 30 days (by default). So removed branches won't be purged by
@@ -6,10 +6,10 @@
     will finally be released.
 
   * If you want to understand it, hard-reset a commit and then create a new
-    one to replace it.  Now look at {{{git show-branch -g}}} -- it shows you a
-    gap in the bottom pattern, plus you see that branches {{{master@{1}}}} and
-    {{{master@{3}}}} have the same set of commits reading vertically), and
-    then git reflog, where you will see that {{{HEAD@{1}}}} and {{{HEAD@{3}}}}
+    one to replace it.  Now look at `git show-branch -g` -- it shows you a
+    gap in the bottom pattern, plus you see that branches `master@{1`} and
+    `master@{3`} have the same set of commits reading vertically), and
+    then git reflog, where you will see that `HEAD@{1`} and `HEAD@{3`}
     are the same
 
   * reflog history is not shared -- it is exclusive to your repository.  This
@@ -18,4 +18,4 @@
 
 ----
 
-^^based on a comment in http://blogs.gnome.org/newren/2007/11/24/local-caching-a-major-distinguishing-difference-between-vcses/ ^^
+^^based on a comment in <http://blogs.gnome.org/newren/2007/11/24/local-caching-a-major-distinguishing-difference-between-vcses/> ^^

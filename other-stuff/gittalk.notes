@@ -1,134 +1,134 @@
-= presentation on git, a DVCS
+# presentation on git, a DVCS
 
-= why use a VCS
+# why use a VCS
   * reversibility or rollback@@, aka C-Y-A!
-    ** linear@@, simple to implement
+    * linear@@, simple to implement
   * concurrency
-    ** non-linear@@, all the complexity is here
-    ** make or break productivity
+    * non-linear@@, all the complexity is here
+    * make or break productivity
        *** individual productivity also@@, if it can make context switching
        trivial
   * annotation
 
-= VCSs in common use
+# VCSs in common use
   * open source
-    ** CVS
-    ** SVN (Subversion)
-    ** Darcs/TLA/Bazaar/Monotone@@, Mercurial, Git
+    * CVS
+    * SVN (Subversion)
+    * Darcs/TLA/Bazaar/Monotone@@, Mercurial, Git
   * proprietary
-    ** VSS@@, Clearcase@@@@, Perforce
-    ** others??
+    * VSS@@, Clearcase@@@@, Perforce
+    * others??
 
-= warnings about git
+# warnings about git
   * has far too many commands
-    ** luckily, most are "plumbing"
-    ** we just use the "porcelain" :-)
+    * luckily, most are "plumbing"
+    * we just use the "porcelain" :-)
   * man pages may be confusing
-    ** but often have good examples!
-    ** and there are excellent tutorials and HOWTOs on the web
+    * but often have good examples!
+    * and there are excellent tutorials and HOWTOs on the web
 
-= warnings about git (cont'd)
+# warnings about git (cont'd)
   * not optimised for
-    ** tracking permissions and ownership
-    ** tracking individual or unrelated files with separate history
-    ** tracking very large binary files (mp3s, movies, etc.).
+    * tracking permissions and ownership
+    * tracking individual or unrelated files with separate history
+    * tracking very large binary files (mp3s, movies, etc.).
   * partial checkouts not allowed!
 
-= history
+# history
   * initially designed as a file system!
   * originally only a backend@@, now all in one
   * reputation for being hard to use@@, now no longer valid
-    ** demo 01 - a simple new project
-    ** demo 02 - cloning an existing project to work on
+    * demo 01 - a simple new project
+    * demo 02 - cloning an existing project to work on
   * focus on large projects with many developers
-    ** but that doesn't mean small projects can't use it
-    ** remember: multi-tasking
+    * but that doesn't mean small projects can't use it
+    * remember: multi-tasking
 
-= the normal cycle
+# the normal cycle
   * caveat: we're not talking about SCM systems, only VCS
   * demo 03 - a normal cycle
   * index
-    ** a staging area for the next commit
-    ** stuff gets sent here when you "add"
-    ** when you "commit", the current index is turned into a real commit object
+    * a staging area for the next commit
+    * stuff gets sent here when you "add"
+    * when you "commit", the current index is turned into a real commit object
 
-= concurrency control
+# concurrency control
   * lock-based CC
-    ** file contention; small quick changes usually suffer
-    ** limits parallel or opportunistic development
+    * file contention; small quick changes usually suffer
+    * limits parallel or opportunistic development
   * allowing non-linear changes
-    ** merging unrelated changes cleanly (3-way merge)
-    ** conflict resolution when needed
+    * merging unrelated changes cleanly (3-way merge)
+    * conflict resolution when needed
   * demo 04 - a short branch in GIT
 
-= branching
+# branching
   * say you need large sets of changes on a stable product@@, handled by
     separate developers
-    ** long gaps between commits -- you're afraid to commit
-    ** one huge bout of merging just before you commit
-    ** except for the FIRST developer to commit :-)
+    * long gaps between commits -- you're afraid to commit
+    * one huge bout of merging just before you commit
+    * except for the FIRST developer to commit :-)
   * demo 05 - a longer branch
 
-= branching in most other VCSs
+# branching in most other VCSs
   * branching is considered advanced and people avoid it
-    ** either the tool has no branching,
-    ** or has really bad merging
+    * either the tool has no branching,
+    * or has really bad merging
   * and branching is useless without good merging
   * so lots of parallelism goes unused
-    ** or you need "SCM admins" to do the merge!
+    * or you need "SCM admins" to do the merge!
 
-= typical problems with branches/merges (SVN)
+# typical problems with branches/merges (SVN)
   * attribution of branch changes
   * loses information about branch@@, and about changes made to satisfy merge
   * merge history must be manually recorded
-    ** practically impossible to have two parallel branches merging at regular
+    * practically impossible to have two parallel branches merging at regular
        intervals
   * demo 06 - merge characteristics in git
 
-= problems with centralised operation
+# problems with centralised operation
   * creating a branch for your large set of changes
-    ** needs rules for naming branches
-    ** pollute the global namespace anyway
-    ** everyone else who checks-out ends up seeing this branch
+    * needs rules for naming branches
+    * pollute the global namespace anyway
+    * everyone else who checks-out ends up seeing this branch
   * repository operations need network access
-    ** even on a LAN, a diff takes too long
-    ** reduces incentive to use the tools available
+    * even on a LAN, a diff takes too long
+    * reduces incentive to use the tools available
 
-= problems with centralised operation (cont'd)
+# problems with centralised operation (cont'd)
   * everyone checks into the main tree
-    ** may result in broken builds
+    * may result in broken builds
   * no atomic commits, sometimes@@, or integrity checking
   * no refactor support, detecting renames, etc.
   * and finally, @@you can't do this
-    ** take work home on a laptop
-    ** make a few commits during the weekend
-    ** sync up on Monday
+    * take work home on a laptop
+    * make a few commits during the weekend
+    * sync up on Monday
 
-= implementation problems with normal VCSs
+# implementation problems with normal VCSs
   * single point of failure due to centralised model
   * usually heavy on resurces and very slow
   * hardware and admin costs sometimes more than the license costs
 
-== above stuff mostly from
-  * http://www.bitkeeper.com/Comparisons.html has subsections like
-    http://www.bitkeeper.com/Comparisons.CVS.html and so on
+## above stuff mostly from
+  * <http://www.bitkeeper.com/Comparisons.html> has subsections like
+    <http://www.bitkeeper.com/Comparisons.CVS.html> and so on
   * excellent resource, but knowing Mr McVoy, a little NaCl may be useful :)
 
-= Linus on merging
+# Linus on merging
   * merging is the most important activity
-    ** "I merge 22,000 files several times a day, and I get unhappy if a merge
+    * "I merge 22,000 files several times a day, and I get unhappy if a merge
        takes more than 5 seconds" -- Linus
-    ** the linux kernel has 22000 files and has averaged 4.5 merges/day over
+    * the linux kernel has 22000 files and has averaged 4.5 merges/day over
        the last 2 years
 
-= Linus on merging (cont'd)
+# Linus on merging (cont'd)
   * make it fast and painless
-    ** ...and people will start using it every day
+    * ...and people will start using it every day
   * merge often, merge early
   * otherwise you have huge conflicts to resolve later!
 
-== Linus on merging (cont'd)
-    http://git.or.cz/gitwiki/LinusTalk200705Transcript
+## Linus on merging (cont'd)
+    <http://git.or.cz/gitwiki/LinusTalk200705Transcript>
 
     If you can do something really fast, really well, people will start using
     it differently. One of the things I wanted to make sure is that merges go
@@ -139,27 +139,27 @@
     merging easy, you actually avoid a whole class of problems that you
     otherwise have a really really hard time avoiding.
 
-== some more demos
+## some more demos
   * demo 07 - the "git log" command
   * demo 08 - the "git show" command
 
-= distributed operation
+# distributed operation
   * allows having private branches
   * makes everything much faster
   * in git, the local copy is a full repository just like any other
-    ** so you can pull from X and push to Y
-    ** helps protect the main tree from bad checkins
-    ** bonus: every developer's PC is a backup server now!
+    * so you can pull from X and push to Y
+    * helps protect the main tree from bad checkins
+    * bonus: every developer's PC is a backup server now!
 
-= disconnected operation
+# disconnected operation
   * local caching: how much is cached locally when you check out?
-    ** CVS: working copy of specific version, plus info about what version was
+    * CVS: working copy of specific version, plus info about what version was
        checked out
-    ** SVN: CVS, plus extra copy of the specified version
-    ** BZR/HG: SVN, plus complete history of current branch
-    ** GIT: BZR/HG, plus complete history of ALL branches!
+    * SVN: CVS, plus extra copy of the specified version
+    * BZR/HG: SVN, plus complete history of current branch
+    * GIT: BZR/HG, plus complete history of ALL branches!
 
-== notes on above
+## notes on above
 * CVS: Anything other than edit needs network access, even a diff between your
   working copy and the currently checked out version
 * SVN: Diffs between working copy and any other version need network
@@ -169,48 +169,48 @@
   ** no atomic commits!
   ** no merge tracking
 
-= major strengths of git
+# major strengths of git
   * non-linear development
   * distributed development
   * private branches free people to take risks in secret :-)
   * easy and very intelligent merging
-    ** "a change will be merged more often than written"
+    * "a change will be merged more often than written"
   * big productivity gains
 
-= major strengths of git (cont'd)
+# major strengths of git (cont'd)
   * cryptographic authentication of history
   * much more efficient repo format
-    ** Mozilla CVS repo: 2.7 GB
-    ** imported to SVN 8.2 GB
-    ** imported to GIT: 450 MB!
-    ** (a full checkout is 350 MB)
+    * Mozilla CVS repo: 2.7 GB
+    * imported to SVN 8.2 GB
+    * imported to GIT: 450 MB!
+    * (a full checkout is 350 MB)
   * offline repo access
 
-= major strengths of git (cont'd) -- offline repo access
+# major strengths of git (cont'd) -- offline repo access
   * very fast
-  * allows frequent//, granular//@@, commits
-    ** since a commit only takes seconds
+  * allows frequent*, granular*@@, commits
+    * since a commit only takes seconds
   * you can separate work into small, comprehensive pieces
-    ** small changes get sort of lost if you bunch 'em up!
+    * small changes get sort of lost if you bunch 'em up!
 
-= major strengths of git (cont'd)
+# major strengths of git (cont'd)
   * much better merge resolution tools than CVS
-    ** example: refactor + bug-fix in parallel, by different teams
-    ** demo 09 -- more complex merge
+    * example: refactor + bug-fix in parallel, by different teams
+    * demo 09 -- more complex merge
   * private branches
-    ** and if you make them public, the history is preserved
+    * and if you make them public, the history is preserved
   * BACKUPS!  INSTANT BACKUPS!  WORLDWIDE BACKUPS!
 
-= git concepts
+# git concepts
   * repo
-    ** self-contained; remove ".git" and it's all gone
+    * self-contained; remove ".git" and it's all gone
   * branch
-    ** active line of development
-    ** a repo can track any number of branches
+    * active line of development
+    * a repo can track any number of branches
   * master
-    ** default branch in a new git project
+    * default branch in a new git project
 
-= concept detail: branches
+# concept detail: branches
   * easy and inexpensive
   * can have separate branches for separate features
   * many being worked on "simultaneously"!
@@ -218,33 +218,33 @@
   * boosts individual productivity as well as team productivity
   * almost all existing VCSs suck at this
 
-= git concepts (cont'd)
+# git concepts (cont'd)
   * working tree
-    ** is associated with only one branch
+    * is associated with only one branch
   * head
-    ** the tip of a branch
+    * the tip of a branch
   * HEAD
-    ** the tip of the branch associated with your working tree; this is where
+    * the tip of the branch associated with your working tree; this is where
        commits go
-    ** head => always the tip of some branch
-    ** HEAD => same, except when "detached"
+    * head => always the tip of some branch
+    * HEAD => same, except when "detached"
 
-= git concepts (cont'd)
+# git concepts (cont'd)
   * index: holding area for changes approved for commit
-    ** git tracks content, not files
-    ** lets you select some files to commit while postponing others
-    ** lets you keep uncommited changes hanging around
+    * git tracks content, not files
+    * lets you select some files to commit while postponing others
+    * lets you keep uncommited changes hanging around
   * remote
   * origin
 
-= some more git concepts
+# some more git concepts
   * commit ancestry
   * commit ancestry as a DAG
-    ** the essence of git is to build and traverse this DAG
+    * the essence of git is to build and traverse this DAG
 
-== life savers
+## life savers
 
-= CVS equivalence
+# CVS equivalence
         CVS                  GIT
         ---                  ---
         checkout             clone
@@ -254,112 +254,112 @@
         remove               rm
         ???                  mv
 
-= cool stuff
+# cool stuff
   * the reflog, reachability, and garbage collection
   * demo 10 -- cherry picking
   * rebase
   * bisect
   * stash
 
-= rebase -- what and why
+# rebase -- what and why
   * what
   * why
-    ** parallel and serial branching
-    ** getting the best out of bisect
+    * parallel and serial branching
+    * getting the best out of bisect
 
-= rebase -- when and how
+# rebase -- when and how
   * killing off an old commit
   * re-arranging your commits interactively -- demo 11
   * **when not to use it!**
   * origin has moved
-    ** demo 12 -- parallel branch using merge
-    ** demo 13 -- serial branch using rebase
+    * demo 12 -- parallel branch using merge
+    * demo 13 -- serial branch using rebase
   * same, but after some of your changes have gone upstream
-    ** and they have DIFFERENT SHA1s now!!
+    * and they have DIFFERENT SHA1s now!!
 
-= typical model
+# typical model
   * pull versus push
-    ** pull may be easier to cascade up
+    * pull may be easier to cascade up
   * dev/test/pre-rel/prod can have their own trees
-    ** pull from each other/push to specific branches or servers
+    * pull from each other/push to specific branches or servers
 
-= odds and ends
+# odds and ends
   * only one ".git" dir at the top
   * patches and repo updates can be ftp-d or mailed
   * multi-protocol transport
-    ** http, ssh, git
+    * http, ssh, git
   * all copies of a repo have the same history
-    ** universal public identifier (a SHA-1 hash)
-    ** entire 2 year history of linux kernel is half the current full size
+    * universal public identifier (a SHA-1 hash)
+    * entire 2 year history of linux kernel is half the current full size
 
-= summary: what is git optimised for
+# summary: what is git optimised for
   * distributed development
   * large file sets
   * complex merges
   * speculative, trial branches
   * EXTREME SPEED -- very fast and very robust
 
-== mercurial notes
-  * http://weblogs.mozillazine.org/preed/2007/04/version_control_system_shootou_1.html
+## mercurial notes
+  * <http://weblogs.mozillazine.org/preed/2007/04/version_control_system_shootou_1.html>
     :-)
 
-== references
-  * Linus on merging: http://git.or.cz/gitwiki/LinusTalk200705Transcript
-  * http://eagain.net/articles/git-for-computer-scientists
+## references
+  * Linus on merging: <http://git.or.cz/gitwiki/LinusTalk200705Transcript>
+  * <http://eagain.net/articles/git-for-computer-scientists>
   * very nice, pictorial, explanation at
-    http://www.kernel.org/~junio/200607-ols.pdf
-  * http://www.kernel.org/pub/software/scm/git/docs/everyday.html
+    <http://www.kernel.org/~junio/200607-ols.pdf>
+  * <http://www.kernel.org/pub/software/scm/git/docs/everyday.html>
 
-== references (cont'd)
-  * http://keithp.com/blogs/Repository_Formats_Matter/  -- discusses git from a small project point of view; you can retain your central model even with git
-  * http://blogs.gnome.org/newren/2007/11/24/local-caching-a-major-distinguishing-difference-between-vcses/
-  * http://git.or.cz/gitwiki/LinusTalk200705Transcript
+## references (cont'd)
+  * <http://keithp.com/blogs/Repository_Formats_Matter/>  -- discusses git from a small project point of view; you can retain your central model even with git
+  * <http://blogs.gnome.org/newren/2007/11/24/local-caching-a-major-distinguishing-difference-between-vcses/>
+  * <http://git.or.cz/gitwiki/LinusTalk200705Transcript>
   * very informative comment on the advantages of a distributed system:
-    http://weblogs.mozillazine.org/preed/2006/11/version_control_system_shootou.html#comment-486521
+    <http://weblogs.mozillazine.org/preed/2006/11/version_control_system_shootou.html#comment-486521>
 
-== other VCS links
-  * data integrity issues in VSS: http://www.developsense.com/testing/VSSDefects.html
+## other VCS links
+  * data integrity issues in VSS: <http://www.developsense.com/testing/VSSDefects.html>
 
   * SVN
-    ** http://blog.mwolson.org/tech/why_i_dislike_subversion.html
+    * <http://blog.mwolson.org/tech/why_i_dislike_subversion.html>
 
   * Perforce
-    ** http://kb.perforce.com/UserTasks/WorkingDisconnected
-    ** http://luqui.org/blog/archives/2007/02/19/perforce-sucks/
-    ** very interesting stuff.  SVN guys will like this :-)
-       http://www.redhillconsulting.com.au/blogs/simon/archives/000358.html
+    * <http://kb.perforce.com/UserTasks/WorkingDisconnected>
+    * <http://luqui.org/blog/archives/2007/02/19/perforce-sucks/>
+    * very interesting stuff.  SVN guys will like this :-)
+       <http://www.redhillconsulting.com.au/blogs/simon/archives/000358.html>
 
-== ClearCase links
-  * http://creativekarma.com/ee.php/weblog/comments/why_clearcase_sucks/
-  * http://www.digitaltorque.ca/2006/12/18/clearcase-making-easy-things-hard/
-  * http://www.trolocsis.com/wp/2007/04/18/the-joys-of-clearcase/
-  * http://www.germane-software.com:8080/ser/aikido/clearcase-sucks
-  * http://evilparty.org/~orc/2004/08/03/001/index.html
-  * http://selenic.com/pipermail/mercurial/2007-April/012864.html
+## ClearCase links
+  * <http://creativekarma.com/ee.php/weblog/comments/why_clearcase_sucks/>
+  * <http://www.digitaltorque.ca/2006/12/18/clearcase-making-easy-things-hard/>
+  * <http://www.trolocsis.com/wp/2007/04/18/the-joys-of-clearcase/>
+  * <http://www.germane-software.com:8080/ser/aikido/clearcase-sucks>
+  * <http://evilparty.org/~orc/2004/08/03/001/index.html>
+  * <http://selenic.com/pipermail/mercurial/2007-April/012864.html>
 
-== git links
+## git links
   * some important comments on Linus's google-talk video, especially about
     branching and merging:
-    http://codicesoftware.blogspot.com/2007/05/linus-torvalds-on-git-and-scm.html
+    <http://codicesoftware.blogspot.com/2007/05/linus-torvalds-on-git-and-scm.html>
   * and finally a somewhat longer, more philosophical article on git:
-    http://www.betaversion.org/~stefano/linotype/news/106/
+    <http://www.betaversion.org/~stefano/linotype/news/106/>
   * linus explaining merging (what should be automatic and what should not) in
-    a mailing list http://marc.info/?t=119198137100002&r=1&w=2
+    a mailing list <http://marc.info/?t=119198137100002&r=1&w=2>
 
-== git links (cont'd)
-  * on git being very liberal: http://tomayko.com/writings/the-thing-about-git
-    ** Version control systems have traditionally required a lot of up-front
+## git links (cont'd)
+  * on git being very liberal: <http://tomayko.com/writings/the-thing-about-git>
+    * Version control systems have traditionally required a lot of up-front
        planning followed by constant interaction to get changes to the right
        place at the right time and in the right order. And woe unto thee if a
        rule is broken somewhere along the way, or you change your mind about
        something, or you just want to fix this one thing real quick before
        having to commit all the other crap in your working copy.
 
-= Thank you
+# Thank you
 
 ----
 
-=== Questions?
+### Questions?
 
 ----
 
