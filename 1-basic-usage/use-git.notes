@@ -24,7 +24,7 @@ command line in one of the following ways:
     your "HOME" directory is.  From there you can navigate (using the {{{cd}}}
     command) to wherever your repository is.
     ** the "git bash shell" is almost a complete unix shell.  So directories
-       like {{{E:\some\path}}} are accessed as {{{/e/some/other/path}}}.
+       like {{{E:\some\path}}} are accessed as {{{/e/some/path}}}.
 
   * if your repository is in {{{E:\Myname\projects\projectname}}}, open
     {{{E:\Myname\projects}}} in the file manager, right click on

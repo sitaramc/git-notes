@@ -17,8 +17,9 @@ the public key so that he can add it to the server.
     yourself.  Before we do that, a brief security note:
     ** your //private// key should be kept really safe; anyone who can access
        that can impersonate you.  Lock your desktop when you leave it for
-       longer than a few minutes, etc.  If your machine is not on the public
-       internet, you may be relatively safe.
+       longer than a few minutes, etc.  In terms of remote hacks, if your
+       machine is not on the public internet (which is typical for most
+       corporate desktops), you may be relatively safe.
     ** you can protect your private key with a pass-phrase -- and if you can
        use ssh-agent you can avoid typing in the passphrase for every
        operation that involves the repository, which you only need to do once
