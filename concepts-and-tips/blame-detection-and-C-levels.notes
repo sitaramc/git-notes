@@ -19,6 +19,7 @@ seemed to be just "ok they happened to use the same line of code" -- I mean
 how many ways //are// there to say "struct ref *refs = NULL;"?
 
 Note on {{{git gui blame}}}:
+
   * behaves like {{{-C -C}}} by default
   * can behave like {{{-C}}} if {{{gui.fastcopyblame}}} is true
   * choosing full copy detection always acts like {{{-C -C -C}}} (this is on
@@ -33,6 +34,7 @@ So anyway here are my results:
   * {{{-C -C -C}}} always does "fine" detection
 
     ^^as of v1.6.1^^
+
         copy code               move code
         ---------               ---------
         into new file           into new file

@@ -1,21 +1,21 @@
 = useful aliases for the command line
 
-    My {{{.gitconfig}}} is [[../tools/my.gitconfig | here]].  However, I
-    **strongly** recommend at least the following aliases in your
-    {{{.gitconfig}}}:
+My {{{.gitconfig}}} is [[../tools/my.gitconfig | here]].  However, I
+**strongly** recommend at least the following aliases in your
+{{{.gitconfig}}}:
 
-        [alias]
-            s   = status
-            ba  = branch -a -v
-            ci  = commit
-            co  = checkout
-            ru  = remote update
+    [alias]
+        s   = status
+        ba  = branch -a -v
+        ci  = commit
+        co  = checkout
+        ru  = remote update
 
-            l   = log   -C --decorate
-            ls  = log   -C --stat --decorate
+        l   = log   -C --decorate
+        ls  = log   -C --stat --decorate
 
-            sba = show-branch -a
-            sbg = show-branch -g --sha1-name
-            lga = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all
+        sba = show-branch -a
+        sbg = show-branch -g --sha1-name
+        lga = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all
 
-            ignored = ls-files --exclude-standard -o -i
+        ignored = ls-files --exclude-standard -o -i

@@ -2,8 +2,6 @@
 
 [[TOC]]
 
-----
-
 === installing git on the server
 
   * install git using your system's normal install mechanisms
@@ -27,23 +25,23 @@
 
 ==== a word on cloning external repos
 
-    Bypassing the proxy to clone external repos (git, gitosis) is out of the
-    scope of this document, but if you can't bypass it, and you have the clone
-    somewhere else, you can do the following:
+Bypassing the proxy to clone external repos (git, gitosis) is out of the scope
+of this document, but if you can't bypass it, and you have the clone somewhere
+else, you can do the following:
 
-        # on the machine where you have the clone
-        git checkout master
-        # make sure it is the right version etc
-        git bundle create /tmp/temp.bdl master
+    # on the machine where you have the clone
+    git checkout master
+    # make sure it is the right version etc
+    git bundle create /tmp/temp.bdl master
 
-        # now carry that file across from that machine to the one where you
-        # want to install (somehow), then
-        mkdir project       # git, gitosis, whatever
-        cd project
-        git init
-        git pull /tmp/temp.bdl master:master
+    # now carry that file across from that machine to the one where you
+    # want to install (somehow), then
+    mkdir project       # git, gitosis, whatever
+    cd project
+    git init
+    git pull /tmp/temp.bdl master:master
 
-    That's it!
+That's it!
 
 === installing gitosis
 
@@ -52,21 +50,20 @@
   * install python-setuptools using your distro mechanism
   * in the gitosis directory, run the
     [[../tools/install.gitosis | install.gitosis]] command
-    ** pre-requisites: the public key corresponding to the private key on your
-       **desktop** or **laptop** (usually found in {{{~/.ssh/id_rsa.pub}}})
-       needs to be copied over to the gitosis server
+    ** pre-requisites: the public key corresponding to the private key on
+       your **desktop** or **laptop** (usually found in
+       {{{~/.ssh/id_rsa.pub}}}) needs to be copied over to the gitosis server
 
 === back to your desktop -- cloning the admin repo
 
-    How do you admin gitosis?
+How do you admin gitosis?
 
-    Simple: there's a repo called {{{gitosis-admin}}} which you clone on your
-    desktop.  You are allowed to do this because your public key was used in
-    installing and initialising gitosis (see above)!
+Simple: there's a repo called {{{gitosis-admin}}} which you clone on your
+desktop.  You are allowed to do this because your public key was used in
+installing and initialising gitosis (see above)!
 
-    After that, maintaining/managing rights is a simple matter of adding
-    people's public keys, changing the config file (a very simple file), and
-    pushing!
+After that, maintaining/managing rights is a simple matter of adding people's
+public keys, changing the config file (a very simple file), and pushing!
 
 === setting up gitweb
 
@@ -74,6 +71,7 @@ To allow web access to the git repositories, do the following:
 
   * add the following lines to {{{gitosis.conf}}} for each project you want
     visible on the web page and push the changes to the server
+
         [repo foo]
         gitweb = yes
         description = whatever you want
@@ -83,9 +81,9 @@ To allow web access to the git repositories, do the following:
     given to the {{{$projects_list}}} in {{{/etc/gitweb.conf}}}, so gitweb can
     use it to decide what projects to show on the front page.
 
-    As an aside, setting {{{daemon=yes}}} makes gitosis create a file called
+    ^^As an aside, setting {{{daemon=yes}}} makes gitosis create a file called
     {{{git-daemon-export-ok}}} in the project.git directory.  This is for git
-    daemon access, which we don't use.
+    daemon access, which we don't use.^^
 
   * on the server, you have to do these things:
     ** install apache or lighttpd
@@ -95,13 +93,14 @@ To allow web access to the git repositories, do the following:
        the files are)
     ** and finally make the following changes/additions in
        {{{/etc/gitweb.conf}}}:
+
         $projects_list = "/home/git/gitosis/projects.list";
         $export_ok = "";
         $strict_export = "true";
 
 ==== Gotchas!
 
-  * once you set gitweb=yes for a project and push, it's accessible forever
-    after that, even if you remove that line.  You have to explicitly set
-    {{{gitweb=no}}} and push before the project gets removed from the
+  * once you set {{{gitweb=yes}}} for a project and push, it's accessible
+    forever after that, even if you remove that line.  You have to explicitly
+    set {{{gitweb=no}}} and push before the project gets removed from the
     {{{gitosis/projects.list}}} file.

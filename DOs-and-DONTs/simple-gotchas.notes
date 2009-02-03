@@ -1,4 +1,4 @@
-=== simple gotchas
+=== simple gotchas at the command line
 
   * **gotcha** {{{git log rev}}} and {{{git diff rev}}} go in different
     directions.  Log shows backward from the rev given, while diff goes
@@ -19,6 +19,7 @@
     http://kerneltrap.org/mailarchive/git/2007/10/1/326757 (summary: the
     second one uses the git protocol, and makes no assumptions about the
     original and the clone being on the same file system or even machine)
+
         git clone foo bar           # versus
         git clone file:///foo bar
 

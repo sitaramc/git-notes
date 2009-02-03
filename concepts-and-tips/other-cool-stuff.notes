@@ -14,9 +14,10 @@
   * cherry picking while doing a rebase; {{{man git-rebase}}} for details.  In
     particular, you can rebase off of your own ancestor, to refactor a large
     set of recent changes, like this:
+
         git rebase -i HEAD~10
 
-::**YOU DON'T KNOW HOW COOL THIS IS UNTIL YOU TRY IT!**
+    You won't know how cool this is until you try it!
 
   * Advantages of doing a rebase: doing a {{{git bisect}}} on a merged chain
     sometimes makes it difficult to find the specific commit that caused an

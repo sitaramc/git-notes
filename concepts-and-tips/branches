@@ -4,24 +4,24 @@
 
 ----
 
-    A developer's repository will typically have several branches residing in
-    it, although only one is "checked out" at any given time.
+A developer's repository will typically have several branches residing in it,
+although only one is "checked out" at any given time.
 
-    Apart from local branches (like {{{master}}}, {{{next}}}, and maybe
-    {{{v1.2}}}, {{{some-new-feature}}}), etc., you will also have a set of
-    branches called **origin/branchname** (example {{{origin/master}}}).
-    These are your copy of the corresponding branch from the master server.
-    You will never commit to them directly.
+Apart from local branches (like {{{master}}}, {{{next}}}, and maybe
+{{{v1.2}}}, {{{some-new-feature}}}), etc., you will also have a set of
+branches called **origin/branchname** (example {{{origin/master}}}).  These
+are your copy of the corresponding branch from the master server.  You will
+never commit to them directly.
 
-    You can have any other branches you wish!  Go wild -- no one will stop
-    you, and it's quite difficult to lose data so have fun!
+You can have any other branches you wish!  Go wild -- no one will stop you,
+and it's quite difficult to lose data so have fun!
 
 === the basic concept behind git branches
 
-    If you've ever done linked lists (even if it many years ago), this should
-    be easy.
+If you've ever done linked lists (even if it many years ago), this should be
+easy.
 
-    Each commit is like a {{{malloc}}}-ed structure, with a "next" pointer set
-    to the previous "head" of the linked list.
+Each commit is like a {{{malloc}}}-ed structure, with a "next" pointer set to
+the previous "head" of the linked list.
 
-    Each branch is
+Each branch is

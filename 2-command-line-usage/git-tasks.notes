@@ -8,34 +8,32 @@ covered.
 
 [[TOC]]
 
-----
-
 === setting up
 
 I **strongly** recommend these settings to make life easier.
 
 ==== bash aliases for git
 
-        alias g='git --no-pager'
-        alias gp='git -p'
-        alias mg='git help'
+    alias g='git --no-pager'
+    alias gp='git -p'
+    alias mg='git help'
 
 ==== most useful stuff in {{{$HOME/.gitconfig}}}
 
-    My {{{.gitconfig}}} is [[../tools/my.gitconfig | here]].  Parts of this
-    document assume some of these aliases.
+My {{{.gitconfig}}} is [[../tools/my.gitconfig | here]].  Parts of this
+document assume some of these aliases.
 
 === stuff you tend to forget
 
 ==== add and commit
 
-        # stage updates/deletes for files git already knows about
-        git add -u  [paths...]
-        # ditto for ALL files, including new ones
-        git add -A
+    # stage updates/deletes for files git already knows about
+    git add -u  [paths...]
+    # ditto for ALL files, including new ones
+    git add -A
 
-        # stage updates/deletes for files git already knows about AND COMMIT
-        git commit -a
+    # stage updates/deletes for files git already knows about AND COMMIT
+    git commit -a
 
 ==== push
 
@@ -43,13 +41,13 @@ I **strongly** recommend these settings to make life easier.
 
 ==== diff
 
-        # diff between work area and stage
-        git diff
-        # diff between work area and repo (CVS model)
-        # note that "git diff" + "git diff --cached" == "git diff HEAD"
-        git diff HEAD
-        # other coolness
-        git diff "@{yesterday}"
+    # diff between work area and stage
+    git diff
+    # diff between work area and repo (CVS model)
+    # note that "git diff" + "git diff --cached" == "git diff HEAD"
+    git diff HEAD
+    # other coolness
+    git diff "@{yesterday}"
 
 ==== conflicts on pull/merge
 
@@ -62,11 +60,13 @@ I **strongly** recommend these settings to make life easier.
     getting all 3 versions into the file so you can hack at it in vim
   * you can tell git blame to only show important changes, like so (pity it
     does not work with the GUI blame)
+
         git blame -C $(git merge-base HEAD MERGE_HEAD).. conflicted_path
 
 ==== log pickaxe and blame
 
   * finding out when a particular change happened or who made it
+
         git log -S"some code line" file.c   # why is this called pickaxe search?
         git blame -b file.c
 
@@ -83,22 +83,28 @@ I **strongly** recommend these settings to make life easier.
 
 ==== **oopsies! (recovering from mistakes)**
 
-    The following are useful to undo **before a commit**.  Note that these
-    usages of "checkout" (with **specific** files/paths) do not result in
-    switching branches but in updating the files/paths given.
+The following are useful to undo **before a commit**.  Note that these usages
+of "checkout" (with **specific** files/paths) do not result in switching
+branches but in updating the files/paths given.
 
   * bad working copy, want to make working <= staged
+
         git checkout -- filename
+
   * bad working copy, want to make working <= HEAD
+
         git checkout HEAD -- filename
+
   * bad staged version, want to make staged <= HEAD (working copy is not
     touched)
+
         git reset HEAD -- filename
 
     When things get worse, and it's not just a few files that were screwed up,
     use this
 
   * throw away all local changes and make working, staged <= HEAD
+
         git checkout -f
 
     The following are useful to undo **after a commit**, as long as you
@@ -106,9 +112,11 @@ I **strongly** recommend these settings to make life easier.
 
   * screwed up commit?  hope no one else pulled your last commit, quickly fix
     the source, and then
+
         git commit -a --amend
 
   * bad commit? apply a reversed patch as an additional commit on top
+
         git revert HEAD^    # one revision ago
         git revert "@{1 hour ago}"
         git revert "@{5}"   # 5th last saved state, from reflog
@@ -116,6 +124,7 @@ I **strongly** recommend these settings to make life easier.
             # between.
 
   * commit is so bad you want to roll back time?
+
         git reset --hard HEAD~5 # 5th last revision
             # a reset rolls back the log, but is still recorded in the reflog,
             # which gets expired after some 30 to 90 days.
@@ -125,9 +134,11 @@ I **strongly** recommend these settings to make life easier.
 ==== log and show
 
   * {{{git lga}}} is pretty cool; lga is an alias in my config for
+
         log --graph --pretty=oneline --abbrev-commit --decorate --all
 
   * Check the logs to see what's happened recently
+
         git log [--stat] -[p] [-n <number of commits to show>]
         git log "@{yesterday}.."
             # note the suffix "..", since the default is prefix "..", which is
@@ -138,6 +149,7 @@ I **strongly** recommend these settings to make life easier.
     {{{git show}}} does the right thing: shows a commit as a commit, a tree as
     a plain "ls", etc.  But if you're printing a large blob you better use a
     pager or redirect!
+
         git show [ HEAD^ | HEAD^^ | HEAD@{3} | origin | origin/master | etc ]
         git show 7a8b9c     # or some hex number; shows you the object
         git show HEAD~3:file.c  # get file.c from 3 versions back
@@ -145,6 +157,7 @@ I **strongly** recommend these settings to make life easier.
 ==== reflog
 
   * useful reflog commands
+
         # activity on current branch, including timestamp
         git reflog show @{now}
         # same, on some_branch
@@ -163,6 +176,7 @@ I **strongly** recommend these settings to make life easier.
   * if you need serious troubleshooting with branches, use the following.  It
     may be useful in some contexts where {{{git lg}}} is too complex to figure
     out what tip contains what commit
+
         git show-branch $(git show-ref -h |cut -c41-)
 
 ==== cat-file (repo object) and ls-tree (tree object)
@@ -214,6 +228,7 @@ I **strongly** recommend these settings to make life easier.
   * really awesome, but be careful, not all refspecs will work on the
     receiving side.  Assuming we're talking about a normal "origin" pull for
     an existing clone, this is what you do
+
         # sending side
         git bundle create ~/junk HEAD^^^..
             # or say "254c8de..", assuming the receiving side has that hash)
@@ -224,6 +239,7 @@ I **strongly** recommend these settings to make life easier.
         git merge FETCH_HEAD
 
   * to clone a repo using this method:
+
         # sending side: cd to repo and checkout the master or whatever, then:
         git bundle create ~/junk HEAD
         # receiving side: mkdir/cd some empty directory, then:
@@ -233,6 +249,7 @@ I **strongly** recommend these settings to make life easier.
 
   * from
     http://madduck.net/blog/2007.07.11:creating-a-git-branch-without-ancestry/
+
         git status  # ensure all clear
         git symbolic-ref HEAD refs/heads/indbr
         rm .git/index
@@ -252,10 +269,12 @@ I **strongly** recommend these settings to make life easier.
     following commands (neither command by itself does the whole job).  Also
     Note the lowercase "a" on the "repack", which says you want to blindly
     discard unreachable objects instead of keeping them as loose objects.
+
         git repack -adf     # kills in-pack garbage
         g prune             # kills loose garbage
 
   * (from the do-you-really-want-to-do-this? department)
+
         g reflog expire --expire=10days --all
         # use expire-unreachable to limit it a bit
         # use branchname(s) instead of --all
@@ -264,6 +283,7 @@ I **strongly** recommend these settings to make life easier.
 ==== remotes
 
   * how do you find out how many remotes you have and what they are called?
+
         vim .git/config                         # or...
         git remote | map git remote [-n] show   # even better!
             # use -n to prevent lookup if needed
@@ -293,12 +313,14 @@ I **strongly** recommend these settings to make life easier.
 
   * to see a list of ALL the objects in the entire system, including
     filenames (but this isn't tremendously useful though):
+
         git rev-list --objects --all
 
 ==== simulating git stash
   * some say it's better to simulate git stash than actually use it!  The
     following makes use of the fact that the repo HEAD is usually one step
     behind the index, which is one step behind the working tree.
+
         # initial values: R (repo), I (index), C (changed), and U (untracked)
         # notation: repo contents/index contents/work tree contents
         # R/RI/RICU; start
@@ -328,10 +350,13 @@ I **strongly** recommend these settings to make life easier.
     **but the INDEX is really a wonderful concept, and you really should not
     bypass it like this**.  See
     http://blogs.gnome.org/newren/2007/12/08/limbo-why-users-are-more-error-prone-with-git-than-other-vcses/
+
         git diff HEAD       # to see changes you made
         git add             # to tell git about new files...
         git commit -a       # ...and let git figure out changed and deleted files before committing
+
   * CVS equivalence
+
         CVS                 GIT
         ---                 ---
         checkout            clone

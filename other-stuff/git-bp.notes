@@ -4,12 +4,12 @@
 
 ----
 
-    **WARNING: I have not checked out all the commands -- there could be
+>   ^^**WARNING: I have not checked out all the commands -- there could be
     errors!  The first time you use it, please try them on a sandbox!**  Also,
     note that a lot of this can be done from the GUI also, if you wish.
 
-    This is essentially a modification and simplification of the typical
-    workflow that Linux and other projects using DVCSs use.
+>   This is essentially a modification and simplification of the typical
+    workflow that Linux and other projects using DVCSs use.^^
 
 === assumptions
 
@@ -21,8 +21,8 @@
 
 === roles
 
-    Every project has the following loosely defined roles.  If it's a small
-    project the same person may take on multiple roles.
+Every project has the following loosely defined roles.  If it's a small
+project the same person may take on multiple roles.
 
   * 1 release manager.  In $COMPANY terms, this is the PL
   * 1 quality guy (maybe the same as the release manager)
@@ -32,25 +32,33 @@
 
 === typical workflow
 
-    Here's a typical workflow, assuming a starting point from the "master"
-    branch on the master server.  This assume that the people on the project
-    have ssh (write) access to the repo -- it is not the "please pull..." mode
-    that internet projects use.
+Here's a typical workflow, assuming a starting point from the "master" branch
+on the master server.  This assume that the people on the project have ssh
+(write) access to the repo -- it is not the "please pull..." mode that
+internet projects use.
 
 ==== developer
 
 One-time:
   * clone from master
+
         git clone ssh://sita@master.server.com/path/to/repo.git
+
   * create your work branch and switch to it
+
         git checkout -b sita-work master
 
 Regular:
   * switch to your work branch; assumed for the rest of this section
+
         git checkout sita-work
+
   * work work work/commit/test etc
+
         ...
+
   * keep up-to-date with changes on the server
+
         git fetch origin
         # destroys history but OK if you haven't published your commits yet
         git rebase origin/master
@@ -59,11 +67,14 @@ Regular:
         git merge origin/master
         # make sure you re-test all your changes after this operation, in case
         # some upstream change has affected your code
+
   * keep sending your changes upstream
+
         git push origin sita-work
 
 Irregular:
   * emergency fix ordered for bug 123 on v2.3
+
         git stash
         git pull master.server v2.3
         git checkout -b sita-v2.3-bug123 origin/v2.3
@@ -77,6 +88,7 @@ Irregular:
 
   * (wild idea strikes you; so wild you don't even want to risk putting it in
     next)
+
         git checkout -b wildidea sita-work
         (work work work/commit/test etc)
         git checkout sita-work
@@ -87,19 +99,23 @@ Irregular:
 
 ==== feature guy
 
-    This will be a mix between the developers workflow and the release
-    manager's workflow.
+This will be a mix between the developers workflow and the release manager's
+workflow.
 
 ==== release manager
 
-    When doing your own development, you do the same thing as the developer
-    described above
+When doing your own development, you do the same thing as the developer
+described above
 
-    Regular:
+Regular:
+
   * keep up-to-date with changes on the server (not needed if you are the only
     release manager)
+
         ...same as for developer workflow above...
+
   * pull stuff from developers
+
         git checkout next
         git tag -f savenext
         git merge . dev-work
@@ -115,6 +131,7 @@ Irregular:
             # send dev a problem report and ask him to resubmit
 
   * make sure next > master > maint is preserved
+
         git checkout master
         git merge vX.Y      # for each vX.Y that has seen any recent activity
         # test...
@@ -124,6 +141,7 @@ Irregular:
         # test...
 
   * submit code to the master server
+
         git checkout master
         # test
         # test ok?  tag it
@@ -131,6 +149,7 @@ Irregular:
         git push origin ready-`date -I`"
 
   * make a release
+
         git checkout master
         # test again?
         git tag v3.7

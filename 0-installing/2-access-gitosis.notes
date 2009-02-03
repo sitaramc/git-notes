@@ -2,8 +2,6 @@
 
 [[TOC]]
 
-----
-
 === generating a public key
 
 Gitosis uses RSA public keys to authenticate users -- there are no passwords.
@@ -27,6 +25,7 @@ the public key so that he can add it to the server.
        painlessly.
 
   * with that out of the way, type in the following command:
+
         ssh-keygen -t rsa
 
   * apart from asking you what files to place the keypair in, it will also ask
@@ -61,6 +60,7 @@ it was already ready to be cloned:
   * create an empty folder somewhere
   * right-click the folder name and choose "git bash here"
   * in the resulting command prompt, type in
+
         git clone git@YOUR_GITOSIS_SERVER:testing.git
         # (or maybe) git clone git@YOUR_GITOSIS_SERVER:MYPROJ.git
 
@@ -99,12 +99,15 @@ that too only once).
   * run {{{git init}}}
   * create and edit a new text file called {{{.gitignore}}} and enter patterns
     that the checkin process should ignore, for example
+
         *.exe
         *.dll
         *.ocx
         Debug/
         tmp/
+
   * run the following commands (or you can do this from the GUI)
+
         git add .gitignore
         git commit -m "first commit, just the ignore file"
 

@@ -4,12 +4,10 @@
 
 ----
 
-^^These are generic instructions that may also eventually go on a public
-website somewhere.  Anything that is CAPITALISED in the notes below must be
-replaced as appropriate to (y)our internal environment.  Contact me for
-details.  -- Sitaram Chamarty^^
-
-----
+>   ^^These are generic instructions that may also eventually go on a public
+    website somewhere.  Anything that is CAPITALISED in the notes below must
+    be replaced as appropriate to (y)our internal environment.  Contact me for
+    details.  -- Sitaram Chamarty^^
 
 === launching and using git -- the command line
 

@@ -39,6 +39,7 @@ most of the words are mine.
     ** or you can clone the entire project into a new directory and see if it
        compiles
     ** or you can run:
+
         git ls-files --exclude-standard -o -i
 
   * **take backups**!  Don't use the version control system as a backup

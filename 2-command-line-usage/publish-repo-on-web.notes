@@ -1,12 +1,19 @@
-==== publishing a repository on the web
+= publishing a repository on the web
 
-  * from http://www.cs.helsinki.fi/u/kaitanie/gittalk.pdf
+^^from http://www.cs.helsinki.fi/u/kaitanie/gittalk.pdf^^
+
+In order to push your repository to a web server so others can get it via
+http, do this:
+
   * Prepare an empty public repository as user on machine example.org:
+
         cd $HOME/public_html
         mkdir myproject.git; cd myproject.git
         git --bare init
         chmod a+x hooks/post-update
         git update-server-info
+
   * Push your work to that repository:
+
         git remote add public ssh://user@example.org/path/to/myproject.git
         git push public refs/heads/master:refs/heads/master
