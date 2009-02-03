@@ -22,6 +22,7 @@ quite a few things you can do with the GUI tools.  I am very impressed by the
 page, and pointing to it saves me a lot of work :-)
 
 However, note these two minor points:
+
   * I find it easier to stick to the ssh that comes with git.  So please
     ignore the parts that mention "putty" or "plink".  Of course if you know
     what you are doing (for example, if you already know ssh and/or PKI very

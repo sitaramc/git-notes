@@ -39,9 +39,9 @@ tools are:
   * {{{gitk}}} to get a bird's eye view your current branch, or {{{gitk
     --all}}} to view all branches, local and remote
 
-    ^^(//staging// a file means getting a file ready to commit -- only files
-    that are staged will be committed; this allows you to keep some changes
-    "pending", without committing them)^^
+^^(//staging// a file means getting a file ready to commit -- only files that
+are staged will be committed; this allows you to keep some changes "pending",
+without committing them)^^
 
 Git's GUI interfaces let you do almost anything that you **normally** need to
 do -- all the simple straightforward things as well as some sophisticated
@@ -58,7 +58,7 @@ You might be wondering why there are two GUIs...
 
 ==== {{{git gui}}}
 
-{{{git gui}}}) shows you the current state of your work area with respect to
+{{{git gui}}} shows you the current state of your work area with respect to
 the currently checked-out branch.  In the top left pane, it shows you what
 files are changed with respect to the last commit.  In the bottom left pane it
 shows you what files have been marked "ready for commit" -- only these changes
@@ -67,7 +67,8 @@ will go into the next commit if you commit now.
 (As I said above, git allows you to keep some changes "pending", without
 committing them.  The "ready to commit" part is called the "index", "staging
 area", or "cache" in the documentation, so the bottom left pane is showing you
-what is in the "index").
+what is in the "index".  Check out [why the index is
+useful](../concepts-and-tips/uses-of-index.html) for more).
 
 In either case, the changes made to the currently selected file are shown on
 the right pane.
@@ -110,5 +111,5 @@ where it came from!)
 One common task that is needlessly complex in both the GUIs is {{{git pull}}}.
 In a properly setup repository that has been cloned from the project master or
 something like that, getting the latest changes is just a matter of typing
-{{{git pull}}}.  In {{{git gui}}}, described below, this takes 4 steps,
+{{{git pull}}}.  In {{{git gui}}}, described above, this takes 4 steps,
 although there is a reason for that complexity :-)

@@ -15,9 +15,7 @@
     ** make sure you {{{git checkout v1.6.1}}} or whatever is the latest
        version that {{{git tag}}} shows you before you start
     ** installing the dependencies required to compile git (like libcurl,
-       libexpat, tcl -- even though you don't really need the GUI tools on a
-       server install, ) is
-       also out of scope!
+       libexpat, tcl -- yes, even on a server install) is also out of scope!
     ** after installing this, remove the distro-installed git using
        {{{urpme}}} or {{{aptitude remove}}}.  If this automatically removes
        anything else (like libdigest-sha1-perl and liberror-perl on ubuntu),
@@ -94,9 +92,9 @@ To allow web access to the git repositories, do the following:
     ** and finally make the following changes/additions in
        {{{/etc/gitweb.conf}}}:
 
-        $projects_list = "/home/git/gitosis/projects.list";
-        $export_ok = "";
-        $strict_export = "true";
+            $projects_list = "/home/git/gitosis/projects.list";
+            $export_ok = "";
+            $strict_export = "true";
 
 ==== Gotchas!
 

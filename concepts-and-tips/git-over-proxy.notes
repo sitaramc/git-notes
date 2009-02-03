@@ -66,11 +66,11 @@ Possible variations are:
   * you could permanently set the environment variable if **all** your git
     repos are remote (very unlikely)
 
-    One thing you //cannot// do is to roll the entire socat command into the
-    environment variabl.  Git passes the host and port as two arguments to the
-    proxy command, but socat expects them in the syntax you see above, so you
-    //will//need to wrap it in a script as I have done.  I guess you could
-    argue that this is a point in favour of corkscrew etc. ;-)
+One thing you //cannot// do is to roll the entire socat command into the
+environment variable.  Git passes the host and port as two arguments to the
+proxy command, but socat expects them in the syntax you see above, so you
+//will//need to wrap it in a script as I have done.  I guess you could argue
+//that this is a point in favour of corkscrew etc. ;-)
 
 === proxying the **ssh** protocol
 
@@ -89,6 +89,25 @@ your {{{~/.ssh/config}}}
 Now you can just say (for example):
 
     git clone gh:sitaramc/git-notes.git
+
+==== ssh proxy using corkscrew instead of socat
+
+  * download and install corkscrew (<http://www.agroman.net/corkscrew/>)
+  * create a file (eg., ~/.ssh/myauth) and put your http proxy
+    username and password as "username:password" in it and save
+    it.
+  * safeguard the file
+
+        chmod 600 ~/.ssh/myauth
+
+  * open ~/.ssh/config and add the following entry, adding an explicit path to
+    corkscrew if needed.
+
+        host gh
+            user git
+            hostname github.com
+            port 22
+            proxycommand corkscrew your.proxy.ip 3128 %h %p ~/.ssh/myauth
 
 ==== extra coolness for github
 

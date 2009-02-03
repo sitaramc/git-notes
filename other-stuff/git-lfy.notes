@@ -12,7 +12,7 @@ it is so exciting.
 Here's a taste: Figure 1 is a screenshot from the GUI version of what SVN
 folks would know as //svn blame//.
 
-{{../images/gitlfy-fig1-gui-blame.gif|Figure 1: Git GUI blame}}
+![Figure 1](../images/gitlfy-fig1-gui-blame.gif "Figure 1: Git GUI blame")
 
 As you can see, git says that the function called {{{find_tree_entry}}} was
 originally written in {{{sha1_name.c}}} and later moved to {{{tree-walk.c}}}
@@ -105,7 +105,7 @@ In addition, git has excellent GUI tools to visualise this sort of branching
 easily. Figure 2, for example, is from the development tree of a project
 called //cobbler.//
 
-{{../images/gitlfy-fig2-branch-visual.gif|Figure 2: Branch visualisation}}
+![Figure 2](../images/gitlfy-fig2-branch-visual.gif "Figure 2: Branch visualisation")
 
 Merging is a very big priority for Linus Torvalds. He says, "I merge 22,000
 files several times a day, and I get unhappy if a merge takes more than 5
@@ -147,7 +147,7 @@ make the history look like Figure 3 (note: this is not a real project!). When
 this branch is eventually merged into the mainline (like when it is deemed
 stable enough), this "stitching pattern" remains.
 
-{{../images/gitlfy-fig3-stitching-pattern.gif|Figure 3: Stitching pattern}}
+![Figure 3](../images/gitlfy-fig3-stitching-pattern.gif "Figure 3: Stitching pattern")
 
 For some projects it may be easier to make all the branch work look as if it
 was done //on top of// the current mainline commit. This is called
@@ -271,6 +271,8 @@ swear by Hg, and I anticipate many good-natured arguments with them about
 git/Hg, sort of like vim/emacs or perl/python!  As long as they're all open
 source, the more the merrier, I say...]
 
-This article first appeared in Linux For You, an Indian magazine for open
+----
+
+^^This article first appeared in Linux For You, an Indian magazine for open
 source enthusiasts, in July 2008.  It is released under the Creative Commons
-Attribution Sharealike license.
+Attribution Sharealike license.^^

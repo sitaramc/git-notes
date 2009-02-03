@@ -100,15 +100,15 @@ branches but in updating the files/paths given.
 
         git reset HEAD -- filename
 
-    When things get worse, and it's not just a few files that were screwed up,
-    use this
+When things get worse, and it's not just a few files that were screwed up, use
+this
 
   * throw away all local changes and make working, staged <= HEAD
 
         git checkout -f
 
-    The following are useful to undo **after a commit**, as long as you
-    haven't published or pushed the commit elsewhere:
+The following are useful to undo **after a commit**, as long as you haven't
+published or pushed the commit elsewhere:
 
   * screwed up commit?  hope no one else pulled your last commit, quickly fix
     the source, and then
@@ -181,45 +181,44 @@ branches but in updating the files/paths given.
 
 ==== cat-file (repo object) and ls-tree (tree object)
 
-    Note: I'm not sure what, if any, is the difference between {{{show}}} and
-    {{{cat-file -p}}} for "blob" objects.  For commits there is a subtle
-    difference.  (Try it)
+Note: I'm not sure what, if any, is the difference between {{{show}}} and
+{{{cat-file -p}}} for "blob" objects.  For commits there is a subtle
+difference.  (Try it)
 
-        # any object
-        git cat-file [ -t | -s | -p ] 789abc
-            # find the type or size of an object, or pretty print it
-            # If it's a blob, I'd use use "git show" until we find out what
-            # "pretty" means for arbitrary blobs :-)
-        git cat-file blob 789abc        # cat the object
+    # any object
+    git cat-file [ -t | -s | -p ] 789abc
+        # find the type or size of an object, or pretty print it
+        # If it's a blob, I'd use use "git show" until we find out what
+        # "pretty" means for arbitrary blobs :-)
+    git cat-file blob 789abc        # cat the object
 
-        # any tree
-        git ls-tree         # files and directories, top level only
-        git ls-tree -l      # also show the size of the object
-        git ls-tree -d      # only directories
-        git ls-tree -r      # recurse, only files
-        git ls-tree -r -d   # recurse, only directories
-        git ls-tree -r -t   # recurse, both directories and files
+    # any tree
+    git ls-tree         # files and directories, top level only
+    git ls-tree -l      # also show the size of the object
+    git ls-tree -d      # only directories
+    git ls-tree -r      # recurse, only files
+    git ls-tree -r -d   # recurse, only directories
+    git ls-tree -r -t   # recurse, both directories and files
 
 ==== ls-files
 
-    To get listings of various types of files, use {{{git ls-files}}}.  The
-    common but less intuitive ones are shown here, the rest can be had from
-    the man page:
+To get listings of various types of files, use {{{git ls-files}}}.  The common
+but less intuitive ones are shown here, the rest can be had from the man page:
 
-        # deleted files and modified files (deleted files are also counted as
-        # modified, so may come up twice...
-        git ls-files -d -m
-        # what's in the index; includes files that were "git add"ed
-        git ls-files -s
-        # conflicted files
-        git ls-files -u
-        # "other files"; includes EVERYthing not in d/m/s, I think
-        # seems to be equal to untracked + ignored
-        git ls-files -o
-        # untracked files only
-        git ls-files --exclude-standard -o
-        # ignored files only
-        git ls-files --exclude-standard -o -i
+    # deleted files and modified files (deleted files are also counted as
+    # modified, so may come up twice...
+    git ls-files -d -m
+    # what's in the index; includes files that were "git add"ed
+    git ls-files -s
+    # conflicted files
+    git ls-files -u
+    # "other files"; includes EVERYthing not in d/m/s, I think
+    # seems to be equal to untracked + ignored
+    git ls-files -o
+    # untracked files only
+    git ls-files --exclude-standard -o
+    # ignored files only
+    git ls-files --exclude-standard -o -i
 
 === the bleeding edge
 
@@ -324,9 +323,9 @@ branches but in updating the files/paths given.
         # initial values: R (repo), I (index), C (changed), and U (untracked)
         # notation: repo contents/index contents/work tree contents
         # R/RI/RICU; start
-        git commit -m wip-index-state
+        git commit --allow-empty -m wip-index-state
         # now RI/RI/RICU; pushed index onto repo
-        git add -A && git commit -m wip-worktree-state
+        git add -A && git commit --allow-empty -m wip-worktree-state
         # now RICU/RICU/RICU; pushed C/U files onto repo
             #   ... switch branch, work work work, commit ...
             #   now you want to get back to the saved state
@@ -346,9 +345,10 @@ branches but in updating the files/paths given.
     option to {{{git commit}}}.
     ** **you will eventually prefer this :-)**
   * **gotcha**: {{{commit}}} means to your local repo, not to the "server"!
-  * these commands/options effectively bypass the "index" or "staging area",
-    **but the INDEX is really a wonderful concept, and you really should not
-    bypass it like this**.  See
+  * these commands/options effectively bypass the "index" or "staging
+    area", **but the INDEX is really a wonderful concept, and you really
+    should not bypass it like this**.  See [why the index is
+    useful](../concepts-and-tips/uses-of-index.html) or
     http://blogs.gnome.org/newren/2007/12/08/limbo-why-users-are-more-error-prone-with-git-than-other-vcses/
 
         git diff HEAD       # to see changes you made

@@ -16,7 +16,7 @@ I notice that there are two granularities of detection too -- at what I call
 the "fine" granularity, it looks at smaller hunks of code to find maches.  I'm
 not sure how useful that is, because most of the references I got that way
 seemed to be just "ok they happened to use the same line of code" -- I mean
-how many ways //are// there to say "struct ref *refs = NULL;"?
+how many ways //are// there to say `struct ref *refs = NULL;`?
 
 Note on {{{git gui blame}}}:
 

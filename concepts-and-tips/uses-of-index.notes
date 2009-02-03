@@ -4,11 +4,12 @@
 
 ----
 
->   ^^Newcomers to git often ask why there is such a thing as the index, and
+>   Newcomers to git often ask why there is such a thing as the index, and
     what use is it.  If you don't understand what the index does, it might
     seem like one extra (and needless) complication.
 
-    So... what use is this?^^
+>   So... what use is this, apart from confusing you with multiple names like
+    index, staging area, and cache?
 
 === staging helps in reviewing changes
 

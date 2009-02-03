@@ -4,30 +4,33 @@
 
 === general VCS terminology
 
-  * a **project** is the minimum set of source code (and related files) that
-    need to be kept together to **build** the software.  Example: Linux
-    ** each project will have one **repository**
-    ** one **team** can work on multiple projects, so there could be multiple
-       repositories on each desktop
+A **project** is the minimum set of source code (and related files) that need
+to be kept together to **build** the software.  Example: Linux
 
-  * a **branch** in a project is an active line of development
-    ** **master** is the conventional name for the main development tree of a
-       project
-    ** other conventional branches are **next** (for code that is ready to
-       come into //main//), and various maintenance branches like **v1.3** or
-       **v2.6.4** to designate released versions
-    ** these are only conventions, not rules, but they seem to work well in
-       general
+  * each project will have one **repository**
+  * one **team** can work on multiple projects, so there could be multiple
+    repositories on each desktop
 
-  * a **feature** is a part of a project that is large and complex enough that
-    it's day-to-day commits would be too noisy to include in the main project.
-    Example: the disk subsystem, the networking subsystem, etc., in Linux
-    ** a **feature branch** is a branch for a feature, and is usually
-       long-lived.  This means it regularly acquires changes made in the main
-       line, and -- at stable points in its development cycle -- merges its
-       changes back into the main line
-    ** small projects may not have any feature branches.  That doesn't mean
-       they don't have any features :-)
+A **branch** in a project is an active line of development
+
+  * **master** is the conventional name for the main development tree of a
+    project
+  * other conventional branches are **next** (for code that is ready to come
+    into //main//), and various maintenance branches like **v1.3** or
+    __v2.6.4__ to designate released versions
+  * these are only conventions, not rules, but they seem to work well in
+    general
+
+A **feature** is a part of a project that is large and complex enough that
+it's day-to-day commits would be too noisy to include in the main project.
+Example: the disk subsystem, the networking subsystem, etc., in Linux
+
+  * a **feature branch** is a branch for a feature, and is usually long-lived.
+    This means it regularly acquires changes made in the main line, and -- at
+    stable points in its development cycle -- merges its changes back into the
+    main line
+  * small projects may not have any feature branches.  That doesn't mean they
+    don't have any features :-)
 
 === git-specific terminology
 

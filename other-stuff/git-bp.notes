@@ -40,6 +40,7 @@ internet projects use.
 ==== developer
 
 One-time:
+
   * clone from master
 
         git clone ssh://sita@master.server.com/path/to/repo.git
@@ -49,6 +50,7 @@ One-time:
         git checkout -b sita-work master
 
 Regular:
+
   * switch to your work branch; assumed for the rest of this section
 
         git checkout sita-work
@@ -73,6 +75,7 @@ Regular:
         git push origin sita-work
 
 Irregular:
+
   * emergency fix ordered for bug 123 on v2.3
 
         git stash

@@ -21,5 +21,7 @@
     original and the clone being on the same file system or even machine)
 
         git clone foo bar           # versus
+        # FIXME: fix this after permanent conversion to MD is over; should be
+        # a triple-slash after the "file:"
         git clone file:///foo bar
 

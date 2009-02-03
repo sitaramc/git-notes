@@ -65,6 +65,7 @@ it was already ready to be cloned:
         # (or maybe) git clone git@YOUR_GITOSIS_SERVER:MYPROJ.git
 
 If that worked, you can {{{cd testing}}} or {{{cd MYPROJ}}} and:
+
   * run some git commands from the command line
   * run {{{git gui}}} to stage and unstage files, commit, and push
   * run {{{gitk --all}}} to get a bird's eye view of all your branches, both
@@ -80,13 +81,13 @@ If you want to create a new project from an existing code base, and add it to
 the gitosis server for others to start collaborating on, you need to do the
 following:
 
-  * discuss with the GITOSIS_ADMIN what the name of the project should be and
+  * discuss with the GITOSIS\_ADMIN what the name of the project should be and
     pick one.  We'll assume it's called MYPROJ in the description below
-    ** you'll have to wait till the GITOSIS_ADMIN gives you permission to
+    ** you'll have to wait till the GITOSIS\_ADMIN gives you permission to
        create a project called MYPROJ, and (optionally) adds your future team
        members to the access list.  If any of those team members do not
        already have access to the system, you can help them create and send
-       their public keys to the GITOSIS_ADMIN
+       their public keys to the GITOSIS\_ADMIN
   * go to the directory containing the latest and best version of your current
     project files
     ** if you're doing this via file explorer, right click on the folder and
@@ -115,7 +116,7 @@ that too only once).
     implicitly for someone cloning an existing project -- this is only for the
     person who is seeding the gitosis server with the first push:
 
-        # name the remote called "origin"
+        # add a remote called "origin" pointing to the gitosis server/project
         git remote add origin git@YOUR_GITOSIS_SERVER:MYPROJ.git
         # push your stuff to the remote
         git push origin master
