@@ -12,26 +12,38 @@ the public key so that he can add it to the server.
     terminal
 
   * you need to generate an RSA key pair (a public key and a private key) for
-    yourself.  Before we do that, a brief security note:
-    * your *private* key should be kept really safe; anyone who can access
-       that can impersonate you.  Lock your desktop when you leave it for
-       longer than a few minutes, etc.  In terms of remote hacks, if your
-       machine is not on the public internet (which is typical for most
-       corporate desktops), you may be relatively safe.
-    * you can protect your private key with a pass-phrase -- and if you can
-       use ssh-agent you can avoid typing in the passphrase for every
-       operation that involves the repository, which you only need to do once
-       or twice in a day, really.  Contact me if you need help doing this
-       painlessly.
+    yourself.
+
+    <font color="#cc0000">
+
+    >  - - - - - - -
+    >  **A brief security note**
+    >
+    >  * your **private** key should be kept really safe; anyone who can
+    >    access that can impersonate you.  Lock your desktop when you leave it
+    >    for longer than a few minutes, etc.  In terms of remote hacks, if
+    >    your machine is not on the public internet (which is typical for most
+    >    corporate desktops), you may be relatively safe.
+    >
+    >  * you can protect your private key with a pass-phrase if you wish.
+    >    You can use something called `ssh-agent` to avoid typing in the
+    >    pass-phrase for every operation that accesses the server.  Contact
+    >    me if you need help with this.
+    >  - - - - - - -
+
+    </font>
 
   * with that out of the way, type in the following command:
 
         ssh-keygen -t rsa
 
-  * apart from asking you what files to place the keypair in, it will also ask
-    if you want to store a pass-phrase.  If you want a passphrase, enter it
-    (twice) when prompted, otherwise keep hitting enter until it comes back to
-    the command prompt!
+    * hit enter when it asks you for a filename -- *don't* change the default
+    * when it asks you for a passphrase, you have two choices.  Either hit
+      enter for "no passphrase", or choose some long string and type it in.
+      Twice.
+    * On Unix, `ssh-agent` makes it quite painless to use a passphrase, while
+      keeping your private key secured all the time.  This might work on
+      Windows also; I'm not sure.
 
   * the output of that command will be two files: a private key and a public
     key.  You need to send your GITOSIS_ADMIN the **public** key by email
