@@ -48,7 +48,7 @@ extremely fast, so it never gets in your way.
 I must add, at this point, a plug for the one webpage that helped me more than
 anything else to understand the git model quickly and easily. It is called
 "Git for Computer Scientists", and it is at
-http://eagain.net/articles/git-for-computer-scientists/.  I consider this
+<http://eagain.net/articles/git-for-computer-scientists/>.  I consider this
 essential reading for anyone trying to understood the git object store.
 
 ### Merging -- git's first and biggest strength
@@ -133,7 +133,7 @@ unused.
 
 Even where merging is available, systems like SVN have quite a few problems
 with how it is implemented. For a good description of these issues take a look
-at <http://git.or.cz/gitwiki/GitSvnComparsion.>  Although SVN is working on
+at <http://git.or.cz/gitwiki/GitSvnComparsion>.  Although SVN is working on
 these issues, I am convinced that once the productivity gains of a
 *distributed* VCS become well known, SVN will eventually fade. SVN's aims
 have always been to fix the problems in CVS rather than do anything

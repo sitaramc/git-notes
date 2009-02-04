@@ -1,4 +1,4 @@
-### simple gotchas at the command line
+# simple gotchas at the command line
 
   * **gotcha** `git log rev` and `git diff rev` go in different
     directions.  Log shows backward from the rev given, while diff goes

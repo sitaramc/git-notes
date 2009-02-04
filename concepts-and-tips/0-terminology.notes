@@ -97,6 +97,10 @@ and pushes his changes back to our repository:
     cd b; echo there >> b; git add b; git commit -m b
     git push
 
+The `git push` above sends your new commits to the "origin" repository.  More
+specifically, it updates the "magic" directory on repo "a" with this new
+commit.
+
 Now you go back to the main repo and check `git status`
 
     cd ../a

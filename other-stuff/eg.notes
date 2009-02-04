@@ -61,7 +61,7 @@ git behaviour, for reasons cited in
 [uses of index](../concepts-and-tips/uses-of-index.html)
 
 `eg diff`'s second change from normal git (see
-http://www.gnome.org/~newren/eg/documentation/diff.html ) seems logical on the
+<http://www.gnome.org/~newren/eg/documentation/diff.html>) seems logical on the
 face of it, but I'm not buying.  `diff` and `log` are inherently
 different commands with different purposes and outputs, and it's meaningless
 to try and synchronise their syntax.

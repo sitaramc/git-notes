@@ -5,7 +5,9 @@ own understanding, almost like cheat sheets, but they may be useful for others
 also.
 
 Git is a **Distributed** Version Control System.  Most VCSs you know (like
-CVS, Subversion, Clearcase, Perforce, and VSS) are centralised.
+CVS, Subversion, Clearcase, Perforce, and VSS) are centralised.  A Distributed
+VCS allows you to make frequent, local, commits to checkpoint your work while
+you're still perfecting the code -- you cannot do this with a centralised VCS.
 
 If you haven't heard of git till now, you may want to start with a
 [presentation](other-stuff/gittalk.html) I do on git sometimes.  Although it
