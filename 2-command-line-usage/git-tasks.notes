@@ -246,13 +246,31 @@ but less intuitive ones are shown here, the rest can be had from the man page:
 
 #### making an independent branch in an existing repo
 
-  * from
+  * based on
     <http://madduck.net/blog/2007.07.11:creating-a-git-branch-without-ancestry/>
 
-        git status  # ensure all clear
-        git symbolic-ref HEAD refs/heads/indbr
+        # ensure all changes are committed
+        git status
+        # ensure even ignored files aren't present, or you don't care
+        git ls-files --exclude-standard -o -i
+
+        # WARNING -- IF THE ABOVE COMMANDS SHOW ANY USEFUL FILES,
+        #               STOP HERE!
+
+        # create an empty tree -- choose one of these options
+        # if you're sure you have no dot-files
+        rm -rf *
+        # if your tree may have dot files...
+        git rm -r .; git clean -fdx
+
+        # remove the index
         rm .git/index
-        ...create new tree as you like...
+
+        # point HEAD to the new branchname, whatever it is
+        git symbolic-ref HEAD refs/heads/indbr
+
+        # create some files, add, commit
+        touch empty
         git add .
         git commit -m "first commit of independent branch"
 
