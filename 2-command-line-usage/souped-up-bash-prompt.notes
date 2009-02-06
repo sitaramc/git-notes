@@ -1,0 +1,66 @@
+# souping up your bash prompt
+
+This document describes how to get command completion as well as a souped up
+bash prompt.
+
+Git comes with a bash script in the 'contrib/completion' directory which takes
+care of command completion as well as displays the current branch name in your
+`PS1` (primary bash prompt).  We use that as a basis, and -- without digging
+inside of it (meaning you can upgrade that without worry) -- we add more
+functionality.
+
+#### Summary for the impatient/expert
+
+  * normally, shows whatever `__git_ps1` sends back.  That is, completion,
+    branch name, and branch state text come from `__git_ps1`, in
+    'contrib/completion/git-completion.bash' in the git source tree
+  * but when you
+      * switch branches, or
+      * change current working directory, or
+      * *hit enter twice in quick succession at the bash prompt* (!!)
+
+    it shows a color-coded count of files in various states: unmerged (bold
+    red), untracked (blue), modified (red), and staged (green).  In addition,
+    the branch name reported by `__git_ps1` is also colored (for example,
+    bright red when the head is detached).
+
+You might be wondering about that "hit enter twice in quick succession" piece
+:-) The idea is that it should be as convenient and accessible as the current
+implementation, but it shouldn't really happen on *every* prompt.
+
+The implementation is either a neat and elegant hack or kludge city, depending
+on whom you ask -- and your opinions are welcome, after you take a look at the
+code.
+
+#### Details
+
+For a while, I've wanted a quick summary of `git status` -- how many files are
+staged (`git add`ed), modified, untracked, unmerged, etc.  I've also wanted a
+quick indication of whether the current HEAD is a detached head, etc.  And I
+wanted it to be as compact as possible.
+
+But...  I didn't want 'git status' to run on every prompt -- that would be too
+expensive for some of the msysgit users I support.  I wanted this extra piece
+to kick in only when
+
+  * I change directories, or
+  * I switch branches, or the branch state changes, or
+  * when I want it to, but I'm too lazy to type a command to tell it (also
+    called psychic mode!)
+
+That last part was tough, but I'm pleased that my solution not only works, it
+even works on msysgit so my Windows users are happy too!
+
+So anyway I finally got all of this together, (with some bits of code copied
+from git://github.com/lvv/git-prompt.git), and you can download it
+[here](../tools/git-completion-plus.bash).  And here's a [syntax
+colored](../tools/git-completion-plus.bash.html) version to quickly view on a
+browser.
+
+You're expected to source it into your `.bashrc`; it'll take care of sourcing
+the git-supplied one, which it looks for in `$HOME`.
+
+----
+
+^^and [this](../tools/git-completion.bash) is a copy of the v1.6.1 version of
+git-completion.bash from the git source tree; you probably have it already^^
