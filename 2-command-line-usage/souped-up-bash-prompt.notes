@@ -1,5 +1,9 @@
 # souping up your bash prompt
 
+^^[[TOC]]^^
+
+----
+
 This document describes how to get command completion as well as a souped up
 bash prompt.
 
@@ -51,6 +55,8 @@ to kick in only when
 That last part was tough, but I'm pleased that my solution not only works, it
 even works on msysgit so my Windows users are happy too!
 
+#### Download bash script
+
 So anyway I finally got all of this together, (with some bits of code copied
 from git://github.com/lvv/git-prompt.git), and you can download it
 [here](../tools/git-completion-plus.bash).  And here's a [syntax
@@ -59,6 +65,27 @@ browser.
 
 You're expected to source it into your `.bashrc`; it'll take care of sourcing
 the git-supplied one, which it looks for in `$HOME`.
+
+#### Screenshot
+
+Someone asked for a screenshot so [here is
+one](../images/git-completion-plus.png); it should give you enough of an idea.
+You can see the extra information (namely, the output of `__git_ps1` being
+colored, and a few numbers after that in different colors at certain places:
+
+  * when I hit enter twice quickly (the timestamps on the left side will tell
+    you when I did that)
+  * when the output of `__git_ps1` changes (this is the bit inside
+    parentheses)
+
+The color choices retain the colors that git status shows (with `git config
+--global color.ui true`) for staged and modified files -- this is green and
+red, respectively.  `git status` uses red for untracked files also, but we use
+blue.  Unmerged files are magenta.
+
+I didn't show changing to another directory and coming back -- that would also
+trigger the extra info.  I also didn't show all 4 colors (staged, modified,
+untracked, unmerged) at the same time but I'm sure you get the idea.
 
 ----
 
