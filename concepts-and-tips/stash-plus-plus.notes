@@ -8,11 +8,17 @@ not covered by the ignore mechanism.
     git commit --allow-empty -m wip-index-state
     git add -A && git commit --allow-empty -m wip-worktree-state
 
-    git bundle create /tmp/sos.bdl --all --not --remotes
-
-    # copy that file wherever you want, however you want...
-    rsync /tmp/sos.bdl bkphost:   # or scp, or whatever
+    # make a temp branch a la 'stash'
+    git branch wip-stash-state ||
+        die 'could not create wip-stash-state branch; aborting';
 
     # unstash
     git reset --mixed HEAD^
     git reset --soft HEAD^
+
+    # create the bundle and remove the temp branch
+    git bundle create /tmp/sos.bdl --all --not --remotes
+    git branch -D wip-stash-state
+
+    # copy that file wherever you want, however you want...
+    rsync /tmp/sos.bdl bkphost:   # or scp, or whatever
