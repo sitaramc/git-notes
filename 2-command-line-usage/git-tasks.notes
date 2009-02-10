@@ -179,6 +179,20 @@ published or pushed the commit elsewhere:
 
         git show-branch $(git show-ref -h |cut -c41-)
 
+#### cherry (not cherry-pick)
+
+  * summary: `+` shows you commits you have that the 'upstream' doesn't
+
+        git cherry -v upstream [head]
+
+  * detail: for every commit in 'head' that doesn't exist in 'upstream'
+    * prefix `-` if there is at least an *equivalent* commit
+    * prefix `+` if there's not even that
+
+  * TIP: if you're trying to cut some branches (like `git branch --merged`)
+    * put the candidate to be cut **on the right side**, and
+    * make sure there are no `+`s in the output
+
 #### cat-file (repo object) and ls-tree (tree object)
 
 Note: I'm not sure what, if any, is the difference between `show` and
