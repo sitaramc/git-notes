@@ -11,8 +11,7 @@
 
 export PROMPT_COMMAND=__git_ps1_plus
 #   DO NOT use the $(...) construct in PS1; see function below for why
-PS1='\[\e[32m\]\t\[\e[30m\] \h:\W$__git_ps1_text \$ \[\e[m\]'
-
+PS1=${PS1%????}'$__git_ps1_text \$ \[\e[m\]'
 # -----------------------------------------------------------------------------
 # in brief:
 # -----------------------------------------------------------------------------
@@ -38,7 +37,7 @@ PS1='\[\e[32m\]\t\[\e[30m\] \h:\W$__git_ps1_text \$ \[\e[m\]'
         clean_vcs_color=blue      # nothing to commit (working directory clean)
      modified_vcs_color=red       # Changed but not updated:
         added_vcs_color=green     # Changes to be committed:
-        mixed_vcs_color=yellow    # 
+        mixed_vcs_color=yellow    #
     untracked_vcs_color=BLUE      # Untracked files:
      detached_vcs_color=RED
      unmerged_vcs_color=MAGENTA
@@ -124,7 +123,7 @@ __git_ps1_plus()
     `
 
     grep -q "^ref:" $git_dir/HEAD  2>/dev/null
-    if  ! grep -q "^ref:" $git_dir/HEAD  2>/dev/null;   then 
+    if  ! grep -q "^ref:" $git_dir/HEAD  2>/dev/null;   then
         detached=detached
     fi
 

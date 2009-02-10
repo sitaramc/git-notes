@@ -41,3 +41,6 @@
         ls-ign  = ls-files --exclude-standard -o -i
 [rerere]
 	enabled = 1
+[tig]
+	show-rev-graph = yes
+	show-refs = yes
