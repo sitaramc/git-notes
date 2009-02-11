@@ -131,6 +131,28 @@ published or pushed the commit elsewhere:
 
 ### useful commands
 
+#### grep
+
+`git grep` is very, **very*, powerful.  It has pretty much all the normal grep
+options, plus:
+
+  * doesn't search files that are not revisioned (untracked, excluded/ignored,
+    etc)
+  * with `--cached`, looks only in the cache
+  * with one or more ref names, searched only within those revisions
+  * can take a pattern, like `*.c`, to restrict the files searched
+  * can do `--and`, `--or`, `--not`, etc with patterns.  This is a pretty big
+    wow.  As <http://gitster.livejournal.com/27674.html> says:
+
+        git grep -e ';;' --and --not -e 'for *(.*;;' -- '*.c'
+
+    which searches for ';;' in all C files, unless they occur in a typical
+    `for (;;) {` type of construct.
+
+  * finally, there's a somewhat gratuitously thrown in `--all-match` option,
+    which says "match any of these strings, but print matches only from files
+    that have *all* of them".  I wonder whose scratch that was... ;-)
+
 #### log and show
 
   * `git lga` is pretty cool; lga is an alias in my config for
