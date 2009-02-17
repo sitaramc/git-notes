@@ -28,6 +28,8 @@
         lga = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all
         # this is the most commonly used one, it turns out!
         l19 = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all -19
+        # and this one can be a real lifesaver on a complex tree
+        lsd = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all --simplify-by-decoration
 
         ru  = remote update
 
@@ -41,6 +43,5 @@
         ls-ign  = ls-files --exclude-standard -o -i
 [rerere]
 	enabled = 1
-[tig]
-	show-rev-graph = yes
-	show-refs = yes
+[diff]
+	mnemonicprefix = true
