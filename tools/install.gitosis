@@ -3,16 +3,18 @@
 # without args, just prints daily use commands for pushing an empty repo to an
 # existing gitosis host
 
-# with args
-
-# NOTES: you may want to make the email address in the pubkey file ($2)
-# canonical if you care.
+# with args, sets up gitosis.  You need 2 arguments:
 
 # $1
-#   is MDV or DEB
+#   is 'MDV' or 'DEB' depending on what type of Linux you're using
+#   (MDV stands for Mandriva, DEB for Debian/Ubuntu; patches for others,
+#   especially Fedora, welcome)
 # $2
 #   is the filename containing the pubkey corresponding to the private key on
 #   your (the git admin's) desktop/laptop
+
+# NOTES: you may want to make the email address in the pubkey file ($2)
+# canonical if you care.
 
 usage()
 {
