@@ -1,6 +1,6 @@
 # useful aliases for the command line
 
-My `.gitconfig` is [here](../tools/my.gitconfig).  However, I
+My `.gitconfig` is [here](../tools/my.gitconfig.txt).  However, I
 **strongly** recommend at least the following aliases in your
 `.gitconfig`:
 

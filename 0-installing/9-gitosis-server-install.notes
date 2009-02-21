@@ -47,7 +47,7 @@ That's it!
     * again, bypassing the proxy is out of scope here ;-)
   * install python-setuptools using your distro mechanism
   * in the gitosis directory, run the
-    [install.gitosis](../tools/install.gitosis) command
+    [install.gitosis](../tools/install.gitosis.txt) command
     * pre-requisites: the public key corresponding to the private key on
        your **desktop** or **laptop** (usually found in
        `~/.ssh/id_rsa.pub`) needs to be copied over to the gitosis server

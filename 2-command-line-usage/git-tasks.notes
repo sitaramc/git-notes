@@ -20,7 +20,7 @@ I **strongly** recommend these settings to make life easier.
 
 #### most useful stuff in `$HOME/.gitconfig`
 
-My `.gitconfig` is [here](../tools/my.gitconfig).  Parts of this
+My `.gitconfig` is [here](../tools/my.gitconfig.txt).  Parts of this
 document assume some of these aliases.
 
 ### stuff you tend to forget
