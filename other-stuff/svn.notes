@@ -83,3 +83,9 @@ Mozilla repository, with full history from 1998 or so:
   * (a full checkout of just the source: 350 MB)
 
 That's a ratio of almost 20:1 in size over SVN.
+
+#### some links
+
+  * <http://markmcb.com/2008/10/18/3-reasons-to-switch-to-git-from-subversion/>:
+    the first example, 'Endless, Easy, Non-File-System-Based, Local Branches',
+    is particularly powerful and convincing
