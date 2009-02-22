@@ -1,0 +1,146 @@
+#!/bin/bash
+
+# XXX: MUST be run from the git-notes repo's top level directory...
+
+die() { echo "$@"; exit 1; }
+dbg() { echo DEBUG "$@" >&2; }
+
+shopt -s nullglob
+
+# change this to customise where your output goes
+
+export outdir=/home/sitaram/imli/sitaramc.github.com
+
+# ---------------------- reset outdir
+
+cd $outdir || die "couldnt CD to $outdir"
+# the first time you git init that directory, make a really empty tree and tag
+# it so you can do this.  If all you want is the output HTML files, you may
+# not need this; an 'rm -rf' should do as well
+git reset --hard really_empty || die "couldnt reset to really_empty"
+git clean -fd
+cd -
+
+# ---------------------- build git notes
+
+mk_notes_hier()
+{
+    # given a starting directory, build the hierarchy of index.html etc
+    # arg1 is the starting point under $outdir
+    # arg2 and above are the set of directories w.r.t $PWD that need to be processed
+    # ***** ARG2 MUST BE ABSOLUTE PATHS *****
+
+    # move to output directory right away
+    o=$outdir/$1; mkdir -p $o; cd $o; shift
+
+    # generate the list of files, split by actual argument passed and the rest
+    # of the "found" file name (H and P, in find's printf syntax)
+    find "$@" -type f -name "*.notes" -printf "%02d %H %P\n" | sort |
+    while read dummy h p
+    do
+        # make the corresponding directory on the output side
+        pd=$(dirname $p); mkdir -p $pd
+        pb=$(basename $p .notes)
+        # the tools directory in which this script is sitting should also be
+        # in your PATH
+        md.pl -css $h/$p | Markdown.pl > $o/$pd/$pb.html
+        echo $h $pd
+    done | sort -u |
+    while read h dir
+    do
+        for dummy in 1
+        do
+            for i in $dir/*/*.html
+            do
+                echo $(basename $(dirname $i))
+            done | sort -u |
+            while read subdir
+            do
+                echo "<li><a href=\"$subdir/index.html\">$subdir</a></li>"
+            done >/tmp/sitaram.usgc.tmp
+
+            echo "<head><style>"
+            echo "    table    { font-size: 0.9em; font-family: sans-serif; }"
+            echo "</style></head>"
+            echo "<table>"
+            for i in $dir/*.html
+            do
+                [[ $i =~ /000-README.html$ ]] && continue
+                j=$(basename $i .html)
+                echo "<tr><td><a
+                href=\"$j.html\">$j</a>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>"
+                echo "    " "$(head -1 < $h/$dir/$j.notes | cut -c3-)"
+                echo "</td></tr>"
+                /bin/rm -f $dir/$j.notes
+            done
+            echo "</table><hr>"
+        done > /tmp/sitaram.usgc.tmp2
+        if [[ -s /tmp/sitaram.usgc.tmp ]]
+        then
+            echo "<sup>subdirectories:<ul>"
+            cat /tmp/sitaram.usgc.tmp
+            echo "</ul></sup><hr>"
+        fi > $dir/index.html
+        cat /tmp/sitaram.usgc.tmp2 >> $dir/index.html
+        cat $dir/000-README.html >> $dir/index.html 2>/dev/null
+    done
+    cd -
+}
+
+mk_notes_hier . $PWD
+echo ...git notes done >&2
+
+# ---------------------- update tools
+mkdir $outdir/tools
+cp tools/install.gitosis    $outdir/tools
+cp tools/my.gitconfig       $outdir/tools
+cp tools/git-completion*    $outdir/tools
+# make some of them .txt for download...
+for i in $outdir/tools/{git-completion*bash,install.gitosis,my.gitconfig}
+do
+    mv $i $i.txt
+done
+echo ...git tools done >&2
+
+# ---------------------- special: git talk needs slidy
+
+# XXX do we need to switch this to markdown syntax?
+wiki_creole.pl < other-stuff/gittalk.notes | tools/mkslidy.pl > $outdir/other-stuff/gittalk.html
+mkdir -p $outdir/tools
+cp tools/git.png $outdir/tools
+cp tools/slidy.* $outdir/tools
+echo ...git talk done >&2
+
+# ---------------------- special: git lfy needs figures to be pushed out
+
+mkdir -p $outdir/images
+cp images/* $outdir/images
+echo ...git lfy images done >&2
+
+# ---------------------- README for outdir
+
+cd $outdir || die "couldnt CD to $outdir"
+cat > README <<EOF
+
+Forking this repo
+
+    Don't!
+
+    This will get blown away (reset) every time.  Fork "git-notes" instead.
+
+Why?
+
+    Well I finally switched from WikiCreole to Markdown, but I still have a
+    couple of customisations (notably the part that creates a TOC at the top),
+    which prevent me from using the github's Jekyll as-is.
+
+    So I do the conversion offline and push the HTML into its own repo.
+
+EOF
+
+# ---------------------- ...and PUSH!
+
+git add .
+git commit -m "latest HTML output (see git-notes repo for history)"
+echo now you can:
+echo '    ' cd $outdir\; git push -f\; cd -
