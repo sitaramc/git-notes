@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# from doener via irc 2009-02-20 approx 20:30 IST
+
+# if you store it as e.g. "git-archive-branch" in a directory that is in your
+# PATH, you can do "git ar<TAB><TAB> archive whatever"
+
+if [ "refs/heads/$2" = "$(git rev-parse --symbolic-full-name HEAD)" ]; then
+	echo "Can't archive the current branch"
+	exit 1
+fi
+
+case "$1" in
+archive)
+	git update-ref "refs/archive/$2" "refs/heads/$2" && git branch -D "$2"
+	;;
+restore)
+	git branch "$2" "refs/archive/$2"
+	git update-ref -d "refs/archive/$2" "refs/archive/$2"
+	;;
+drop)
+	git update-ref -d "refs/archive/$2" "refs/archive/$2"
+	;;
+list)
+	git for-each-ref --format='%(refname)' refs/archive
+	;;
+esac
