@@ -40,10 +40,19 @@ my $ctr = 0;
 sub maketoc
 {
     my($o, $t) = @_;
-    $ctr++;
+    # used to be just '$ctr++;', but now you can specify an anchor for later
+    # use elsewhere or it will get auto-generated.  The notation for
+    # specifying an anchor is that the first word of $t should match '#\w+'
+    # followed by one space
+    if ($t =~ /^#(\w+) /) {
+        $ctr = $1;
+        $t =~ s/^#\w+ //;
+    } else {
+        ($ctr = $t) =~ s/\W+/_/g;
+    }
     $toc .= "&nbsp;" x (4 * length($o));
-    $toc .= "<a href=\"#a$ctr\">$t</a><br>\n";
-    return "$o <a name=\"a$ctr\">$t</a>";
+    $toc .= "<a href=\"#$ctr\">$t</a><br>\n";
+    return "$o <a name=\"$ctr\">$t</a>";
 }
 
 sub my_creole_markup
