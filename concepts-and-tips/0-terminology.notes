@@ -143,16 +143,19 @@ latest versions when you clone or pull from it.
 
 If you're a developer looking to understand branches, the commit tree,
 detached head, reflog, etc., this section might help you.  I assume you
-understand the basics of the standard malloc(3) system call, (allocate some
-memory on your request and return you a pointer to the memory so you can do
-what you want with it in your program).
+understand the basics of the standard malloc(3) system call: you make a
+request to allocate some memory, and malloc returns you a pointer to the
+memory so you can do what you want with it in your program.
 
 To understand what a detached head is, you have to think of a **commit tree**
 as a one-directional linked list.  Each **branch** (like 'master', 'next',
-etc) is a global/static pointer variable, pointing to the top of one such
-list.  A **commit** is one node in the linked list; a struct containing some
+etc) is a static pointer variable, pointing to the top of one such list.  A
+**commit** is one node in the linked list; a struct containing some
 information plus links to parent commit struct(s).  There are no forward links
--- you cannot go from an earlier commit to a later one.
+-- you cannot go from an earlier commit to a later one.  **HEAD** is like a
+local variable that is needed to get actual work done; usually it'll be the
+same as one of the branches, but it's not a static variable and its value
+changes all the time.
 
 Making a new commit involves the classic "insert a new node at the head of the
 linked list" code that anyone who's done a basic data structures course knows.
@@ -163,24 +166,24 @@ In pseudo-code:
     HEAD.parent = master;  // fill in the backlink
     master = HEAD;         // move list head to new node
 
-A **reset** of a branch is like assigning to the corresponding global
+A **reset** of a branch is like assigning to the corresponding static
 variable:
 
     git checkout master     # HEAD = master
     git reset --hard HEAD~  # master = HEAD = HEAD.parent
 
 The old value of HEAD is now gone; nothing is pointing to that node now, and
-it will be garbage collected soon.  [Well not immediately; see reflog
+it will be garbage collected soon.  [Well, not immediately; see reflog
 below...]
 
 A **checkout** is different from a reset.  In a checkout, you're only changing
-HEAD, not the global variable representing your branch:
+HEAD, not the static variable representing your branch:
 
     git checkout master     # HEAD = master
     git checkout HEAD~      # HEAD = HEAD.parent    // master is unchanged
 
 And this is what is called a **detached head**.  The HEAD variable is pointing
-to something that *none* of your global variables directly points to.  So
+to something that *none* of your static variables directly points to.  So
 
     git checkout master
     git checkout HEAD~3
@@ -194,7 +197,7 @@ current one, is like saying
     HEAD = HEAD.parent;
     HEAD = HEAD.parent;    // 3 times
 
-**It is important to realise** that 'HEAD' is not a global variable, and
+**It is important to realise** that 'HEAD' is not a static variable, and
 gets lost when you do something else (like another checkout of a different
 branch perhaps).
 
@@ -237,8 +240,8 @@ overwritten:
 which is like
 
     static struct ... *newbranch
-        // yeah I know C doesn't let you create a new global variable
-        // dynamically, but let's pretend...
+        // yeah I know C doesn't let you create a new static variable
+        // on demand at run time, but let's pretend...
     newbranch = HEAD
 
 And now you can afford to lose your HEAD without any ill effects, because
@@ -251,7 +254,7 @@ wrapper around it that saves away the return values each time it is called, as
 well as what command called it and when, and it keeps this information for 30
 days.  Even if you lost all your pointers, you could check this saved list and
 the caller/time information to jog your memory of which one it was, and
-actually use the pointer value to assign to a global variable.
+actually use the pointer value to assign to a static variable.
 
     git reflog show HEAD@{now} -10
 
@@ -273,4 +276,3 @@ Now you look at this, decide which one you want, and grab it:
 
 So, the final part of our analogy, if you haven't figured it out yet, is that
 the **SHA1** is like the pointer value returned by malloc :-)
-
