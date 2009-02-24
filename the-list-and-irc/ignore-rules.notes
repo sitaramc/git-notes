@@ -1,30 +1,27 @@
 # rules for .gitignore and the like
 
 Those of you who have read the manual for gitignore will have noticed that,
-while the rules for precedence of the various files (pattern sources) are
-very clear, the rules for the actual exclusion patterns are somewhat less so.
+while the rules for precedence of the various files (pattern sources) are very
+clear, the rules for the actual exclusion patterns are somewhat less so.
 They're certainly accurate, but newcomers have to read very carefully if they
 want to do anything moderately complex with their exclude rules.
 
-One day (2009-02-18, ~16:00, to be precise), 'doener' (Björn Steinbrink) came
-up with these much simpler rules.
+One day (2009-02-18, ~16:00 IST, to be precise), 'doener' (Björn Steinbrink)
+came up with some much simpler rules that said the same thing, and -- building
+on the insight that his rules gave me -- I came up with these:
 
-1.  no slash in the name --> matches anything that has that name, even if you
-    need to strip a few parent directories
-2.  slash at the end --> matches only directories (and their contents)
-3.  slash anywhere else --> matches anything with that name, leading
-    directories are not stripped
-4.  and wildcard is * which doesn't match slashes
+----
 
-This is my take on the rules after looking at them, along with the man page,
-more carefully.  Note that rule 1 merely *modifies* rules 2 and 3, it does not
-supercede or preclude them.
+Note that rule 1 merely *modifies* rules 2 and 3, it does not supercede or
+preclude them.
 
-1.  slash at the end --> matches only directories (and their contents)
-2.  no slash otherwise --> matches that name, at any depth in the tree
-3.  slash anywhere else --> matches that name, relative to the .gitignore (or
-    $GIT_WORK_TREE if the pattern is from one of the other pattern sources
-    like `.git/info/exclude` etc)
+1.  If your pattern ends with a slash, it matches only directories (and their
+    contents)
+2.  If there is no slash otherwise, it matches that name, at any depth in the
+    tree
+3.  If there is a slash anywhere else, it matches that name, relative to the
+    .gitignore (or $GIT_WORK_TREE if the pattern is from one of the other
+    pattern sources like `.git/info/exclude` etc)
 
 The wildcards (`*` and `?`) do not match slashes, but otherwise the patterns
 are normal shell globs as defined by fnmatch(3) with the FNM_PATHNAME flag
