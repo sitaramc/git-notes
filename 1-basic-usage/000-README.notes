@@ -31,3 +31,15 @@ However, note these two minor points:
   * some of the stuff dealing with other servers (like adding a remote,
     pulling from someone's IP address, etc.), may work differently in a
     corporate environment.
+
+----
+
+Another *very useful* resource is the [gitready](http://gitready.com/) site,
+where you'll find lots of tips and techniques.  In particular, they explain
+things very graphically (for example, if you always wondered what rebase is,
+try [intro to
+rebase](http://gitready.com/intermediate/2009/01/31/intro-to-rebase.html),
+then maybe [pull with
+rebase](http://gitready.com/advanced/2009/02/11/pull-with-rebase.html) or
+[squashing commits with
+rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html).
