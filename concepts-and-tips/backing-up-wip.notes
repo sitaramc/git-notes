@@ -1,16 +1,18 @@
-# better than stash
+# backing up work in progress
 
-This is better than stash -- you can backup everything on your local repo that
-is not already on one of your remotes, plus it includes all untracked files
-not covered by the ignore mechanism.
+This is how you can backup everything on your local repo that is not already
+on one of your remotes, including all untracked files not covered by the
+ignore mechanism.  I use a script based on this to save my work to a remote
+server at regular intervals, in case of a disaster (hardware failure, etc) on
+the regular desktop.
 
-    # better than stash; untracked files also saved
+    # sort of like stash; untracked files also saved
     git commit --allow-empty -m wip-index-state
     git add -A && git commit --allow-empty -m wip-worktree-state
 
-    # make a temp branch a la 'stash'
-    git branch wip-stash-state ||
-        die 'could not create wip-stash-state branch; aborting';
+    # make a temp branch (FIXME: should we do this first?)
+    git branch wip-backup ||
+        die 'could not create wip-backup branch; aborting';
 
     # unstash
     git reset --mixed HEAD^
@@ -18,7 +20,7 @@ not covered by the ignore mechanism.
 
     # create the bundle and remove the temp branch
     git bundle create /tmp/sos.bdl --all --not --remotes
-    git branch -D wip-stash-state
+    git branch -D wip-backup
 
     # copy that file wherever you want, however you want...
     rsync /tmp/sos.bdl bkphost:   # or scp, or whatever
