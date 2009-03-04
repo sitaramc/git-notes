@@ -19,30 +19,39 @@
     ** VSS@@, Clearcase@@@@, Perforce
     ** others??
 
-= warnings about git
+= upfront: caveats about git
   * has far too many commands
     ** luckily, most are "plumbing"
     ** we just use the "porcelain" :-)
   * man pages may be confusing
     ** but often have good examples!
     ** and there are excellent tutorials and HOWTOs on the web
+    ** example: http://gitready.com
+    ** official documentation: http://git-scm.com/documentation
 
-= warnings about git (cont'd)
-  * not optimised for
-    ** tracking permissions and ownership
-    ** tracking individual or unrelated files with separate history
-    ** tracking very large binary files (mp3s, movies, etc.).
-  * partial checkouts not allowed!
+= caveats about git (cont'd)
+  * will not track permissions and ownership
+  * will not allow partial checkouts
+    ** (but submodule mechanism exists; out of scope of this talk)
+  * not optimised for tracking very large binary files (mp3s, movies, etc.).
 
 = history
   * initially designed as a file system!
   * originally only a backend@@, now all in one
   * reputation for being hard to use@@, now no longer valid
-    ** demo 01 - a simple new project
-    ** demo 02 - cloning an existing project to work on
   * focus on large projects with many developers
     ** but that doesn't mean small projects can't use it
     ** remember: multi-tasking
+
+= simple demos
+  * a couple of demos just to get a feel for git
+    ** demo 01 - a simple new project
+    ** demo 02 - cloning an existing project to work on
+  * don't like the CLI?
+    ** 2 excellent GUI tools com with git
+    ** for an excellent intro to these tools, see
+    http://nathanj.github.com/gitguide
+    ** plugins: Visual Studio plugin, eclipse plugin, etc
 
 = the normal cycle
   * caveat: we're not talking about SCM systems, only VCS
@@ -62,12 +71,13 @@
   * demo 04 - a short branch in GIT
 
 = branching
-  * say you need large sets of changes on a stable product@@, handled by
-    separate developers
-    ** long gaps between commits -- you're afraid to commit
+  * say you're adding 3 complex new "features" to a stable product
+    ** handled by separate developers
+    ** each feature takes time to stabilise
+  * most VCSs
+    ** long gaps between commits -- because you're afraid to commit
     ** one huge bout of merging just before you commit
-    ** except for the FIRST developer to commit :-)
-  * demo 05 - a longer branch
+    ** (except for the FIRST feature to get in!)
 
 = branching in most other VCSs
   * branching is considered advanced and people avoid it
@@ -190,7 +200,7 @@
   * very fast
   * allows frequent//, granular//@@, commits
     ** since a commit only takes seconds
-  * you can separate work into small, comprehensive pieces
+  * you can separate work into small, comprehensible pieces
     ** small changes get sort of lost if you bunch 'em up!
 
 = major strengths of git (cont'd)
@@ -199,7 +209,6 @@
     ** demo 09 -- more complex merge
   * private branches
     ** and if you make them public, the history is preserved
-  * BACKUPS!  INSTANT BACKUPS!  WORLDWIDE BACKUPS!
 
 = git concepts
   * repo
@@ -225,9 +234,7 @@
     ** the tip of a branch
   * HEAD
     ** the tip of the branch associated with your working tree; this is where
-       commits go
-    ** head => always the tip of some branch
-    ** HEAD => same, except when "detached"
+    commits go
 
 = git concepts (cont'd)
   * index: holding area for changes approved for commit
