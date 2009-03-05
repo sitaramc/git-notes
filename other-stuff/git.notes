@@ -11,8 +11,6 @@
 
 ### some URLs
 
-  * <http://developers.slashdot.org/comments.pl?sid=1079921&cid=26321869> from
-    somewhere in the trenches
   * <http://article.gmane.org/gmane.comp.version-control.git/46609> -- how
     `git am -3` works
   * <http://cworth.org/hgbook-git/tour/> -- I cannot emphasise how useful this
@@ -30,13 +28,15 @@
 
 ### some advocacy URLs :-)
 
+  * <http://lwn.net/Articles/317154/>: *git bisect "is well-nigh
+    single-handedly responsible for reducing our average bugreport-to-fix time
+    from 4 days to 6 hours".*
+  
   * <http://blog.moertel.com/articles/2007/12/10/how-i-stopped-missing-darcs-and-started-loving-git#comment-856>
     a very cogent comparision with Darcs from someone who used Darcs for 3
     years and git for 1 year
 
   * features unique to git: <http://gitster.livejournal.com/16077.html>
-
-  * <http://www.advogato.org/person/apenwarr/diary/371.html>
 
   * <http://www.developsense.com/testing/VSSDefects.html>
 
@@ -65,7 +65,7 @@
     of all the praising articles on git, and yet the most tangible because he
     keeps on pumping us with examples of stuff he and others had done which
     could ALL be replaced by git:
-    <http://www.advogato.org/person/apenwarr/diary/371.html.>  Has stuff like "I
+    <http://www.advogato.org/person/apenwarr/diary/371.html>.  Has stuff like "I
     wanted to build distributed filesystem, but git beat me to it; I wanted a
     file backup system, but git beat me to it", etc., essentially saying that
     git is a platform for building whatever you want, not just a VCS.  Or how
