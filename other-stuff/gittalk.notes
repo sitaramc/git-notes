@@ -1,5 +1,9 @@
 = presentation on git, a DVCS
 
+= why
+
+../images/projects-sans-vcs.png
+
 = why use a VCS
   * reversibility or rollback@@, aka C-Y-A!
     ** linear@@, simple to implement
