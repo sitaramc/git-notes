@@ -113,19 +113,26 @@ switched to another branch:
     git checkout someoldbranch
 
 HEAD is now a symbolic reference to 'someoldbranch', and its previous value
-(the SHA-1 representing the top commit you made on the detached HEAD) is
-overwritten.
+(the SHA-1 representing the top commit you made on the detached HEAD) has now
+been overwritten.
 
 So is it gone for good now, never to be seen again?  Fortunately, no!  The
-commit object itself (analogy: the memory pointed to by 'temp') is still safe
-out there somewhere, but you don't know where!  You have to find it...
+commit object itself is still safe out there somewhere, but you don't know
+where!  You have to find it...
 
-So let's pretend your malloc has a wrapper around it that saves away the
-return values each time it is called, as well as what command called it and
-when, and it keeps this information for 30 days.  Even if you lost all your
-pointers, you could check this saved list and the caller/time information to
-jog your memory of which one it was, and actually use that pointer value to
-recover your 'temp'.
+Think back to these 2 lines in the analogy above, where the 'current node' was
+updated:
+
+    list_top = temp;            // in the first example
+    temp = temp2;               // in the second example
+
+What if you had some sort of wrapper around that line, such that, every time
+this happened, the new value being assigned is also saved away somewhere,
+including information on what command called it and when.  And let's say this
+information is kept for 30 days.  So, even if you lost all your pointers, you
+could check this saved list and the caller/time information to jog your memory
+of which one it was, and actually use that pointer value to recover the node
+you 'lost'.
 
 That's the 'reflog' in git:
 
