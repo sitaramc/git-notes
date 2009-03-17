@@ -9,10 +9,21 @@ CVS, Subversion, Clearcase, Perforce, and VSS) are centralised.  A Distributed
 VCS allows you to make frequent, local, commits to checkpoint your work while
 you're still perfecting the code -- you cannot do this with a centralised VCS.
 
-If you haven't heard of git till now, you may want to start with a
+##### Why?
+
+If you haven't heard of git till now, and wish to understand what's the big
+fuss all about and why it's become so popular, you may want to start with a
 [presentation](other-stuff/gittalk.html) I do on git sometimes.  Although it
 is meant to be interactive and you'll be missing the demos, it may still be
-useful.
+useful.  Or you can read an [article on git](other-stuff/git-lfy.html) I wrote
+for LFY (June 2008 issue).
+
+##### How?
+
+If you wish to **use** git, but don't know where to start, start
+[here](1-basic-usage).
+
+##### Beyond the basics
 
 If you know a little about git and/or have attended one of my talks, you can
 follow the links at the top.

@@ -13,8 +13,14 @@
 
 ----
 
-For a much better introduction to the GUI tools, including lots of
-screenshots, go to <http://nathanj.github.com/gitguide/>
+You can start with a [basic intro](intro.html) to the concepts that will help
+anyone, whether you've never used any VCS before or are coming from, say, SVN.
+
+----
+
+Once you've done that, and are ready to start **using** git, there's a really
+thorough introduction to the GUI tools, including lots of screenshots, at
+<http://nathanj.github.com/gitguide/>.
 
 The page has an excellent example "project" that is simple enough that you can
 concentrate on the git features being demonstrated, and the author goes into
