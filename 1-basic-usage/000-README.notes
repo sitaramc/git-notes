@@ -1,6 +1,12 @@
 ## Basic usage
 
-...using mostly the GUI
+^^(...using mostly the GUI)^^
+
+----
+
+**<font color="red">You can start with a [basic intro](intro.html) to the
+concepts behind git.  This will be useful to anyone, whether you've never used
+any VCS before or are coming from, say, SVN.</font>**
 
 ----
 
@@ -10,11 +16,6 @@
     be able to read it and just do the equivalent -- Linux has GUI installers
     that even *find* the software for you, and running bash commands is easy
     as pie, so I'm not going to handhold you lot :-)^^
-
-----
-
-You can start with a [basic intro](intro.html) to the concepts that will help
-anyone, whether you've never used any VCS before or are coming from, say, SVN.
 
 ----
 
@@ -48,4 +49,4 @@ rebase](http://gitready.com/intermediate/2009/01/31/intro-to-rebase.html),
 then maybe [pull with
 rebase](http://gitready.com/advanced/2009/02/11/pull-with-rebase.html) or
 [squashing commits with
-rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html).
+rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)).

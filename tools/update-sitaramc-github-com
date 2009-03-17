@@ -106,16 +106,19 @@ echo ...git tools done >&2
 
 # XXX do we need to switch this to markdown syntax?
 wiki_creole.pl < other-stuff/gittalk.notes | tools/mkslidy.pl > $outdir/other-stuff/gittalk.html
+wiki_creole.pl < 1-basic-usage/intro.notes | tools/mkslidy.pl > $outdir/1-basic-usage/intro.html
 mkdir -p $outdir/tools
 cp tools/git.png $outdir/tools
 cp tools/slidy.* $outdir/tools
 echo ...git talk done >&2
 
-# ---------------------- special: git lfy needs figures to be pushed out
+# ---------------------- special: git lfy and intro figures
 
-mkdir -p $outdir/images
+mkdir -p    $outdir/images
 cp images/* $outdir/images
-echo ...git lfy images done >&2
+mkdir -p                        $outdir/1-basic-usage/intro-images
+cp 1-basic-usage/intro-images/* $outdir/1-basic-usage/intro-images
+echo ...git lfy and intro images done >&2
 
 # ---------------------- README for outdir
 

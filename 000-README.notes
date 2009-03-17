@@ -1,5 +1,12 @@
 ## (READ THIS FIRST) README for the git-notes repo
 
+----
+
+**<font color="red">If you wish to use git, but don't know where to start,
+[start here](1-basic-usage/index.html)</font>**.
+
+----
+
 This repo contains all my notes about git.  I started writing them for my
 own understanding, almost like cheat sheets, but they may be useful for others
 also.
@@ -17,11 +24,6 @@ fuss all about and why it's become so popular, you may want to start with a
 is meant to be interactive and you'll be missing the demos, it may still be
 useful.  Or you can read an [article on git](other-stuff/git-lfy.html) I wrote
 for LFY (June 2008 issue).
-
-##### How?
-
-If you wish to **use** git, but don't know where to start, start
-[here](1-basic-usage).
 
 ##### Beyond the basics
 

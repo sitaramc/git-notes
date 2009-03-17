@@ -1,0 +1,293 @@
+= a very basic intro to version control and git
+
+= why
+
+../images/projects-sans-vcs.png
+
+= what is a VCS
+
+= why use a VCS
+  * reversibility or rollback@@, aka C-Y-A!
+    ** linear (on the time axis)@@, simple to implement
+  * concurrency
+    ** non-linear@@, all the complexity is here
+  * annotation
+
+= creating a repository
+
+  * how hard is it?
+
+= an empty directory
+
+intro-images/1000-empty.png
+
+= add some files
+
+intro-images/1001-sampleproj.png
+
+= 'git init' -- done!
+
+intro-images/1002-init-done.png
+
+= how about on windows?
+
+intro-images/1003-empty-windows.png
+
+= making a repository
+
+intro-images/1004-init-win1.png
+
+= making a repository
+
+intro-images/1005-init-win2.png
+
+= making a repository
+
+intro-images/1006-init-win3.png
+
+= done!
+
+intro-images/1007-init-win4.png
+
+= just checking...
+
+intro-images/1008-init-done-win1.png
+
+= yup -- works fine!
+
+intro-images/1009-init-done-win2.png
+
+= CLI on windows?
+
+intro-images/1010-init-winb1.png
+
+= a bash shell
+
+intro-images/1011-init-winb2.png
+
+= 'git init' -- done!
+
+intro-images/1012-init-done-winb.png
+
+= what is a 'work tree'
+
+intro-images/worktree.png
+
+= what is a 'repo'
+
+  * A repository is just
+    ** a work tree, @@plus
+    ** a special '.git' directory at the top level of the work tree.
+  * NEVER FIDDLE WITH THIS DIRECTORY UNLESS YOU KNOW WHAT YOU ARE DOING!
+  * YOU HAVE BEEN WARNED!
+
+= repository
+
+intro-images/repo.png
+
+= (what's inside '.git'?)
+
+intro-images/1013-inside-dotgit.png
+
+= you said 'non-linear'
+
+l:intro-images/worktree-symbol.png
+
+  * sure...
+  * a repository keeps snapshots of the work tree...
+  * ...at different points in time
+
+= snap
+
+intro-images/repo-1.png
+
+= snapshots
+
+intro-images/repo-2.png
+
+= snapshots of the work tree
+
+intro-images/repo-3.png
+
+= at different
+
+intro-images/repo-4.png
+
+= at different points
+
+intro-images/repo-5.png
+
+= at different points in time
+
+intro-images/repo-6.png
+
+= what is a commit
+
+remember those snapshots?  Yup -- they're all commits!
+
+Here, to refresh your memory:
+
+h50%:intro-images/repo-6.png
+
+= what is a repo again?
+
+  * a work tree + .git?  sure, but also...
+  * a bunch of commits laid out as a 'graph'
+    ** a "directed acyclic graph", if you're interested
+
+= DAG
+
+intro-images/dag.png
+
+= what is a branch
+
+  * since a graph is sort of the same as a tree (for our purposes)
+    ** it has branches
+    ** and those branches have names
+
+= branches
+
+intro-images/dag-br.png
+
+= what is a tag
+
+  * when you checkout a branch and then commit, the branch is now pointing at
+    the new 'snapshot'.  @@This means...
+  * ...the branch keeps moving with every commit
+  * But sometimes you want to mark a point in your development
+    ** with some sort of a permanent label
+    ** that stays right there, even if you add commits on top
+
+= tags
+
+intro-images/dag-br-tag.png
+
+= general VCS concepts
+
+  * "project": minimum set of source code (and related files) needed
+    to **build** the software
+  * in a CVCS (Centralised VCS)
+    ** each project will have exactly one "repository"
+    ** on some central server
+    ** and each developer will checkout the projects he needs
+       *** from the server to his workstation
+
+= a DVCS is different
+
+  * each project will have one "central" repository
+  * but each repository can have many "clones"
+  * so each developer has a clone on his workstation
+    ** a complete copy of the repository
+    ** plus his own stuff
+  * (...for EACH project he's working on)
+
+= what is a 'remote'
+
+  * when you clone, the repo you cloned from is a 'remote' for you
+  * every remote has a name (a user-friendly name you choose)
+  * (special case for clone: the 'remote' has a special name: 'origin')
+    ** much nicer than using the full URL, like
+    ** {{{ssh://sitaram@git.server/repos/myproj.git}}}
+  * bad picture coming up...
+
+= remotes
+
+(bad?  it's useless!)
+
+intro-images/remote.png
+
+= git concepts
+  * repo
+    ** self-contained; remove ".git" at the top and it's all gone
+  * branch
+    ** an active line of development
+    ** a repo can track any number of branches
+  * master
+    ** name of default branch in a new git project
+
+= concept detail: branches
+  * easy and inexpensive
+  * can have separate branches for separate features
+  * many being worked on "simultaneously"!
+  * you can switch rapidly between branches
+  * boosts individual productivity as well as team productivity
+  * almost all existing VCSs suck at this
+
+= individual productivity?
+  * concurrency
+  * makes context switching trivial
+
+= git concepts (cont'd)
+  * working tree
+    ** is associated with only one branch at any time
+  * head
+    ** the tip of a branch
+  * HEAD
+    ** the tip of the branch associated with your working tree; this is where
+    commits go
+
+= git concepts (cont'd)
+  * index: holding area for changes approved for commit
+    ** git tracks content, not files
+    ** lets you select some files to commit while postponing others
+    ** lets you keep uncommited changes hanging around
+
+= some more git concepts
+  * commit ancestry
+  * commit ancestry as a DAG
+    ** the essence of git is to build and traverse this DAG
+    ** http://eagain.net/articles/git-for-computer-scientists
+  * universal public identifier (a SHA-1 hash)
+    ** every file, directory, and commit has a unique hash
+    ** check the integrity of an entire repo by comparing just one 160-bit
+    value (40 hex digits)
+
+= workflow
+  * far better than anything I can try:
+    ** http://nathanj.github.com/gitguide
+  * so I'll just describe things at a high level
+
+= one-time workflow
+  * per developer
+    ** set up your name and email address
+  * per developer per project
+    ** 'git init' (the first guy)
+    ** 'git clone ...' (the others)
+
+= err... clone?  from where?
+  * git servers and protocols (note: git does NO access control!)
+    ** ssh (read+write, access control by ssh)
+    ** file protocol (locally mounted files, read+write, access control by OS)
+    ** git protocol (read only, access control by OS/firewall etc)
+    ** http (read only, access control by Apache)
+       *** (read-write using DAV == Loch Ness monster)
+       *** (meaning I've heard it exists, but I haven't seen it!)
+  * for a corporate environment
+    ** just install 'gitosis' and be done!
+
+= normal workflow activities
+  * checkout a branch
+  * edit files
+  * review your changes ('git diff', or 'git gui')
+  * review other people's changes or your older commits ('gitk' -- a very
+    powerful GUI tool)
+  * stage and commit them
+
+= normal workflow activities
+  * push your commits to the server
+  * push failed?  maybe your teammates committed something recently?
+    ** pull from the server first
+    ** their changes get merged into your local repo
+    ** then you push...
+
+= conflicts
+  * what is a conflict
+  * how do you resolve it?
+
+= advanced workflow activities
+  * cherry-pick -- pick up specific changes from another branch or repo and
+    make those changes happen in your repo
+  * rebase -- move commits around; sort of like
+    ** cut off a branch where it connects to the trunk of a tree...
+    ** ...and graft it somewhere else
+  * bisect
