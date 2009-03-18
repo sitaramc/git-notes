@@ -19,55 +19,55 @@
 
 = an empty directory
 
-intro-images/1000-empty.png
+intro-images/empty.png
 
 = add some files
 
-intro-images/1001-sampleproj.png
+intro-images/sampleproj.png
 
 = 'git init' -- done!
 
-intro-images/1002-init-done.png
+intro-images/init-done.png
 
 = how about on windows?
 
-intro-images/1003-empty-windows.png
+intro-images/empty-windows.png
 
 = making a repository
 
-intro-images/1004-init-win1.png
+intro-images/init-win1.png
 
 = making a repository
 
-intro-images/1005-init-win2.png
+intro-images/init-win2.png
 
 = making a repository
 
-intro-images/1006-init-win3.png
+intro-images/init-win3.png
 
 = done!
 
-intro-images/1007-init-win4.png
+intro-images/init-win4.png
 
 = just checking...
 
-intro-images/1008-init-done-win1.png
+intro-images/init-done-win1.png
 
 = yup -- works fine!
 
-intro-images/1009-init-done-win2.png
+intro-images/init-done-win2.png
 
 = CLI on windows?
 
-intro-images/1010-init-winb1.png
+intro-images/init-winb1.png
 
 = a bash shell
 
-intro-images/1011-init-winb2.png
+intro-images/init-winb2.png
 
 = 'git init' -- done!
 
-intro-images/1012-init-done-winb.png
+intro-images/init-done-winb.png
 
 = what is a 'work tree'
 
@@ -87,7 +87,7 @@ intro-images/repo.png
 
 = (what's inside '.git'?)
 
-intro-images/1013-inside-dotgit.png
+intro-images/inside-dotgit.png
 
 = you said 'non-linear'
 
@@ -247,7 +247,7 @@ intro-images/remote.png
     ** http://nathanj.github.com/gitguide
   * so I'll just describe things at a high level
 
-= one-time workflow
+= one-time setup
   * per developer
     ** set up your name and email address
   * per developer per project
