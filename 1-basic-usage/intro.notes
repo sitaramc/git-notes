@@ -74,7 +74,6 @@ intro-images/init-done-winb.png
 intro-images/worktree.png
 
 = what is a 'repo'
-
   * A repository is just
     ** a work tree, @@plus
     ** a special '.git' directory at the top level of the work tree.
@@ -130,8 +129,7 @@ Here, to refresh your memory:
 h50%:intro-images/repo-6.png
 
 = what is a repo again?
-
-  * a work tree + .git?  sure, but also...
+  * a work tree + .git?  @@sure, but also...
   * a bunch of commits laid out as a 'graph'
     ** a "directed acyclic graph", if you're interested
 
@@ -140,7 +138,6 @@ h50%:intro-images/repo-6.png
 intro-images/dag.png
 
 = what is a branch
-
   * since a graph is sort of the same as a tree (for our purposes)
     ** it has branches
     ** and those branches have names
@@ -150,10 +147,9 @@ intro-images/dag.png
 intro-images/dag-br.png
 
 = what is a tag
-
   * when you checkout a branch and then commit, the branch is now pointing at
     the new 'snapshot'.  @@This means...
-  * ...the branch keeps moving with every commit
+  * ...the branch 'tip' keeps moving with every commit
   * But sometimes you want to mark a point in your development
     ** with some sort of a permanent label
     ** that stays right there, even if you add commits on top
@@ -163,26 +159,32 @@ intro-images/dag-br.png
 intro-images/dag-br-tag.png
 
 = general VCS concepts
-
   * "project": minimum set of source code (and related files) needed
     to **build** the software
   * in a CVCS (Centralised VCS)
     ** each project will have exactly one "repository"
     ** on some central server
-    ** and each developer will checkout the projects he needs
+    ** and each developer will checkout the project
        *** from the server to his workstation
 
 = a DVCS is different
-
   * each project will have one "central" repository
+    ** (maybe; see next slide)
   * but each repository can have many "clones"
   * so each developer has a clone on his workstation
     ** a complete copy of the repository
-    ** plus his own stuff
-  * (...for EACH project he's working on)
+    ** plus his own work/changes
+
+= central repo in a DVCS?
+  * the developers can push and pull from each other directly
+    ** because they're also repositories just like the "central" one
+  * so do we still need a "central" repo?
+    ** not really@@; that's only an administrative decision now
+    ** not a technical requirement
+    ** but it makes managing projects easier
+    ** so yes, we still have central repos for most projects
 
 = what is a 'remote'
-
   * when you clone, the repo you cloned from is a 'remote' for you
   * every remote has a name (a user-friendly name you choose)
   * (special case for clone: the 'remote' has a special name: 'origin')
@@ -280,6 +282,43 @@ intro-images/remote.png
     ** their changes get merged into your local repo
     ** then you push...
 
+= clean and dirty work tree
+  * clean: all changes committed to local repo
+  * dirty: some files changed, and changes not yet committed
+  * PULL IS BEST DONE ON A CLEAN TREE!
+
+= clean tree - CLI
+
+intro-images/clean-cli.png
+
+= clean tree - GUI
+
+intro-images/clean-gui.png
+
+= dirty tree - CLI
+
+intro-images/dirty-cli.png
+
+= dirty tree - GUI
+
+intro-images/dirty-gui.png
+
+= staging from the GUI
+
+intro-images/staging-gui.png
+
+= staged files - CLI
+
+intro-images/staged-cli.png
+
+= committing from the GUI
+
+intro-images/commit-gui.png
+
+= clean again!
+
+intro-images/clean-again.png
+
 = conflicts
   * what is a conflict
   * how do you resolve it?
@@ -287,7 +326,9 @@ intro-images/remote.png
 = advanced workflow activities
   * cherry-pick -- pick up specific changes from another branch or repo and
     make those changes happen in your repo
-  * rebase -- move commits around; sort of like
+  * rebase -- move commits around@@; sort of like
     ** cut off a branch where it connects to the trunk of a tree...
     ** ...and graft it somewhere else
   * bisect
+
+= ...and we're done!
