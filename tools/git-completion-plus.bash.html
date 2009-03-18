@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title>~/git-completion-plus.bash.html</title>
+<title>~/imli/git-notes/tools/git-completion-plus.bash.html</title>
 <meta name="Generator" content="Vim/7.2">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 </head>
@@ -13,24 +13,9 @@
 <font color="#0000ff"># -----------------------------------------------------------------------------</font><br>
 <font color="#0000ff">#&nbsp;&nbsp; This file should be sourced into your bashrc.</font><br>
 <br>
-<font color="#0000ff">#&nbsp;&nbsp; The following two lines are necessary.&nbsp;&nbsp;Of course you can have your own</font><br>
-<font color="#0000ff">#&nbsp;&nbsp; PS1 in your .bashrc; just put it *after* the line that sources this file</font><br>
-<font color="#0000ff">#&nbsp;&nbsp; and make sure you include $__git_ps1_text in it.</font><br>
-<br>
-<font color="#a52a2a"><b>export</b></font><font color="#008b8b">&nbsp;PROMPT_COMMAND=</font>__git_ps1_plus<br>
-<font color="#0000ff">#&nbsp;&nbsp; DO NOT use the $(...) construct in PS1; see function below for why</font><br>
-<font color="#008b8b">PS1</font>=<font color="#a52a2a"><b>'</b></font><font color="#ff00ff">\[\e[32m\]\t\[\e[30m\] \h:\W$__git_ps1_text </font><font color="#6a5acd">\$</font><font color="#ff00ff">&nbsp;\[\e[m\]</font><font color="#a52a2a"><b>'</b></font><br>
-<br>
 <font color="#0000ff"># -----------------------------------------------------------------------------</font><br>
 <font color="#0000ff"># in brief:</font><br>
 <font color="#0000ff"># -----------------------------------------------------------------------------</font><br>
-<font color="#0000ff">#&nbsp;&nbsp; - normally, shows whatever __git_ps1 sends back.&nbsp;&nbsp;That is, completion,</font><br>
-<font color="#0000ff">#&nbsp;&nbsp;&nbsp;&nbsp; branch name, and branch state text come from the git-supplied</font><br>
-<font color="#0000ff">#&nbsp;&nbsp;&nbsp;&nbsp; contrib/completion/git-completion.bash</font><br>
-<font color="#0000ff">#&nbsp;&nbsp; - but when you</font><br>
-<font color="#0000ff">#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - switch branches, or</font><br>
-<font color="#0000ff">#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - change current working directory, or</font><br>
-<font color="#0000ff">#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - hit enter twice in quick succession at the bash prompt (!!)</font><br>
 <font color="#0000ff">#&nbsp;&nbsp;&nbsp;&nbsp; shows a color-coded count of files in various states: unmerged (bold</font><br>
 <font color="#0000ff">#&nbsp;&nbsp;&nbsp;&nbsp; red), untracked (blue), modified (red), and staged (green).&nbsp;&nbsp;In</font><br>
 <font color="#0000ff">#&nbsp;&nbsp;&nbsp;&nbsp; addition, the branch name reported by __git_ps1 is also colored</font><br>
@@ -46,7 +31,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">clean_vcs_color</font>=blue&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># nothing to commit (working directory clean)</font><br>
 &nbsp;&nbsp;&nbsp;&nbsp; <font color="#008b8b">modified_vcs_color</font>=red&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#0000ff"># Changed but not updated:</font><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">added_vcs_color</font>=green&nbsp;&nbsp;&nbsp;&nbsp; <font color="#0000ff"># Changes to be committed:</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">mixed_vcs_color</font>=yellow&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># </font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">mixed_vcs_color</font>=yellow&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff">#</font><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">untracked_vcs_color</font>=BLUE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># Untracked files:</font><br>
 &nbsp;&nbsp;&nbsp;&nbsp; <font color="#008b8b">detached_vcs_color</font>=RED<br>
 &nbsp;&nbsp;&nbsp;&nbsp; <font color="#008b8b">unmerged_vcs_color</font>=MAGENTA<br>
@@ -57,45 +42,18 @@
 <font color="#a52a2a"><b>. </b></font>~/git-completion.bash<br>
 <br>
 <font color="#0000ff"># -----------------------------------------------------------------------------</font><br>
-<font color="#0000ff"># this function sets __git_ps1_text when called.&nbsp;&nbsp;It must be called via</font><br>
-<font color="#0000ff"># PROMPT_COMMAND; calling it via $(...) in PS1 does not work because you</font><br>
-<font color="#0000ff"># cannot maintain state if it's a sub-process</font><br>
-<font color="#0000ff"># -----------------------------------------------------------------------------</font><br>
+<font color="#0000ff"># this function sets __git_ps1_text when called.</font><br>
 <br>
 <font color="#008b8b">__git_ps1_plus()</font><br>
 <font color="#008b8b">{</font><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">git_dir</font>=<font color="#6a5acd">`git rev-parse --git-dir </font><font color="#ff00ff">2</font><font color="#6a5acd">&gt; /dev/null`</font><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#6a5acd">[[</font>&nbsp;<font color="#a52a2a"><b>-n</b></font>&nbsp;<font color="#a52a2a"><b>&quot;</b></font><font color="#a020f0">$git_dir</font><font color="#a52a2a"><b>&quot;</b></font>&nbsp;<font color="#6a5acd">]]</font>&nbsp;<font color="#a52a2a"><b>||</b></font>&nbsp;<font color="#6a5acd">{</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># not in a git dir?&nbsp;&nbsp;reset state and display field; return</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">__git_ps1_state</font>=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># not in a git dir?&nbsp;&nbsp;reset display field; return</font><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">__git_ps1_text</font>=<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52a2a"><b>return</b></font><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#6a5acd">}</font><br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># elegant hack or extreme kludgery?&nbsp;&nbsp;You decide...</font><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># I wanted a way to see the extra 'git status' info very conveniently, but</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># not on *every* prompt -- hitting enter twice in quick succession at the</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># bash prompt was about as much as I was willing to do :-)</font><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># The hack works by remembering the $SECONDS value at the end of each</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># unsuccesful invocation.&nbsp;&nbsp;When the next invocation still has the same</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># $SECONDS, you know the user hit enter twice, so you do the 'git status'</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># stuff.</font><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># In addition, of course, if the PWD or the output of __git_ps1 itself</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># changed, that also triggers the extra stuff.</font><br>
-<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52a2a"><b>local</b></font>&nbsp;gitps1<font color="#a52a2a"><b>;</b></font>&nbsp;<font color="#008b8b">gitps1</font>=<font color="#a020f0">$(</font><font color="#6a5acd">__git_ps1</font><font color="#a020f0">)</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#6a5acd">[[</font>&nbsp;<font color="#a020f0">$__git_ps1_state</font>&nbsp;<font color="#a52a2a"><b>==</b></font>&nbsp;<font color="#a020f0">$PWD</font>/<font color="#a020f0">$gitps1</font>&nbsp;<font color="#6a5acd">]]</font>&nbsp;<font color="#a52a2a"><b>&amp;&amp;</b></font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#6a5acd">[[</font>&nbsp;<font color="#a020f0">$__git_ps1_plus_last</font>&nbsp;<font color="#a52a2a"><b>-ne</b></font>&nbsp;<font color="#a020f0">$SECONDS</font>&nbsp;<font color="#6a5acd">]]</font>&nbsp;<font color="#a52a2a"><b>&amp;&amp;</b></font>&nbsp;<font color="#6a5acd">{</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">__git_ps1_text</font>=<font color="#a020f0">$gitps1</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">__git_ps1_plus_last</font>=<font color="#a020f0">$SECONDS</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52a2a"><b>return</b></font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#6a5acd">}</font><br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># save state for next time</font><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">__git_ps1_state</font>=<font color="#a52a2a"><b>&quot;</b></font><font color="#a020f0">$PWD</font><font color="#ff00ff">/</font><font color="#a020f0">$gitps1</font><font color="#a52a2a"><b>&quot;</b></font><br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># this is the notionally expensive stuff -- run 'git status', parse it,</font><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff"># and convert the whole thing to colors and numbers</font><br>
@@ -132,7 +90,7 @@
 <font color="#6a5acd">&nbsp;&nbsp;&nbsp;&nbsp;`</font><br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52a2a"><b>grep</b></font>&nbsp;-q <font color="#a52a2a"><b>&quot;</b></font><font color="#ff00ff">^ref:</font><font color="#a52a2a"><b>&quot;</b></font>&nbsp;<font color="#a020f0">$git_dir</font>/HEAD&nbsp;&nbsp;<font color="#ff00ff">2</font><font color="#a52a2a"><b>&gt;</b></font>/dev/null<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52a2a"><b>if </b></font>&nbsp;<font color="#a52a2a"><b>!</b></font>&nbsp;<font color="#a52a2a"><b>grep</b></font>&nbsp;<font color="#a52a2a"><b>-q</b></font>&nbsp;<font color="#a52a2a"><b>&quot;</b></font><font color="#ff00ff">^ref:</font><font color="#a52a2a"><b>&quot;</b></font>&nbsp;<font color="#a020f0">$git_dir</font>/HEAD&nbsp;&nbsp;<font color="#ff00ff">2</font><font color="#a52a2a"><b>&gt;</b></font>/dev/null<font color="#a52a2a"><b>;</b></font>&nbsp;&nbsp; <font color="#a52a2a"><b>then</b></font>&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52a2a"><b>if </b></font>&nbsp;<font color="#a52a2a"><b>!</b></font>&nbsp;<font color="#a52a2a"><b>grep</b></font>&nbsp;<font color="#a52a2a"><b>-q</b></font>&nbsp;<font color="#a52a2a"><b>&quot;</b></font><font color="#ff00ff">^ref:</font><font color="#a52a2a"><b>&quot;</b></font>&nbsp;<font color="#a020f0">$git_dir</font>/HEAD&nbsp;&nbsp;<font color="#ff00ff">2</font><font color="#a52a2a"><b>&gt;</b></font>/dev/null<font color="#a52a2a"><b>;</b></font>&nbsp;&nbsp; <font color="#a52a2a"><b>then</b></font><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008b8b">detached</font>=detached<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52a2a"><b>fi</b></font><br>
 <br>
