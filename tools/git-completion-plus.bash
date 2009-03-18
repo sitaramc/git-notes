@@ -5,23 +5,9 @@
 # -----------------------------------------------------------------------------
 #   This file should be sourced into your bashrc.
 
-#   The following two lines are necessary.  Of course you can have your own
-#   PS1 in your .bashrc; just put it *after* the line that sources this file
-#   and make sure you include $__git_ps1_text in it.
-
-export PROMPT_COMMAND=__git_ps1_plus
-#   DO NOT use the $(...) construct in PS1; see function below for why
-PS1=${PS1%????}'$__git_ps1_text \$ \[\e[m\]'
 # -----------------------------------------------------------------------------
 # in brief:
 # -----------------------------------------------------------------------------
-#   - normally, shows whatever __git_ps1 sends back.  That is, completion,
-#     branch name, and branch state text come from the git-supplied
-#     contrib/completion/git-completion.bash
-#   - but when you
-#       - switch branches, or
-#       - change current working directory, or
-#       - hit enter twice in quick succession at the bash prompt (!!)
 #     shows a color-coded count of files in various states: unmerged (bold
 #     red), untracked (blue), modified (red), and staged (green).  In
 #     addition, the branch name reported by __git_ps1 is also colored
@@ -48,45 +34,18 @@ PS1=${PS1%????}'$__git_ps1_text \$ \[\e[m\]'
 . ~/git-completion.bash
 
 # -----------------------------------------------------------------------------
-# this function sets __git_ps1_text when called.  It must be called via
-# PROMPT_COMMAND; calling it via $(...) in PS1 does not work because you
-# cannot maintain state if it's a sub-process
-# -----------------------------------------------------------------------------
+# this function sets __git_ps1_text when called.
 
 __git_ps1_plus()
 {
     git_dir=`git rev-parse --git-dir 2> /dev/null`
     [[ -n "$git_dir" ]] || {
-        # not in a git dir?  reset state and display field; return
-        __git_ps1_state=
+        # not in a git dir?  reset display field; return
         __git_ps1_text=
         return
     }
 
-    # elegant hack or extreme kludgery?  You decide...
-
-    # I wanted a way to see the extra 'git status' info very conveniently, but
-    # not on *every* prompt -- hitting enter twice in quick succession at the
-    # bash prompt was about as much as I was willing to do :-)
-
-    # The hack works by remembering the $SECONDS value at the end of each
-    # unsuccesful invocation.  When the next invocation still has the same
-    # $SECONDS, you know the user hit enter twice, so you do the 'git status'
-    # stuff.
-
-    # In addition, of course, if the PWD or the output of __git_ps1 itself
-    # changed, that also triggers the extra stuff.
-
     local gitps1; gitps1=$(__git_ps1)
-    [[ $__git_ps1_state == $PWD/$gitps1 ]] &&
-    [[ $__git_ps1_plus_last -ne $SECONDS ]] && {
-        __git_ps1_text=$gitps1
-        __git_ps1_plus_last=$SECONDS
-        return
-    }
-
-    # save state for next time
-    __git_ps1_state="$PWD/$gitps1"
 
     # this is the notionally expensive stuff -- run 'git status', parse it,
     # and convert the whole thing to colors and numbers

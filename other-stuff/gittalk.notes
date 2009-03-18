@@ -6,7 +6,7 @@
 
 = why use a VCS
   * reversibility or rollback@@, aka C-Y-A!
-    ** linear@@, simple to implement
+    ** linear (on the time axis)@@, simple to implement
   * concurrency
     ** non-linear@@, all the complexity is here
     ** make or break productivity
@@ -21,6 +21,7 @@
     ** Darcs/TLA/Bazaar/Monotone@@, Mercurial, Git
   * proprietary
     ** VSS@@, Clearcase@@@@, Perforce
+    ** Bitkeeper
     ** others??
 
 = upfront: caveats about git
@@ -37,6 +38,7 @@
   * will not track permissions and ownership
   * will not allow partial checkouts
     ** (but submodule mechanism exists; out of scope of this talk)
+  * will not track/store empty directories
   * not optimised for tracking very large binary files (mp3s, movies, etc.).
 
 = history
@@ -120,7 +122,7 @@
 
 = implementation problems with normal VCSs
   * single point of failure due to centralised model
-  * usually heavy on resurces and very slow
+  * usually heavy on resources and very slow
   * hardware and admin costs sometimes more than the license costs
 
 == above stuff mostly from

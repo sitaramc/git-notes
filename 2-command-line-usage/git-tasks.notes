@@ -324,11 +324,11 @@ but less intuitive ones are shown here, the rest can be had from the man page:
     discard unreachable objects instead of keeping them as loose objects.
 
         git repack -adf     # kills in-pack garbage
-        g prune             # kills loose garbage
+        git prune           # kills loose garbage
 
   * (from the do-you-really-want-to-do-this? department)
 
-        g reflog expire --expire=10days --all
+        git reflog expire --expire=10days --all
         # use expire-unreachable to limit it a bit
         # use branchname(s) instead of --all
         # units can be seconds, minutes, etc
