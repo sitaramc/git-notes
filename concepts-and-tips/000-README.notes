@@ -3,3 +3,11 @@
 This directory contains individual tips and techniques as separate articles.
 These are likely to have more narrative than commands, so they should be good
 for concepts and light reading.
+
+In addition, I have found [Git for Computer
+Scientists](http://eagain.net/articles/git-for-computer-scientists/) to be
+very useful when I was trying to get my head wrapped around the basic
+concepts.
+
+Another page that may be useful is [Git from the bottom
+up](http://www.newartisans.com/blog_assets/git.from.bottom.up.pdf).
