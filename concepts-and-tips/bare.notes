@@ -1,0 +1,172 @@
+# all about "bare" repos -- what, why, and how to fix a non-bare push
+
+^^
+[[TOC]]
+^^
+
+----
+
+### what is a bare repo?
+
+A bare repository is a concept that is sort of unique to a Distributed VCS
+like git (and, I presume, other such DVCSs like Hg/Bzr/etc also).
+'master' without affecting you, since it isn't the checked out branch
+[[1]](#fn)
+
+A normal git repository is a directory that contains
+
+  * project directories and files (the "working tree" mentioned above)
+  * a single directory called `.git` containing all of git's
+    administrative and control files; we'll call it the **magic** directory
+    because git can't do any magic without it :-)
+
+When you do a `git status` inside such a directory, git looks inside the
+"magic" directory, compares your current working tree with the "current
+branch" as recorded in the magic directory, and tells you what files have
+changed, etc etc.
+
+A "bare" repo, as the git
+[glossary](http://www.kernel.org/pub/software/scm/git/docs/gitglossary.html)
+says, is a repository that does not contain a "working tree" at all.  It
+doesn't contain the special `.git` sub-directory either; instead, it
+contains all the contents of the `.git` subdirectory right in the main
+directory itself.
+
+### yeah yeah, but **why** do I need a bare repo?
+
+ok; demo time...
+
+Let's try creating a small repo, adding a file, committing, and checking
+`git status`:
+
+    mkdir a; cd a; git init
+    echo hi > a;git add a; git commit -m a
+    git status
+
+This should respond
+
+    # On branch master
+    # nothing to commit (working directory clean)
+
+So far so good.  Now someone clones our repository, adds a new file, commits,
+and pushes his changes back to our repository:
+
+    cd ..;git clone a b
+    cd b; echo there >> b; git add b; git commit -m b
+    git push
+
+The `git push` above sends your new commits to the "origin" repository.  More
+specifically, it updates the "magic" directory on repo "a" with this new
+commit.
+
+Now you go back to the main repo and check `git status`
+
+    cd ../a
+    git status
+
+which responds
+
+    # On branch master
+    # Changes to be committed:
+    #   (use "git reset HEAD <file>..." to unstage)
+    #
+    #       deleted:    b
+
+Whoa!  What happened here?  We **added** a file called `b` in the cloned
+repository and pushed to the "origin".  But your origin now claims you
+**deleted** that file...?
+
+To understand this, you need to realise that **the "magic" directory is always
+assumed to be correct**; it is the "standard" against which your working tree
+is compared to determine what changes you made in your working tree.
+
+So when you asked for a status, git first looked inside the magic directory.
+The magic directory said you should have two files, "a" and "b", but your work
+tree has only file "a".  So `git status` concludes that you have deleted
+the file "b"!
+
+In other words, when someone changes the "magic" directory **behind your
+back**, your locally checked out copy (your working tree) appears to have the
+**opposite** changes made by you.
+
+All this confusion can (and *should*) be avoided by using a "bare"
+repository to clone and pull from, and push to.  It doesn't have a checked out
+tree, so it just does what the "server" notionally does in a centralised VCS
+-- records commits, branches, etc when you push to it, and gives you the
+latest versions when you clone or pull from it.
+
+### how do I fix such a non-bare push?
+
+If you did push into a non-bare repo, the first thing to do is make sure that
+no one is working on that checked out work tree, and no local changes have
+been made since the last checkout.
+
+Once you've made sure of that, you should log onto that machine, cd to that
+repo, and do this:
+
+    git reset --hard HEAD
+
+If you had local changes on that work tree, or you are not sure if you had
+any, then you have a bit of a challenge.  There are ways to deal with it quite
+nicely in git, but I haven't tried them yet.  Ideas:
+
+1.  see if any of the HEADs in reflog match your current work tree exactly, in
+    which case you really do NOT have any local changes, and you can safely do
+    that reset.  Use `git reflog show your-branch-name` to find the topmost
+    commit after the most recent push or set of pushes (in case there were
+    more than one) and compare your work tree against that.
+
+    Let's say your reflog output looks like this:
+
+        $ git reflog show master
+        fcbb5a7 master@{0}: push
+        e41b4ce master@{1}: push
+        6ef3360 master@{2}: commit: blah blah more blah
+        a48b324 master@{3}: commit: blah blah blah
+        48e4b98 master@{4}: commit (initial): first commit
+
+    As you can see, there were two "behind your back" pushes, and it is very
+    likely that master@{2} is the "base" for your current work tree.  So you
+    compare against that:
+
+        $ git diff --stat --exit-code master@{2}
+
+    If there are no differences, you're probably OK to do that `git reset
+    --hard`.  If you're really paranoid, you'll check to make sure that
+    master@{2} is an ancestor of HEAD:
+
+        git rev-list HEAD..master@{2}   # should be empty
+
+2.  anyway, if the diff above showed differences, you have a merge of some
+    sort coming up.  Here's what you do:
+
+    * make a temporary branch off that same commit
+
+            git checkout -b temp master@{2}
+
+    * now you have two alternatives:
+
+      * The safe way: commit those changes.  If the work is not complete,
+        complete it -- you have all the time in the world now that you have
+        created a temp branch, and any number of pushes can now happen on
+        'master' without affecting you, since it isn't the checked out branch
+        [[1]](#fn)
+
+      * The quicker way: stash those changes using `git stash`.  I am 99% sure
+        stashing will work as well here, but would appreciate hearing from any
+        git.experts reading this (email me at sitaramc@gmail.com)
+
+    * now checkout master and either merge temp or `git stash pop` depending
+      on which option you chose above; it's just a normal branch now!
+
+    * finally, when everything looks ok, `git branch -D temp`
+
+----
+
+^^
+
+<a name="fn">[1] Yup -- you can make a non-bare repo look like a bare repo
+for push purposes by creating and checking out a branch that your users will
+not push to.  The entire repo does not have to be bare, really...
+
+^^
