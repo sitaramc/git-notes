@@ -1,0 +1,30 @@
+# backing up a repo by just: git push backup
+
+This is, like many things in this directory, by doener, on irc circa
+2009-03-25 19:24 Wed IST
+
+    mkdir -p ~/backups/projectX.git
+    cd ~/backups/projectX.git
+    git init --bare
+    # see notes below for these two
+    git config core.logAllRefUpdates true
+    git config receive.denyDeletes true
+
+    cd /path/to/projectX
+    git remote add -t dont_fetch_from_the_backup --mirror backup ~/backups/projectX.git
+
+Here is some documentation (paraphrased from the irc chat log).
+
+It creates a bare repo to store the backup, adds a remote to the "work" repo
+and then pushes.  The `--mirror` bit makes the remote act as a mirror (i.e.
+"git push" will default to `--mirrror` for this remote) The `-t
+dont_fetch_from_the_backup` is there because, normally, with `--mirror` you
+get a bidirectional mirror setup, i.e. fetch is set to `refs/*:refs/*`, and
+you don't want an accidental fetch to kill your work.  Of course simply
+unsetting `remote.backup.fetch` would also do, but the error message for the
+invalid ref reminds you you shouldn't be doing that.
+
+My additions:  I hope that by adding the two config variables above, I can
+allow non-fast forward pushes, letting the reflog act as a safety net as
+usual.  The reflog does not protect from a deleted branch, hence we disallow
+that (that is rare enough that I can do it manually if I need to).
