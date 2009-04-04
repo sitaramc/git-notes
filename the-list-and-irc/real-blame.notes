@@ -47,7 +47,7 @@ those logs for a longer period of time.
 ### investigation
 
 So let's say you look at the reflog and find you want to know who pushed a
-particular commit.
+particular commit[1]
 
     git@git:~/repositories/testing.git$ git reflog
     582b3ad... HEAD@{0}: push
@@ -56,7 +56,7 @@ particular commit.
 You're interested in `582b3ad`, so you do the following (note that the output
 line below is wrapped for the purposes of this page):
 
-    git@git:~/repositories/testing.git$ grep ' 582b3' logs/*
+    git@git:~/repositories/testing.git$ grep -r ' 582b3' logs
     logs/HEAD:f0a5fc1171c967a7af975fc454a25a599066565b
         582b3ad0219d922a9aed6f5cbb3f4f9a5741df6b git master user
         <git@my.domain.com> 1238837842 +0530      push
@@ -105,4 +105,19 @@ it.  Typically this is because of using different machines or whatever.  If
 you pass such a file to `ssh-keygen -l` it'll only compute the fingerprint of
 the first pubkey in the file.  I found this out quite luckily -- I'd
 completely forgotten about the multiple keys per file thing...!
+^^
+
+----
+
+^^
+[1] The reflog stores only the "tip" of a series of commits, so if the
+suspicious commit is in the middle of a series which was pushed all at once,
+you have some extra work.
+
+The basic idea is, you take the second SHA in each reflog line, check
+if it is a descendent of the commit you want, note the timestamp if so, and
+then choose the earliest among them to go check in `auth.log`.
+
+I'll write a script to do this if someone asks... right now I can't be
+bothered :-)
 ^^
