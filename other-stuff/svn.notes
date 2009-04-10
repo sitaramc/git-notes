@@ -8,9 +8,69 @@ eventually it should all be pulled into this file.*
 
 ^^as Churchill said, so much to do, and so little time in which to do it... (*sigh*)^^
 
+What follows is my understanding of the SVN scenario, from various sources.  I
+personally have used SVN only briefly.  If there are errors in the SVN part of
+this description please let [me](mailto:sitaramc@gmail.com) know.
+
 [[TOC]]
 
 ----
+
+### briefly...
+
+Git's advantages over SVN (all of them affect productivity and/or
+maintainability, indicated in parens as **P** or **M**) are:
+
+  * **(P)** handles merges automatically (in fact SVN doesn't really "handle"
+    merges; merge history must be manually recorded and managed, and it's
+    almost impossible to have 2 branches merging regularly in SVN without a
+    lot of pain for the integration team)
+
+  * **(M)** handles file renames correctly; helps in refactoring (in SVN, if you
+    rename a file, you lose all the history for that file)
+
+  * **(P, M)** devs can create local branches without polluting the central server
+    -- experimental features can be developed and tested "on the side", with
+    full revision control and granular commits.  If the experiment worked, you
+    bring it into the main repo (without losing the individual commits),
+    otherwise you toss it.  In SVN, a successful side project is forced to
+    enter the main project as one large chunk of code, which seriously affects
+    future maintainability.
+
+  * **(P, M)** devs make lots of small commits instead of one humongous commit --
+    much easier for code review, debugging, cherry-picking, and merging with
+    other changes.  Merge-conflict resolution happens on much smaller units
+    instead of one huge chunk of code dumped on the repo!  In SVN, every
+    commit goes to the server, forcing commits to be large and monolithic, in
+    turn causing every merge to be a serious exercise rather than a couple of
+    minutes work.
+
+  * **(P)** common VCS operations do not need network or server access, and are
+    blazingly fast.  SVN and other VCSs may take so long that a developer who
+    is, say, trying to trace the changes that caused a bug may feel it's
+    easier to go through the code himself than run a 'diff' against the last
+    known good version!  That is, these VCSs have the tools but it's a pain to
+    use them!
+
+Git does a lot of things better than any other VCS:
+
+  * **(P)** branching/merging is so bad in most other VCSs that lots of projects
+    forgo all the advantages of parallel development!  Or they have to have a
+    separate "merge team", and they freeze development for a couple of days to
+    do the merge.  With git, merges (and therefore, merge conflicts, if any)
+    are (i) handled by the developer closest to the merged code, not an
+    upstream integrator who probably doesn't know the new code well, and (ii)
+    processed in many small chunks instead of one large chunk of code.
+
+  * **(M)** git doesn't track files, it tracks content.  So if a piece of code
+    moved from one source file to another, and you look at the history of that
+    file visually, git will tell you that these lines came from that file over
+    there, and it'll also tell you the history of those lines before they came
+    here.  This is way beyond what any other VCS can imagine doing, and is a
+    real lifesaver for someone who picks up a complex project for maintenance
+    or a new team member is trying to understand the existing project.
+
+### ...and a bit more detail
 
 #### 'svn update' on very active projects
 
@@ -84,7 +144,7 @@ Mozilla repository, with full history from 1998 or so:
 
 That's a ratio of almost 20:1 in size over SVN.
 
-#### some links
+### some links
 
   * <http://markmcb.com/2008/10/18/3-reasons-to-switch-to-git-from-subversion/>:
     the first example, 'Endless, Easy, Non-File-System-Based, Local Branches',
