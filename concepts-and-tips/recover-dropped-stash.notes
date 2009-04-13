@@ -1,0 +1,23 @@
+# recovering a dropped stash:
+
+You dropped a stash that was created recently, and now you want to recover it.
+As long as you did not do a garbage collection in between, this should work:
+
+    gitk $(git fsck --unreachable | grep commit | cut -f3 -d' ') --since='1 week ago'
+
+The part within the parenthesis finds all unreachable commit objects and
+returns their hashes.  If you never did a garbage collect there might be too
+many of them so the `--since` clause (which you can adjust to whatever you
+want of course; mine is just an example) limits the display to commits created
+recently.
+
+#### why gitk?
+
+A "stash" has a very recognisable, triangular, shape in the commit DAG -- with
+gitk you can visually find stashes really fast.
+
+People who are too macho to use GUIs can have the pleasure of figuring out
+more complex ways to find the **stashes** among all the other unreachable
+commits in a busy repo :-)  For me, this is the kind of task that *calls out*
+for a GUI -- infrequently required, no conceivable need to automate, and
+containing data that stands out visually.
