@@ -20,23 +20,23 @@ preclude them.
 2.  If there is no slash otherwise, it matches that name, at any depth in the
     tree
 3.  If there is a slash anywhere else, it matches that name, relative to the
-    .gitignore (or $GIT_WORK_TREE if the pattern is from one of the other
+    .gitignore (or `$GIT_WORK_TREE` if the pattern is from one of the other
     pattern sources like `.git/info/exclude` etc)
 
 The wildcards (`*` and `?`) do not match slashes, but otherwise the patterns
-are normal shell globs as defined by fnmatch(3) with the FNM_PATHNAME flag
+are normal shell globs as defined by fnmatch(3) with the `FNM_PATHNAME` flag
 set.
 
 ----
 
-^^Just for completeness, the pattern source priorities are, highest to lowest:
+<font size=-1>Just for completeness, the pattern source priorities are, highest to lowest:
 
   * command line
   * the deepest .gitignore that applies to this path
-  * shallower .gitignore files until you get to $GIT_WORK_TREE
+  * shallower .gitignore files until you get to `$GIT_WORK_TREE`
     * patterns in .gitignore files are relative to the location of the
-      gitignore file, not to the $GIT_WORK_TREE
-  * $GIT_DIR/info/exclude
+      gitignore file, not to the `$GIT_WORK_TREE`
+  * `$GIT_DIR/info/exclude`
   * core.excludesfile
 
-^^
+</font>

@@ -10,8 +10,6 @@
 
 A bare repository is a concept that is sort of unique to a Distributed VCS
 like git (and, I presume, other such DVCSs like Hg/Bzr/etc also).
-'master' without affecting you, since it isn't the checked out branch
-[[1]](#fn)
 
 A normal git repository is a directory that contains
 

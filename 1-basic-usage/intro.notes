@@ -261,6 +261,7 @@ intro-images/remote.png
     ** ssh (read+write, access control by ssh)
     ** file protocol (locally mounted files, read+write, access control by OS)
     ** git protocol (read only, access control by OS/firewall etc)
+       *** needs git daemon to be started first
     ** http (read only, access control by Apache)
        *** (read-write using DAV == Loch Ness monster)
        *** (meaning I've heard it exists, but I haven't seen it!)

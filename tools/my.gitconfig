@@ -44,6 +44,7 @@
 
         ka      = !gitk --all
         kdo     = !gitk --date-order
+        kado    = !gitk --all --date-order
         kasd    = !gitk --all --simplify-by-decoration
 [rerere]
 	enabled = 1
