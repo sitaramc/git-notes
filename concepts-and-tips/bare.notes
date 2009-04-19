@@ -147,8 +147,7 @@ nicely in git, but I haven't tried them yet.  Ideas:
       * The safe way: commit those changes.  If the work is not complete,
         complete it -- you have all the time in the world now that you have
         created a temp branch, and any number of pushes can now happen on
-        'master' without affecting you, since it isn't the checked out branch
-        [[1]](#fn)
+        'master' without affecting you, since it isn't the checked out branch.
 
       * The quicker way: stash those changes using `git stash`.  I am 99% sure
         stashing will work as well here, but would appreciate hearing from any
@@ -157,14 +156,23 @@ nicely in git, but I haven't tried them yet.  Ideas:
     * now checkout master and either merge temp or `git stash pop` depending
       on which option you chose above; it's just a normal branch now!
 
-    * finally, when everything looks ok, `git branch -D temp`
+### how do I prevent the problem from happening again?
 
-----
+Well one option is to tell people to stop pushing and shoving :-)
 
-^^
+Jokes apart, if you or others will continue to push into this repo, you have
+to make it a bare repo.
 
-<a name="fn">[1] Yup -- you can make a non-bare repo look like a bare repo
-for push purposes by creating and checking out a branch that your users will
-not push to.  The entire repo does not have to be bare, really...
+To make it a "real" bare repo, just delete all the files except `.git`, then
+`mv .git/* .; rmdir .git`.  Finally, edit the file called `config` and change
+`bare = false` to `bare = true`.
 
-^^
+If you're not comfortable playing with git at that level, there is another
+alternative.  You may have guessed by now that you can make a non-bare repo
+look like a bare repo for push purposes by creating and checking out a branch
+that your users will not push to.  The entire repo does not have to be bare,
+really...
+
+So just run `git checkout -b DUMMY_BRANCH_DONT_USE` (or some such name) and
+keep this branch checked out forever in this repo.  This is a cheap way to
+make a non-bare repo into a bare repo for all practical purposes.
