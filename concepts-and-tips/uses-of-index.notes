@@ -1,15 +1,34 @@
 # Why the index/staging area is so useful
 
-^^[[TOC]]^^
+^^[[TOC]]
+
+[Also see [good version control habits](1-vc-habits.html) for more on a
+related topic.]
+
+^^
 
 ----
 
 >   Newcomers to git often ask why there is such a thing as the index, and
-    what use is it.  If you don't understand what the index does, it might
-    seem like one extra (and needless) complication.
+    what use is it.  They'd rather just do `git add -A; git commit` each time
+    to avoid thinking about the index at all, because it seems like one extra
+    (and needless) complication.
 
 >   So... what use is this, apart from confusing you with multiple names like
     index, staging area, and cache?
+
+
+### what is the index
+
+The index (or any of its other names) is essentially a "holding area" for
+changes that will be committed when you next do `git commit`.  That is, unlike
+other VCSs, a "commit" operation does not simply take the current working tree
+and check it as-is into the repository.  The index allows you to control what
+parts of the working tree go into the repository on the next "commit"
+operation.
+
+That should be sufficient background to appreciate (in abstract terms) the
+following discussion.
 
 ### staging helps in reviewing changes
 
@@ -34,7 +53,7 @@ that the file now appears on *both* top and bottom left panes!
 ^^[Do remember, however, that if the change is really complex maybe you should
 split it into multiple commits!]^^
 
-### staging helps when merging
+### staging helps when a merge has conflicts
 
 When a merge happens, changes that merge cleanly are updated both in the
 staging area as well as in your work tree.  Only changes that did not merge
@@ -86,20 +105,24 @@ push!
 #### a word of warning...
 
 While the first 3 use cases are perfectly legitimate and useful uses of the
-index, this last example could be dangerous if you get carried away.
+index, this last example could be dangerous if you get carried away.  You
+might end up committing something that is not tested *exactly*, because you
+tested with the contents of the work tree, which is not the same as the index
+that is being committed.
 
-You cannot actually compile and test what is in the index, ignoring the rest
-of the unstaged changes.  The index does not exist as a "tree" on the file
-system.
+Of course, using a powerful DVCS does not absolve you from the responsibility
+of thinking :-)  So if you want to be 100% sure, there is a simple way to test
+only the staged code:
 
-So, strictly speaking, you did not test the precise change which you committed
-there; you tested that change *plus* a whole bunch of "pending" stuff in the
-work tree.  You have to be sure the test succeeded **only** because of that
-one change, and not any of the pending stuff.
+    # stash away the changes to git-tracked files that you have not staged yet
+    git stash save --keep-index
+    # now do your tests on the exact stuff being committed
+    make; make test     # etc...
+    # when satisfied, commmit
+    git commit
 
-And if you're not 150% sure, you should do this the proper way: in a separate
-branch, using `git stash` to temporarily save away your uncommitted work
-if needed.
+    # now bring the stashed changes back to continue normal work
+    git stash pop
 
-Using a powerful DVCS does not absolve you from the responsibility of thinking
-:-)
+If you need to understand how/why this works, [ask
+me](mailto:sitaramc@gmail.com), otherwise just use it and be happy :-)
