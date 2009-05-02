@@ -146,12 +146,16 @@ Anyway, your bottom line should be:
 ### alternative method using perl on windows
 
 There is another method, achieved by hacking a perl script that was supposed
-to convert to SVN, to make it go to perl instead.  Pros and cons:
+to convert [to SVN](http://www.riseup.com/~brettw/dev/VSS2Subversion.html), to
+make it go [to perl](../tools/vss2git.pl) instead.  Pros and cons:
 
   * (+) no CRLF problem
   * (+) easier to use: you just need msysgit and this program, no messing
     around with all these dependencies for vss2svn (but then, you can execute
     vss2svn the same way too -- they have a standalone windows executable)
+  * (-) **NOT** very reliable; please double check your data if you really
+    care about history.  Deep down beyond a point where some files were
+    deleted, I found mismatches with a VSS "get" directory.
   * (-) leaves vssver.scc and other junk lying around
   * (-) definitely can't handle deletes
   * (-) timestamps only to the nearest minute
