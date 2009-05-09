@@ -83,7 +83,7 @@ then HEAD is no longer a symbolic reference to anything.  Instead, it actually
 contains the SHA-1 hash (the commit id) of the commit you are switching to.
 
 This is called a **detached HEAD**.  Example commands that will cause your
-HEAD to become detached (ouch!) are<sup>[1]</sup>:
+HEAD to become detached (ouch!) are<sup>[[1]](#fn)</sup>:
 
     git checkout master^        # parent of master
     git checkout HEAD~2         # grandparent of current HEAD
@@ -186,11 +186,10 @@ or present some additional information that may be useful:
 
 ##### footnotes
 
-<sup>[1] Curiously, `git checkout master^0` also gets you a detached HEAD.  The
+<a name="fn"><sup>[1] Curiously, `git checkout master^0` also gets you a detached HEAD.  The
 command actually says "switch to the commit that master currently points to".
 Now you'd think, since 'master' and 'HEAD' are currently pointing at the same
 commit, it shouldn't be a detached HEAD, but the point is not that they happen
 to be pointing to the same commit.  The point is that HEAD is no longer a
 symbolic ref (containing something like `ref: refs/heads/master`) and instead
 contains an explicit SHA-1 in it.</sup>
-

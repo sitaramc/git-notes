@@ -1,5 +1,9 @@
 # git -- a distributed version control system
 
+^^[Please note that this article was written in June 2008.  Although I have
+kept the article largely the same, I have updated the text in one or two
+places to reflect more accurate/relevant information]^^.
+
 Git is a distributed version control system that has been around for 3 years
 now. It is fast, stable, and, best of all, quite unobtrusive. While early
 adopters to git faced a steep learning curve, a number of tutorials (see
@@ -39,7 +43,8 @@ Git development was very rapid -- it became self-hosting in just 4 days of
 development, but remember that's in "Linus-days" :-),  and in about 2.5 months
 it was helping Linus manage Linux kernel development.  Currently, apart from
 the Linux kernel and related projects, it is used by several projects, for
-example Wine, x.org, OLPC, Ruby on Rails, VLC, and Samba.
+example Wine, x.org, OLPC, Ruby on Rails, VLC, and Samba.  [*Update: recent
+high-profile additions are Perl, and GNOME*]
 
 Git has two really *key* strengths: it is very smart at merging, so that the
 developers can do as much parallel development as they wish to, and it is

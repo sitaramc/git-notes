@@ -35,7 +35,7 @@ most of the words are mine.
     list has to be made carefully, and reviewed once in a while, otherwise
     something that is important to the build may get left out!
     * in git, you can temporarily rename the .gitignore file and then do a
-       "git status" (or run "gut gui") to see the files that git is ignoring
+       "git status" (or run "git gui") to see the files that git is ignoring
     * or you can clone the entire project into a new directory and see if it
        compiles
     * or you can run:

@@ -118,7 +118,7 @@ a manual conflict resolution, *but*:
 
 #### local caching and repository size
 
-##### What extra information is is cached locally?
+##### What extra information is cached locally?
 
 When you do an 'svn checkout', you get a working copy of the revision you
 checked out, plus svn saves away an extra copy of the same stuff.  This allows
