@@ -60,12 +60,24 @@
     ** plugins: Visual Studio plugin, eclipse plugin, etc
 
 = the normal cycle
-  * caveat: we're not talking about SCM systems, only VCS
   * demo 03 - a normal cycle
+
+= normal workflow - CVCSs
+../images/flow-CVCS.png
+
+= normal workflow - most DVCSs
+../images/flow-DVCS.png
+
+= normal workflow - Git
+../images/flow-Git.png
+
+= something unique to git
   * index
     ** a staging area for the next commit
     ** stuff gets sent here when you "add"
     ** when you "commit", the current index is turned into a real commit object
+  * helps in reviewing changes
+  * helps when fixing conflicts during a complex merge
 
 = concurrency control
   * lock-based CC
@@ -74,7 +86,6 @@
   * allowing non-linear changes
     ** merging unrelated changes cleanly (3-way merge)
     ** conflict resolution when needed
-  * demo 04 - a short branch in GIT
 
 = branching
   * say you're adding 3 complex new "features" to a stable product
@@ -216,6 +227,50 @@
   * private branches
     ** and if you make them public, the history is preserved
 
+= demo 09 in pictures
+
+../images/demo-09-01.png
+
+= demo 09 in pictures
+
+../images/demo-09-02.png
+
+= demo 09 in pictures
+
+../images/demo-09-03.png
+
+= demo 09 in pictures
+
+../images/demo-09-04.png
+
+= demo 09 in pictures
+
+../images/demo-09-05.png
+
+= demo 09 in pictures
+
+../images/demo-09-06.png
+
+= demo 09 in pictures
+
+../images/demo-09-07.png
+
+= demo 09 in pictures
+
+../images/demo-09-08.png
+
+= demo 09 in pictures
+
+../images/demo-09-09.png
+
+= demo 09 in pictures
+
+../images/demo-09-10.png
+
+= demo 09 in pictures
+
+../images/demo-09-11.png
+
 = git concepts
   * repo
     ** self-contained; remove ".git" and it's all gone
@@ -274,6 +329,18 @@
   * bisect
   * stash
 
+= demo 10 in pictures
+
+../images/demo-10-01.png
+
+= demo 10 in pictures
+
+../images/demo-10-02.png
+
+= demo 10 in pictures
+
+../images/demo-10-03.png
+
 = rebase -- what and why
   * what
   * why
@@ -289,6 +356,65 @@
     ** demo 13 -- serial branch using rebase
   * same, but after some of your changes have gone upstream
     ** and they have DIFFERENT SHA1s now!!
+
+= demo 11 in pictures
+
+../images/demo-11-01.png
+
+  * and now we do:
+    ** {{{git rebase -i HEAD~8}}}
+
+= demo 11 in pictures
+
+../images/demo-11-02.png
+
+= demo 11 in pictures
+
+../images/demo-11-03.png
+
+= demo 11 in pictures
+
+../images/demo-11-04.png
+
+= demo 11 in pictures
+
+../images/demo-11-05.png
+
+= demo 11 in pictures
+
+../images/demo-11-06.png
+
+= demo 12 (normal merge)
+
+../images/demo-12-01.png
+
+= demo 12 (normal merge)
+
+../images/demo-12-02.png
+
+= demo 12 (normal merge)
+
+../images/demo-12-03.png
+
+= demo 12 (normal merge)
+
+../images/demo-12-04.png
+
+= demo 12 (normal merge)
+
+../images/demo-12-05.png
+
+= demo 13 (rebase)
+
+../images/demo-13-01.png
+
+= demo 13 (rebase)
+
+../images/demo-13-02.png
+
+= demo 13 (rebase)
+
+../images/demo-13-03.png
 
 = typical model
   * pull versus push

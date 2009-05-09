@@ -66,7 +66,7 @@ $in =~ s/<h2>.*?(?=<h1>|$)//sg;
 $in =~ s/
             (
                 (?:l:|r:|w\d+%:|h\d+%:) *
-                [^ <>]+ \. (png|gif|jpg|jpeg)
+                [^ <>]+ \. (png|gif|jpg|jpeg|svg)
             )
         /
             &doimg($1)

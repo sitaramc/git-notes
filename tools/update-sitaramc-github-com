@@ -115,9 +115,11 @@ cp tools/slidy.* $outdir/tools
 echo ...git talk done >&2
 
 # ---------------------- special: git lfy and intro figures
+# also convert SVGs to PNGs for gittalk (why can't slidy handle SVGs???)
 
 mkdir -p    $outdir/images
 cp images/* $outdir/images
+( cd $outdir/images; for i in *.svg; do j=$(basename $i .svg); convert $i $j.png; done )
 mkdir -p                        $outdir/1-basic-usage/intro-images
 cp 1-basic-usage/intro-images/* $outdir/1-basic-usage/intro-images
 echo ...git lfy and intro images done >&2
