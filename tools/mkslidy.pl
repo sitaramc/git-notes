@@ -1,5 +1,7 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -ws
 use strict;
+our $fast;  # option to kill "incremental" mode; too many interruptions for
+            # self-paced viewing
 
 not @ARGV and -t and do {
     print STDERR "Usage: wiki_creole.pl < input.txt | $0 > output.html\n";
@@ -38,8 +40,12 @@ my $in;
 
 # dummy tag <n> to create fake "incremental" clauses (possibly a bug in w3c
 # slidy.js but I'm using it!)
-$in =~ s/\@\@(.*?)\@\@/<n>$1<\/n>/g;
-$in =~ s/\@\@/<n>/g;
+if ($fast) {
+    $in =~ s/\@\@//g;
+} else {
+    $in =~ s/\@\@(.*?)\@\@/<n>$1<\/n>/g;
+    $in =~ s/\@\@/<n>/g;
+}
 
 # incremental lists:
 # old logic
@@ -52,7 +58,7 @@ $in =~ s/\@\@/<n>/g;
 # also we put them on the <li>. If we put them on the <ul> as we used to, it
 # requires TWO clicks to show the first element of a sub-list.  Very annoying,
 # and the bug goes away if you put the class attribute on the <li>.
-$in =~ s/<li>/<li class=\"incremental\">/g;
+$in =~ s/<li>/<li class=\"incremental\">/g unless $fast;
 
 # speaker notes
 # our convention is that all slides start with <h1> (slidy requires that
