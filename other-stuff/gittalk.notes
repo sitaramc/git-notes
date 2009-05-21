@@ -25,9 +25,6 @@
     ** others??
 
 = upfront: caveats about git
-  * has far too many commands
-    ** luckily, most are "plumbing"
-    ** we just use the "porcelain" :-)
   * man pages may be confusing
     ** but often have good examples!
     ** and there are excellent tutorials and HOWTOs on the web
@@ -36,10 +33,11 @@
 
 = caveats about git (cont'd)
   * will not track permissions and ownership
+    ** except the "x" (executable) bit
   * will not allow partial checkouts
     ** (but submodule mechanism exists; out of scope of this talk)
   * will not track/store empty directories
-  * not optimised for tracking very large binary files (mp3s, movies, etc.).
+  * not optimised for tracking very large binary files (movies, etc.)
 
 = history
   * initially designed as a file system!
@@ -55,9 +53,11 @@
     ** demo 02 - cloning an existing project to work on
   * don't like the CLI?
     ** 2 excellent GUI tools come with git
-    ** for an excellent intro to these tools, see
+    ** very powerful; for an excellent intro to these tools, see
     http://nathanj.github.com/gitguide
     ** plugins: Visual Studio plugin, eclipse plugin, etc
+    ** but you miss many features **unique** to git if you only use these
+    plugins
 
 = the normal cycle
   * demo 03 - a normal cycle
@@ -199,7 +199,9 @@
 = major strengths of git
   * non-linear development
   * distributed development
-  * private branches free people to take risks in secret :-)
+  * private branches allow people to "experiment" in secret :-)
+    ** and if the experiment works and you decide to make it public, the
+    history is preserved
   * easy and very intelligent merging
     ** "a change will be merged more often than written"
   * big productivity gains
@@ -224,8 +226,6 @@
   * much better merge resolution tools than CVS
     ** example: refactor + bug-fix in parallel, by different teams
     ** demo 09 -- more complex merge
-  * private branches
-    ** and if you make them public, the history is preserved
 
 = demo 09 in pictures
 
@@ -415,12 +415,6 @@
 = demo 13 (rebase)
 
 ../images/demo-13-03.png
-
-= typical model
-  * pull versus push
-    ** pull may be easier to cascade up
-  * dev/test/pre-rel/prod can have their own trees
-    ** pull from each other/push to specific branches or servers
 
 = odds and ends
   * only one ".git" dir at the top
