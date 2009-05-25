@@ -14,8 +14,11 @@
        properly -- long story!
     * make sure you `git checkout v1.6.1` or whatever is the latest
        version that `git tag` shows you before you start
-    * installing the dependencies required to compile git (like libcurl,
-       libexpat, tcl -- yes, even on a server install) is also out of scope!
+    * installing the dependencies required to compile git is also out of scope!
+       However, you can set `NO_CURL`, `NO_EXPAT`, and `NO_TCLTK`.  The first
+       two will prevent http-pull/push from being built, but I never use those
+       protocols anyway, so I don't care :-)  The third one will prevent the
+       GUI tools from being built, which does not matter on a server
     * after installing this, remove the distro-installed git using
        `urpme` or `aptitude remove`.  If this automatically removes
        anything else (like libdigest-sha1-perl and liberror-perl on ubuntu),

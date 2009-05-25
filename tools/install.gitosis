@@ -62,9 +62,8 @@ sudo python setup.py install
 
 [[ $1 == MDV ]] && {
     sudo useradd -c 'git master user' -m -r -s /bin/sh git
-    sudo usermod -U git
-    sudo usermod -U git     # yes, twice -- don't ask!
-    # or maybe "useradd -p somejunk"?
+    sudo usermod -p some.junk git
+    # don't worry; "some.junk" is supposed to be the *encrypted* password :)
 }
 
 [[ $1 == DEB ]] && {
