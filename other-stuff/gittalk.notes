@@ -24,20 +24,63 @@
     ** Bitkeeper
     ** others??
 
-= upfront: caveats about git
-  * man pages may be confusing
-    ** but often have good examples!
-    ** and there are excellent tutorials and HOWTOs on the web
-    ** example: http://gitready.com
-    ** official documentation: http://git-scm.com/documentation
+= "distributed"?
+  * every dev has his/her own repository
+    ** on their own workstation
+    ** no single point of failure/contention
+  * all repos are (usually) "clones" of the central repository
+  * easy to work offline
+    ** e.g., long weekend+laptop :-)
+    ** commits made while offline retain their identity
+    ** they don't get collapsed into one big commit
+  * commit-then-merge, not merge-then-commit
 
-= caveats about git (cont'd)
-  * will not track permissions and ownership
-    ** except the "x" (executable) bit
-  * will not allow partial checkouts
-    ** (but submodule mechanism exists; out of scope of this talk)
-  * will not track/store empty directories
-  * not optimised for tracking very large binary files (movies, etc.)
+== disconnected operation
+  * local caching: how much is cached locally when you check out?
+    ** CVS: working copy of specific version, plus info about what version was
+       checked out
+    ** SVN: CVS, plus extra copy of the specified version
+    ** BZR/HG: SVN, plus complete history of current branch
+    ** GIT: BZR/HG, plus complete history of ALL branches!
+
+== notes on above
+  * CVS: Anything other than edit needs network access, even a diff between your
+    working copy and the currently checked out version
+  * SVN: Diffs between working copy and any other version need network
+  * BZR/HG: Comparing to a different branch or switching to it needs network
+  * VSS
+    ** no network access except via "shares", so local teams only
+    ** no atomic commits!
+    ** no merge tracking
+
+= what's different about git?
+  * cryptographically secure integrity checks builtin
+  * fast
+    ** most operations are local
+    ** network operations are highly optimised
+    ** **ideal** for distributed teams
+  * easy to setup/deploy
+    ** server requires minimal hardware
+    ** no license costs
+
+= what's different about git? (cont'd)
+  * very small repo size
+    ** Mozilla repo in CVS: 2.7 GB
+    ** imported to SVN 8.2 GB
+    ** imported to GIT: 450 MB!
+    ** (a full checkout is 350 MB)
+  * very, very, cheap branching
+  * excellent merging
+
+= caveats about git
+  * no partial checkouts -- it's the whole project or nothing
+    ** but you can use the "submodule" mechanism if you know in advance what
+    pieces will be separately needed
+  * will not track
+    ** permissions and ownership, except the "x" (executable) bit
+    *** in unix terms, only cares about the first "x" in rwxrwxrwx
+    ** empty directories
+  * not optimised for tracking **very large** binary files (movies, etc.)
 
 = history
   * initially designed as a file system!
@@ -47,20 +90,24 @@
     ** but that doesn't mean small projects can't use it
     ** remember: multi-tasking
 
-= simple demos
-  * a couple of demos just to get a feel for git
-    ** demo 01 - a simple new project
-    ** demo 02 - cloning an existing project to work on
+= working with git
+  * CLI is the most powerful
   * don't like the CLI?
-    ** 2 excellent GUI tools come with git
+    ** 3 excellent GUI tools come with git
     ** very powerful; for an excellent intro to these tools, see
     http://nathanj.github.com/gitguide
-    ** plugins: Visual Studio plugin, eclipse plugin, etc
+    ** plugins: Eclipse and VS plugins available
     ** but you miss many features **unique** to git if you only use these
     plugins
 
-= the normal cycle
-  * demo 03 - a normal cycle
+= some mindset changes needed...
+  * learn to make many fine-grained commits rather than a few large ones
+  * commit locally before performing any remote operations
+    ** example, in the typical "svn update" scenario, if your changes are not
+    yet ready to be sent to the server, you can either
+    *** avoid doing the update
+    *** do it and pray :-)
+    ** in git, you just commit locally before doing the "git pull"
 
 = normal workflow - CVCSs
 ../images/flow-CVCS.png
@@ -79,24 +126,25 @@
   * helps in reviewing changes
   * helps when fixing conflicts during a complex merge
 
-= concurrency control
-  * lock-based CC
-    ** file contention; small quick changes usually suffer
-    ** limits parallel or opportunistic development
-  * allowing non-linear changes
-    ** merging unrelated changes cleanly (3-way merge)
-    ** conflict resolution when needed
+= problems in SVN
+  * slow on large repositories
+  * .SVN directories all over the place
+    ** often as large as the entire git repo!
+  * refactor/rename support missing
+  * branching is fine...
+    ** but merging...?
 
-= branching
-  * say you're adding 3 complex new "features" to a stable product
-    ** handled by separate developers
-    ** each feature takes time to stabilise
-  * most VCSs
-    ** long gaps between commits -- because you're afraid to commit
-    ** one huge bout of merging just before you commit
-    ** (except for the FIRST feature to get in!)
+= problems in SVN (cont'd)
+  * merge tracking not very well done
+    ** does not record who did the branch (attributes all changes to the dev
+    who did the merge)
+    ** does not record "merge-only" changes separately from the two branches
+    ** can make repeated merges very difficult
+    *** SVN mergeinfo has many limitations
+  * merges can be slow
+  * large merges can be painful
 
-= branching in most other VCSs
+= branching in most older VCSs
   * branching is considered advanced and people avoid it
     ** either the tool has no branching,
     ** or has really bad merging
@@ -104,42 +152,21 @@
   * so lots of parallelism goes unused
     ** or you need "SCM admins" to do the merge!
 
-= typical problems with branches/merges (SVN)
-  * attribution of branch changes
-  * loses information about branch@@, and about changes made to satisfy merge
-  * merge history must be manually recorded
-    ** practically impossible to have two parallel branches merging at regular
-       intervals
-  * demo 06 - merge characteristics in git
+= problems in SVN (cont'd)
+  * lack of local commits
+    ** you don't want to "break the build"
+    ** so you keep lots of uncommitted changes outside the VCS
+    ** and do one big checkin when you're ready
 
-= problems with centralised operation
-  * creating a branch for your large set of changes
-    ** needs rules for naming branches
-    ** pollute the global namespace anyway
-    ** everyone else who checks-out ends up seeing this branch
-  * repository operations need network access
-    ** even on a LAN, a diff takes too long
-    ** reduces incentive to use the tools available
-
-= problems with centralised operation (cont'd)
-  * everyone checks into the main tree
-    ** may result in broken builds
-  * no atomic commits, sometimes@@, or integrity checking
-  * no refactor support, detecting renames, etc.
-  * and finally, @@you can't do this
-    ** take work home on a laptop
-    ** make a few commits during the weekend
-    ** sync up on Monday
-
-= implementation problems with normal VCSs
-  * single point of failure due to centralised model
-  * usually heavy on resources and very slow
-  * hardware and admin costs sometimes more than the license costs
-
-== above stuff mostly from
-  * http://www.bitkeeper.com/Comparisons.html has subsections like
-    http://www.bitkeeper.com/Comparisons.CVS.html and so on
-  * excellent resource, but knowing Mr McVoy, a little NaCl may be useful :)
+= productivity advantages of git
+  * history tracking handled much better; makes repeated merges a breeze
+    ** all "commits" identified by a SHA-1 checksum
+    *** this is what gives it the cryptographically secure integrity check)
+    ** a branch is just a pointer to some commit
+    ** every commit records its parent commit's sha
+    ** a merge is just a commit with more than one parent commit
+  * so, every commit knows all of its ancestors
+    ** regardless of repository, branch, etc
 
 = Linus on merging
   * merging is the most important activity
@@ -166,66 +193,52 @@
     merging easy, you actually avoid a whole class of problems that you
     otherwise have a really really hard time avoiding.
 
-== some more demos
-  * demo 07 - the "git log" command
-  * demo 08 - the "git show" command
+= productivity advantages of git (cont'd)
+  * complex merges handled much better; frees devs from worrying about it most
+    of the time
+    ** merges involving renames
+    ** criss-cross merges
+  * encourages many small commits instead of few large commits
+    ** easier code reviews
+    ** easier debugging
+    ** easier cherry picking
+    ** easier merging/rebasing (conflict resolution happens in much smaller units)
 
-= distributed operation
-  * allows having private branches
-  * makes everything much faster
-  * in git, the local copy is a full repository just like any other
-    ** so you can pull from X and push to Y
-    ** helps protect the main tree from bad checkins
-    ** bonus: every developer's PC is a backup server now!
+= productivity advantages of git (cont'd)
+  * encourages creating local branches
+    ** no need to pollute the central server
+    ** experimental code can be developed "on the side"
+    *** if it works, promote it to the central server, with the full history
+    of commits intact
+    *** otherwise, delete it; no need to immortalise failed experiments on the
+    central server :-)
+    ** branch **names** are also local
+    *** we can all have a branch called "my-test" or "test" or whatever,
+    without worrying about "is someone else using the same branch name?"
 
-= disconnected operation
-  * local caching: how much is cached locally when you check out?
-    ** CVS: working copy of specific version, plus info about what version was
-       checked out
-    ** SVN: CVS, plus extra copy of the specified version
-    ** BZR/HG: SVN, plus complete history of current branch
-    ** GIT: BZR/HG, plus complete history of ALL branches!
+= productivity advantages of git (cont'd)
+  * encourages using the tools available
+    ** important vcs operations (like "diff") do not need network access
+    ** blazingly fast
+    *** even against a very old revision
+    *** or a version in some other branch
+    ** centralised VCSs take too long
+    *** painful to use
+    *** so programmers avoid them (?)
 
-== notes on above
-* CVS: Anything other than edit needs network access, even a diff between your
-  working copy and the currently checked out version
-* SVN: Diffs between working copy and any other version need network
-* BZR/HG: Comparing to a different branch or switching to it needs network
-* VSS
-  ** no network access except via "shares", so local teams only
-  ** no atomic commits!
-  ** no merge tracking
+== above stuff mostly from
+  * http://www.bitkeeper.com/Comparisons.html has subsections like
+    http://www.bitkeeper.com/Comparisons.CVS.html and so on
+  * excellent resource, but knowing Mr McVoy, a little NaCl may be useful :)
 
-= major strengths of git
-  * non-linear development
-  * distributed development
-  * private branches allow people to "experiment" in secret :-)
-    ** and if the experiment works and you decide to make it public, the
-    history is preserved
-  * easy and very intelligent merging
-    ** "a change will be merged more often than written"
-  * big productivity gains
-
-= major strengths of git (cont'd)
-  * cryptographic authentication of history
-  * much more efficient repo format
-    ** Mozilla CVS repo: 2.7 GB
-    ** imported to SVN 8.2 GB
-    ** imported to GIT: 450 MB!
-    ** (a full checkout is 350 MB)
-  * offline repo access
-
-= major strengths of git (cont'd) -- offline repo access
-  * very fast
-  * allows frequent//, granular//@@, commits
-    ** since a commit only takes seconds
-  * you can separate work into small, comprehensible pieces
-    ** small changes get sort of lost if you bunch 'em up!
-
-= major strengths of git (cont'd)
-  * much better merge resolution tools than CVS
-    ** example: refactor + bug-fix in parallel, by different teams
-    ** demo 09 -- more complex merge
+= maintainability -- refactor/rename support
+  * in most VCSs, renaming a file
+    ** is treated as a copy+delete
+    ** loses history (?)
+  * how about...
+    ** rename + move + edit a file in one branch
+    ** while making some bugfixes to it in another?
+  * git handles this without any fuss -- demo 09
 
 = demo 09 in pictures
 
@@ -271,6 +284,63 @@
 
 ../images/demo-09-11.png
 
+= maintainability: code movement detection
+  * example
+    ** move an important function with lots of history to some other file
+  * what would other VCSs do to the **history**?
+  * next 5 slides show code movement
+    ** displayed using "git gui blame", one of the 3 GUI tools that come with
+    git
+
+= code movement detection in pictures
+
+../images/gui-blame-1.png
+
+= code movement detection in pictures
+
+../images/gui-blame-2.png
+
+= code movement detection in pictures
+
+../images/gui-blame-3.png
+
+= code movement detection in pictures
+
+../images/gui-blame-4.png
+
+= code movement detection in pictures
+
+../images/gui-blame-5.png
+
+= maintainability: code movement detection (cont'd)
+  * this is **way** beyond what any other VCS can even dream of
+  * great help for new people trying to understand existing code base
+  * here's a secret...
+    ** the information you see is not **stored** in the repository
+    ** it is **computed** on demand, dynamically!
+    ** which means you can get the same tracability for all your existing code
+    *** simply by converting to git!
+
+= maintainability: revision history viewer
+  * git has another GUI to show you the version history graph
+    ** very intuitive, shows merges etc very nicely
+    ** lots of "right click" options in various places, to help track things
+    down...
+    ** (one small example follows; there are many, many, more features --
+    there is not enough time to talk about more!)
+
+= revision history viewer
+
+../images/gitk-1.png
+
+= revision history viewer
+
+../images/gitk-2.png
+
+= revision history viewer
+
+../images/gitk-3.png
+
 = git concepts
   * repo
     ** self-contained; remove ".git" and it's all gone
@@ -312,7 +382,7 @@
 
 == life savers
 
-= CVS equivalence
+= CVS/SVN equivalence
         CVS                  GIT
         ---                  ---
         checkout             clone
