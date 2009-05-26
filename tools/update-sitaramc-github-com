@@ -108,9 +108,9 @@ echo ...git tools done >&2
 
 # XXX do we need to switch this to markdown syntax?
 wiki_creole.pl < other-stuff/gittalk.notes | tools/mkslidy.pl -fast > $outdir/other-stuff/gittalk.html
-wiki_creole.pl < other-stuff/gittalk.notes | tools/mkslidy.pl -fast > $outdir/other-stuff/_gittalk.html
+wiki_creole.pl < other-stuff/gittalk.notes | tools/mkslidy.pl > $outdir/other-stuff/_gittalk.html
 wiki_creole.pl < 1-basic-usage/intro.notes | tools/mkslidy.pl -fast > $outdir/1-basic-usage/intro.html
-wiki_creole.pl < 1-basic-usage/intro.notes | tools/mkslidy.pl -fast > $outdir/1-basic-usage/_intro.html
+wiki_creole.pl < 1-basic-usage/intro.notes | tools/mkslidy.pl > $outdir/1-basic-usage/_intro.html
 mkdir -p $outdir/tools
 cp tools/git.png $outdir/tools
 cp tools/slidy.* $outdir/tools
