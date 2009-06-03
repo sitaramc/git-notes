@@ -1,6 +1,6 @@
 # (admin) installing and using the gitosis server
 
-[[TOC]]
+^^[[TOC]]^^
 
 ### installing git on the server
 
@@ -105,3 +105,79 @@ To allow web access to the git repositories, do the following:
     forever after that, even if you remove that line.  You have to explicitly
     set `gitweb=no` and push before the project gets removed from the
     `gitosis/projects.list` file.
+
+### creating a separate "pushlog"
+
+Gitosis does not maintain a log of who actually did the push; everything looks
+like it was pushed by the common "git" user.  However, the information **is**
+available in the `authorized_keys` file.
+
+Here's how to make that happen.
+
+1.  patch `gitosis/serve.py` to pass that info on in `$USER`.  Use the
+    patch in the footnote<sup>[[1]](#fn1)</sup> (courtesy Heiko Voigt (hvoigt at hvoigt.net), in
+    <http://permalink.gmane.org/gmane.comp.version-control.git/120511>)
+
+    If you've already installed gitosis, you'll have to patch something like
+    `/usr/lib/python2.5/site-packages/gitosis-0.2-py2.5.egg/gitosis/serve.py`
+    -- poke around in your system for an exact path.
+
+2.  create a `post-receive` file in `/tmp` with the following contents, and
+    make it executable.
+
+        #!/bin/sh
+        exec >> logs/pushlog
+        date
+        prefix="$(date +%s) $USER"
+        sed -e "s/^/$prefix /"
+        EOF
+
+    The date is written twice -- once in a user-friendly form for humans to
+    look up, and once on each output line so things can be automated if
+    needed.  Note that this *prefixes* the extra info to the data that git
+    itself sends to the hook.
+
+    An example output looks like this:
+
+        Wed Jun  3 09:59:07 IST 2009
+        1244003347 sitaram 4ce76ca6c4346dc7b14f5d3eca087241cf343f19 563f55309e8e22b7ee7b3d24450a1dbb860405a6 refs/heads/master
+
+3.  copy the hook to all existing directories.  While you're about it, make
+    sure the "logs" directory exists in all of them by setting a global
+    option.
+
+        su - git
+        git config --global core.logAllRefUpdates true
+        cd ~/repositories
+        for i in *.git
+        do
+            cp /tmp/post-receive $i/hooks
+        done
+
+4.  **(this is the tricky bit)** make sure this becomes the default hook for
+    any future repositories.  You'll have to `locate post-receive.sample|grep
+    templates` or some such thing to find out where to put it, then copy that
+    `post-receive` file there.
+
+That should be it... make sure you test it!
+
+----
+
+<a name="fn1"><sup>[1] patch for `gitosis/serve.py`
+
+    diff --git gitosis/serve.py gitosis/serve.py
+    index 867249e..0e2c4af 100644
+    --- a/gitosis/serve.py
+    +++ b/gitosis/serve.py
+    @@ -201,6 +201,7 @@ class Main(app.App):
+                 sys.exit(1)
+
+             main_log.debug('Serving %s', newcmd)
+    +        os.putenv('USER', user)
+             os.execvp('git', ['git', 'shell', '-c', newcmd])
+             main_log.error('Cannot execute git-shell.')
+             sys.exit(1)
+    --
+    1.6.2.1.424.g0b27.dirty
+
+</sup>
