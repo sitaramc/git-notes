@@ -3,13 +3,13 @@
 You dropped a stash that was created recently, and now you want to recover it.
 As long as you did not do a garbage collection in between, this should work:
 
-    gitk $(git fsck --unreachable | grep commit | cut -f3 -d' ') --since='1 week ago'
+    gitk $(git fsck | grep commit | cut -f3 -d' ') --since='1 week ago'
 
 The part within the parenthesis finds all unreachable commit objects and
 returns their hashes.  If you never did a garbage collect there might be too
-many of them so the `--since` clause (which you can adjust to whatever you
-want of course; mine is just an example) limits the display to commits created
-recently.
+many false positives so the `--since` clause (which you can adjust to whatever
+you want of course; mine is just an example) limits the display to commits
+created recently.  (See Update 2009-05-25 for more on this)
 
 #### why gitk?
 
@@ -21,3 +21,31 @@ more complex ways to find the **stashes** among all the other unreachable
 commits in a busy repo :-)  For me, this is the kind of task that *calls out*
 for a GUI -- infrequently required, no conceivable need to automate, and
 containing data that stands out visually.
+
+#### Update 2009-05-25
+
+Well, someone who probably doesn't use the GUI, but whom I respect a lot, gave
+me this on IRC:
+
+    git fsck | grep commit | cut -d' ' -f3 | while read hash
+    do
+        git rev-parse --verify --quiet $hash^2 2>/dev/null && echo $hash
+    done | xargs git show
+
+First, I had a superfluous "--unreachable", which evidently is not needed.
+
+But the real point is checking if the "lost" commit in question is a merge
+commit, because my method can have many more false positives.
+
+I guess if you have to do this over ssh, this is great.  Although I'd use this
+instead, because I still want to see that triangle :-)
+
+    git fsck | grep commit | cut -d' ' -f3 | while read hash
+    do
+        git rev-parse --verify --no-revs --quiet $hash^2 2>/dev/null &&
+            echo $hash |
+            xargs git rev-list "--since='1 week ago'" -1
+    done | xargs -i git log --graph --oneline -3 '{}'
+
+Apart from the fact that I really like git's guis, we should also remember
+that gur gnetrg nhqvrapr sbe zbfg bs zl jevgvat vf ershtrrf sebz IFF!
