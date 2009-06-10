@@ -1,0 +1,65 @@
+# DOs and DONTs
+
+^^[[TOC]]^^
+
+----
+
+## DOs
+
+### setting up your gitconfig
+
+#### your global gitconfig
+
+This is `$HOME/.gitconfig`.  Whenever you add the `--global` option to the
+`git config` command, it acts on the global gitconfig file.
+
+Setup your identity
+
+    git config --global user.email your.name@your.com
+    git config --global user.name "your name"
+
+Setup the push default: choose one of these.  New users should take the first
+one, but the traditional default has always been the second one, so I'm used
+to that
+
+    git config --global push.default nothing
+    git config --global push.default matching
+
+Setup to edit files from within "git gui"; replace "gvim -f" with whatever you
+prefer
+
+    git config --global guitool.Edit.cmd 'gvim -f $FILENAME'
+    git config --global guitool.Edit.noconsole yes
+    git config --global guitool.Edit.needsfile yes
+
+If you intend to use the command line more than the GUI, please do check out
+[my gitconfig](../tools/my.gitconfig.txt) for many useful examples that will
+save you lots of time and trouble.
+
+#### every bare repository
+
+^^[What is a bare repo?](../concepts-and-tips/bare.html)^^
+
+Make sure all updates are logged:
+
+    git config core.logAllRefUpdates true
+
+You may also like this to begin with:
+
+    git config receive.denyDeletes true
+
+## DONTs
+
+### actions whose results can be confusing
+
+#### do not checkout "remote" branches
+
+When running `gitk` (the graphical history viewer) do NOT be tempted to right
+click and checkout any branch whose name starts with "remotes/".
+
+Helpfully, these branches are colored partly orange and partly green.
+(Branches that are safe to checkout are colored fully green.)
+
+The problem with checking out a "remotes" branch is that any commits you make
+on top of them can get lost when you checkout some other branch.  See the
+article on a [../concepts-and-tips/detached-head.html](detached head).
