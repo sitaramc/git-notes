@@ -47,10 +47,14 @@ That's it!
 ### installing gitosis
 
   * clone gitosis: `git clone git://eagain.net/gitosis.git`
-    * again, bypassing the proxy is out of scope here ;-)
+    * if you're behind a firewall and can't clone, you can get the latest
+      version via HTTP from <http://eagain.net/gitweb/?p=gitosis.git>, by
+      clicking on the word "snapshot" in the topmost commit listed
   * install python-setuptools using your distro mechanism
   * in the gitosis directory, run the
-    [install.gitosis](../tools/install.gitosis.txt) command
+    [install.gitosis](../tools/install.gitosis.txt) command.  If your system
+    is not a Mandriva or Debian/Ubuntu based system you can go through the
+    script and manually execute all the important pieces (it's well commented)
     * pre-requisites: the public key corresponding to the private key on
        your **desktop** or **laptop** (usually found in
        `~/.ssh/id_rsa.pub`) needs to be copied over to the gitosis server
