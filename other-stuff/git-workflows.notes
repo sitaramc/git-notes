@@ -33,9 +33,9 @@ project the same person may take on multiple roles.
 ### typical workflow
 
 Here's a typical workflow, assuming a starting point from the "master" branch
-on the master server.  This assume that the people on the project have ssh
-(write) access to the repo -- it is not the "please pull..." mode that
-internet projects use.
+on the master server.  This assumes that the people on the project have ssh
+(write) access to the repo -- it is not the "please pull..." mode that open
+source projects use on the internet.
 
 #### developer
 
@@ -62,11 +62,14 @@ Regular:
   * keep up-to-date with changes on the server
 
         git fetch origin
+
         # destroys history but OK if you haven't published your commits yet
         git rebase origin/master
+
         # preserves history, but not always pretty; mandatory if you have
         # published your changes somewhere already
         git merge origin/master
+
         # make sure you re-test all your changes after this operation, in case
         # some upstream change has affected your code
 
@@ -79,7 +82,7 @@ Irregular:
   * emergency fix ordered for bug 123 on v2.3
 
         git stash
-        git pull master.server v2.3
+        git fetch origin v2.3
         git checkout -b sita-v2.3-bug123 origin/v2.3
         # work work work test commit test commit etc
         git push origin sita-v2.3-bug123
@@ -87,7 +90,7 @@ Irregular:
         # master if OK
         # go back to your work
         git checkout sita-work
-        git stash apply
+        git stash pop --index
 
   * (wild idea strikes you; so wild you don't even want to risk putting it in
     next)
@@ -95,9 +98,11 @@ Irregular:
         git checkout -b wildidea sita-work
         (work work work/commit/test etc)
         git checkout sita-work
+
         # is wildidea useful?
         git merge wildidea  # should be a "fast-forward"
-        # get rid of temp branch
+
+        # useful or not, you can get rid of temp branch now
         git branch -d wildidea
 
 #### feature guy
@@ -121,12 +126,12 @@ Regular:
 
         git checkout next
         git tag -f savenext
-        git merge . dev-work
+        git fetch origin dev-work
+        git merge origin/dev-work
         # test it
         # test ok?
             git checkout master
-            gitk --all  # and graphically cherry-pick whatever you want from
-                        # "next" to "master"
+            git merge origin/dev-work
             # test again just to make sure
         # test not ok?
             # discard changes
@@ -156,4 +161,4 @@ Regular:
         git checkout master
         # test again?
         git tag v3.7
-        git push git://master.server/path/to/repo v3.7
+        git push origin v3.7
