@@ -68,7 +68,7 @@ will go into the next commit if you commit now.
 committing them.  The "ready to commit" part is called the "index", "staging
 area", or "cache" in the documentation, so the bottom left pane is showing you
 what is in the "index".  Check out [why the index is
-useful](../concepts-and-tips/uses-of-index.html) for more).
+useful](../concepts/uses-of-index.html) for more).
 
 In either case, the changes made to the currently selected file are shown on
 the right pane.

@@ -38,7 +38,7 @@ save you lots of time and trouble.
 
 #### every bare repository
 
-^^[What is a bare repo?](../concepts-and-tips/bare.html)^^
+^^[What is a bare repo?](../concepts/bare.html)^^
 
 Make sure all updates are logged:
 
@@ -62,4 +62,4 @@ Helpfully, these branches are colored partly orange and partly green.
 
 The problem with checking out a "remotes" branch is that any commits you make
 on top of them can get lost when you checkout some other branch.  See the
-article on a [../concepts-and-tips/detached-head.html](detached head).
+article on a [detached head](../concepts/detached-head.html).

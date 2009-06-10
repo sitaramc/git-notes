@@ -402,7 +402,7 @@ but less intuitive ones are shown here, the rest can be had from the man page:
   * these commands/options effectively bypass the "index" or "staging
     area", **but the INDEX is really a wonderful concept, and you really
     should not bypass it like this**.  See [why the index is
-    useful](../concepts-and-tips/uses-of-index.html) or
+    useful](../concepts/uses-of-index.html) or
     <http://blogs.gnome.org/newren/2007/12/08/limbo-why-users-are-more-error-prone-with-git-than-other-vcses/>
 
         git diff HEAD       # to see changes you made
