@@ -21,7 +21,7 @@ will be assuming the following environment:
   * Desktops:
     * Windows or Linux, doesn't matter
     * the [msysgit](http://code.google.com/p/msysgit/) version of git.  For
-      installation etc., explore [this](../0-installing) page
+      installation etc., explore [this](../0-installing/index.html) page
 
 Finally, to make things more interesting, we'll pretend we have a distributed
 team working out of two locations, (say, Chennai and Zurich, to pick two
@@ -35,7 +35,7 @@ persons) will synchronise the 2 servers as needed.
 
 Here's the basic setup:
 
-![Figure 1](../images/corp-1.png "basic setup")
+![Figure 1](../images/corporate-use-1.png "basic setup")
 
 ### nomenclature
 
@@ -71,7 +71,7 @@ user.  Routine stuff like setting a password etc., are ignored here.
 ### creating the bare repository
 
 Any repository that people will **push** to has to be a **bare** repository.
-Here's a detailed look at [why](../concepts-and-tips/bare.html).
+Here's a detailed look at [why](../concepts/bare.html).
 
 To create the bare repo on the server, first pick a directory that everyone
 will have access to.  We'll use `/var/gitrepos` in our examples.
@@ -163,6 +163,8 @@ Now type in the following:
 At this point you have a nice repo with 2 commits on the "master" branch.  You
 now need to push this to the server.
 
+![Figure 2](../images/corporate-use-2.png "the first push")
+
     # add a "remote" called "origin" that points to the server
     git remote add origin lead@server.ip:/var/gitrepos/proj1.git
 
@@ -236,17 +238,19 @@ Chennai server:
     cd /var/gitrepos/proj1.git
     git fetch zurich master:zurich-master
 
+![Figure 3](../images/corporate-use-3.png "fetching zurich-master")
+
 That's it.  This gets you the latest version of "master" from the Zurich
 server, calling it "zurich-master" on your side (that's what that syntax is
 doing).  At this point, if you run `git branch -a`, you'd see something like
 this:
 
-    \* master
+    * master
       zurich-master
 
 Running `git branch -a -v` would show you a little more detail:
 
-    \* master        2216d56 latest commit on chennai master
+    * master        2216d56 latest commit on chennai master
       zurich-master 283ff39 latest commit on zurich master
 
 You'd do a similar thing on Zurich to get Chennai's "master" and other
@@ -292,6 +296,8 @@ In Chennai, we'd do this:
 
 3.  Now if there are conflicts, you have to resolve them manually (using
     either the GUI and/or some editor), then add files, and commit.
+
+![Figure 4](../images/corporate-use-4.png "merging zurich-master into master")
 
 4.  And finally, push the new master to the server
 
