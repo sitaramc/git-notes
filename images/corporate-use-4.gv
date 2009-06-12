@@ -1,0 +1,36 @@
+digraph G {
+    rankdir = BT
+    splines=false
+    nodesep = 1.0
+    edge [dir=none]
+
+    node[shape=circle, style=filled, width=0.2, label=""]
+
+    subgraph cluster1 {
+        label="origin/zurich-master"; fontcolor=green
+        labelloc=b
+        color=white
+        node[fillcolor=green]
+        t -> u [weight=50]
+        u -> v [weight=50]
+        w [shape=doublecircle]
+        v -> w [weight=50]
+    }
+
+    subgraph cluster2 {
+        label="[master]"; fontcolor=blue
+        labelloc=b
+        color=white
+        node[fillcolor=blue]
+        a -> b -> c
+        c -> d [weight=50]
+        d -> e
+        mc [shape=doublecircle]
+        e -> mc [minlen=3,weight=50]
+    }
+
+    c -> t
+
+    w -> mc
+
+}

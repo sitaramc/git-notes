@@ -1,0 +1,26 @@
+digraph G {
+    // graph size in inches
+    // size ="8,8";
+    rankdir=LR
+    edge [dir=both];
+
+    node [image="server.png", shape=plaintext]
+
+    C [label="Chennai\nserver"]
+    Z [label="Zurich \nserver"]
+
+    node [label="dev PC", image="workstation_t.png", shape=plaintext]
+
+    z1 -> Z
+    z2 -> Z
+    z3 -> Z
+    z4 -> Z
+
+    C -> c1
+    C -> c2
+    C -> c3
+    C -> c4
+
+    edge [color=red];
+    Z -> C [style=bold,minlen=2]
+}

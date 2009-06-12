@@ -1,0 +1,27 @@
+digraph G {
+    rankdir = BT
+    splines=false
+    nodesep = 1.0
+    edge [dir=none]
+
+    compound = true
+
+    subgraph clusterCS {
+        label="Chennai server\n\ \ \ "
+
+        cs2 [shape=box, label="bare repo\non server", style=filled, fillcolor=green]
+        node [style=invis]
+        edge [style=invis]
+        cs1 -> cs2
+    }
+    subgraph clusterCL {
+        label="Commits on\nChennai Lead PC"
+
+        node [shape=box, style=rounded, style=filled, fillcolor=lightblue]
+        c1 [label = "Commit #1\n.gitignore"]
+        c2 [label = "Commit #2\nSource\nFiles"]
+        c1 -> c2
+    }
+
+    cs2 -> c2 [lhead=clusterCL, ltail=clusterCS, label = "push", dir=back, color=red, constraint = false]
+}
