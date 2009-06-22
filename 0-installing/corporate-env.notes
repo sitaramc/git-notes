@@ -238,6 +238,14 @@ Chennai server:
     cd /var/gitrepos/proj1.git
     git fetch zurich master:zurich-master
 
+Here's a pictorial representation.  In this picture, and the others that
+follow, each circle represents a "commit", with the oldest commit at the
+bottom, and newer commits going on top of older ones (the same order that
+`gitk` would show you the commit tree).  The tip of each branch is indicated
+by a double circle, and the **current branch** is in square brackets
+("[master]" in this case).  In this example, Chennai made 2 commits after the
+last time the two servers were synchronised, and Zurich made 4 commits.
+
 ![Figure 3](../images/corporate-use-3.png "fetching zurich-master")
 
 That's it.  This gets you the latest version of "master" from the Zurich
@@ -295,9 +303,9 @@ In Chennai, we'd do this:
         git merge origin/zurich-master
 
 3.  Now if there are conflicts, you have to resolve them manually (using
-    either the GUI and/or some editor), then add files, and commit.
-
-![Figure 4](../images/corporate-use-4.png "merging zurich-master into master")
+    either the GUI and/or some editor), then add files, and commit.  Here's a
+    pictorial representation of the merged tree: ![Figure
+    4](../images/corporate-use-4.png "merging zurich-master into master")
 
 4.  And finally, push the new master to the server
 
@@ -357,8 +365,12 @@ not be doing precisely that.  Here's how Zurich would do this:
 3.  As before, if there are conflicts, you have to resolve them manually
     (using either the GUI and/or some editor), then add files, and commit.
 
-4.  Now you need to build, regression test, etc.  If something went wrong, you
-    do this:
+    Here's a picture.  Notice that "master" stays where it was before, and the
+    merged commit is on a new branch: ![Figure
+    5](../images/corporate-use-5.png "merging chennai-master into test-merge")
+
+4.  Now you need to build, regression test, etc., on the "test-merge" branch.
+    If something went wrong, you do this:
 
         git checkout master
         git branch -D test-merge    # not strictly needed...
@@ -373,7 +385,9 @@ not be doing precisely that.  Here's how Zurich would do this:
         # and push to the server...
         git push origin master
 
-    (You could also do `git merge chennai-master` if you're sure there were no
+    You could also do `git merge chennai-master` if you're sure there were no
     changes made during the test-merge or during testing, but it is generally
-    unsafe to do so, due to human error.  What you tested is what you
-    merge...)
+    unsafe to do so, due to human error.  What you tested is what you should
+    merge.  But regardless of how you do it, this is what the picture looks
+    like now: ![Figure
+    6](../images/corporate-use-6.png "merging test-merge into master")
