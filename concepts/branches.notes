@@ -74,12 +74,12 @@ topics in their own right.
 
 Let's say your version tree looks like this:
 
-    V3 ---o---o---o---o--- V4 ---o---o--- (master)
-     \                      \
-      \---o---o--- (V3maint) \
-       \                      \---o---o--- (V4maint)
-        \-o--- (topicA)        \
-                                \-o--- (topicB)
+    V3---o---o---o---o---o---V4---o---o--- (master)
+     \                        \
+      \---o---o--- (V3maint)   \
+       \                        \---o---o--- (V4maint)
+        \-o--- (topicA)          \
+                                  \-o--- (topicB)
 
 In this picture, V3 and V4 are tags representing specific versions.  V3maint
 is a maintenance branch that collects ongoing fixes for V3.  These ongoing
@@ -87,9 +87,9 @@ fixes could come from commits within V3maint itself, or by integrating topic
 branches such as topicA.  At various points in it's lifecycle, when things are
 stable, the top commit on V3maint will be tagged V3.1, V3.2, etc., as needed.
 
-All this applies equivalently to V4 also, of course.
+(...all this applies equivalently to V4 also, of course...)
 
-The "master" branch is where on-going development for (the future) V5 is
+The "master" branch is where on-going development for the future V5 is
 happening.  This "new" development may well have its own set of topic
 branches, probably by feature name, but right now we'll concentrate on the
 maintenance aspect of fixing bugs or making enhancements to the released

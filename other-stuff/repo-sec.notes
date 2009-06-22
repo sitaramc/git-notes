@@ -29,7 +29,7 @@ required.  In increasing order of paranoia, they are:
 
   * the priest maintains a branch in the same repository that everyone uses,
     and he tags (even signs with his GPG private key, if needed) the commit
-    that represents the current "guarded" version.  Developers are told they
+    that represents the current "sacred" version.  Developers are told they
     should not push to that branch.
 
     > **Side bar**: from a configuration management perspective, the SHA that

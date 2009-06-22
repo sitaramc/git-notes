@@ -78,6 +78,8 @@
   * a somewhat longer, more philosophical article on git:
     <http://www.betaversion.org/~stefano/linotype/news/106/>
   * on tracking content instead of files: <http://marc.info/?l=git&m=116473016012824>
+  * a more detailed version of the same:
+    <http://article.gmane.org/gmane.comp.version-control.git/217>
   * descriptive article on the advantages of a DVCS and speculative branching
     and low overhead repos and so on:
     <http://griddlenoise.blogspot.com/2007/12/distributed-vcss-are-great-enablers-or.html>

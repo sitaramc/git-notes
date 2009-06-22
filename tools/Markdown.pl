@@ -382,7 +382,7 @@ sub _HashHTMLBlocks {
 					<(hr)				# start tag = $2
 					\b					# word break
 					([^<>])*?			# 
-					/?>					# the matching end tag
+					/?>					# the matching end tag/
 					[ \t]*
 					(?=\n{2,}|\Z)		# followed by a blank line or end of document
 				)
@@ -818,7 +818,7 @@ sub _DoLists {
 				my $list_type = ($3 =~ m/$marker_ul/) ? "ul" : "ol";
 				# Turn double returns into triple returns, so that we can make a
 				# paragraph for the last item in a list, if necessary:
-				$list =~ s/\n{2,}/\n\n\n/g;
+				$list =~ s/\n{2,}(?! {8,})/\n\n\n/g;
 				my $result = _ProcessListItems($list, $marker_any);
 				$result = "<$list_type>\n" . $result . "</$list_type>\n";
 				$result;
@@ -833,7 +833,7 @@ sub _DoLists {
 				my $list_type = ($3 =~ m/$marker_ul/) ? "ul" : "ol";
 				# Turn double returns into triple returns, so that we can make a
 				# paragraph for the last item in a list, if necessary:
-				$list =~ s/\n{2,}/\n\n\n/g;
+				$list =~ s/\n{2,}(?! {8,})/\n\n\n/g;
 				my $result = _ProcessListItems($list, $marker_any);
 				$result = "<$list_type>\n" . $result . "</$list_type>\n";
 				$result;

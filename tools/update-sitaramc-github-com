@@ -63,7 +63,7 @@ mk_notes_hier()
             echo "<head><style>"
             echo "    table    { font-size: 0.9em; font-family: sans-serif; }"
             echo "</style></head>"
-            echo "<table>"
+            echo "<hr><table>"
             for i in $dir/*.html
             do
                 [[ $i =~ /000-README.html$ ]] && continue
@@ -74,16 +74,18 @@ mk_notes_hier()
                 echo "</td></tr>"
                 /bin/rm -f $dir/$j.notes
             done
-            echo "</table><hr>"
+            echo "</table>"
+            echo "</div>"
         done > /tmp/sitaram.usgc.tmp2
+        cat $dir/000-README.html > $dir/index.html 2>/dev/null
+        echo '<div style="margin-left: -30px">' >> $dir/index.html
         if [[ -s /tmp/sitaram.usgc.tmp ]]
         then
-            echo "<sup>subdirectories:<ul>"
+            echo "<hr><sup>subdirectories:<ul>"
             cat /tmp/sitaram.usgc.tmp
-            echo "</ul></sup><hr>"
-        fi > $dir/index.html
+            echo "</ul></sup>"
+        fi >> $dir/index.html
         cat /tmp/sitaram.usgc.tmp2 >> $dir/index.html
-        cat $dir/000-README.html >> $dir/index.html 2>/dev/null
     done
     cd -
 }
@@ -122,6 +124,7 @@ echo ...git talk done >&2
 mkdir -p    $outdir/images
 cp images/* $outdir/images
 ( cd $outdir/images; for i in *.svg; do j=$(basename $i .svg); convert $i $j.png; done )
+( cd $outdir/images; for i in *.gv;  do j=$(basename $i .gv); dot -Tpng $i -o $j.png; done )
 mkdir -p                        $outdir/1-basic-usage/intro-images
 cp 1-basic-usage/intro-images/* $outdir/1-basic-usage/intro-images
 echo ...git lfy and intro images done >&2

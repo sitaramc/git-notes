@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# IMPORTANT NOTE: non-Mandriva/Debian/Ubuntu systems: you can manually execute
+# equivalent commands; just look for comment lines starting with "MANUAL:"
+
 # without args, just prints daily use commands for pushing an empty repo to an
 # existing gitosis host
 
@@ -20,17 +23,6 @@ usage()
 {
     [[ $1 == "" ]] || cat <<EOF
 # usage: $0 MDV|DEB my-id_rsa.pub
-
-# instructions for making and pushing
-#   an empty repo called "$1"
-#   to a gitosis server called "$2"
-mkdir $1 &&
-cd $1 &&
-git init &&
-git commit --allow-empty -m start &&
-git remote add origin git@$2:$1.git &&
-git push origin master &&
-cd -
 EOF
     exit 1
 }
@@ -44,21 +36,38 @@ set -e
 
 die() { echo "$@" >&2; exit 1; }
 
+# MANUAL: make sure your pub key file (typically ~/.ssh/id_rsa.pub) from your
+# **workstation** is available on this machine (the gitosis server) as
+# "yourname.pub" or something
 [[ -f $2 ]] || die arg2 should be your public key file
 
+# MANUAL: make sure python-setuptools is installed.
 [[ -f /usr/bin/easy_install ]] || [[ -f /usr/local/bin/easy_install ]] ||
     die "# do one of these
         urpmi python-setuptools
         apt-get install python-setuptools"
 
+# MANUAL: make sure you are **in** the directory where the gitosis software
+# was unzipped or untarred
 [[ -f setup.py ]] ||
 die "# do these first
         git clone git://eagain.net/gitosis.git
         cd gitosis"
 
+# MANUAL: install gitosis; this needs root.  I have no clue how to do this
+# without root so don't ask -- maybe a friendly pythonista can help :)
 sudo python setup.py install
 
 # XXX -- $1 is the system: currently MDV or DEB
+
+# MANUAL: add a "system" user (meaning the UID will be less than 500), called
+# "git", with a proper home directory, /bin/sh as the shell, and a disabled
+# password.
+
+# Note on disabling passwords: on Mandriva, disabling the password using
+# "usermod -L" prevents ssh-pubkey access also.  I don't know about other
+# systems.  So the way to disable password access is to make some random text
+# the *encrypted* password, so no password you ever enter can match.
 
 [[ $1 == MDV ]] && {
     sudo useradd -c 'git master user' -m -r -s /bin/sh git
@@ -76,8 +85,14 @@ sudo python setup.py install
         git
 }
 
-# XXX -- $2 is your your pub key
+# MANUAL: initialise gitosis.  The "yourname.pub" file we spoke of earlier
+# should supply standard input for this command.  The "-H" is important --
+# HOME should be set to /home/git when this command runs.  If you cannot use
+# sudo, use "su - git" from root first, then "git gitosis-init < yourname.pub"
 sudo -H -u git gitosis-init < $2
 
-# this is needed, at least on MDV as of 2009-01-19
+# MANUAL: I have found more systems where this is needed than where it is not.
+# No harm doing it anyway.  Without this, gitosis's post update hooks will not
+# run, and you cannot push administrative updates like adding userids,
+# projects, etc.
 sudo chmod 755 /home/git/repositories/gitosis-admin.git/hooks/post-update

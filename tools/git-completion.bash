@@ -1,3 +1,4 @@
+#!bash
 #
 # bash completion support for core Git.
 #
@@ -33,6 +34,12 @@
 #       are currently in a git repository.  The %s token will be
 #       the name of the current branch.
 #
+#       In addition, if you set GIT_PS1_SHOWDIRTYSTATE to a nonempty
+#       value, unstaged (*) and staged (+) changes will be shown next
+#       to the branch name.  You can configure this per-repository
+#       with the bash.showDirtyState variable, which defaults to true
+#       once GIT_PS1_SHOWDIRTYSTATE is enabled.
+#
 # To submit patches:
 #
 #    *) Read Documentation/SubmittingPatches
@@ -50,9 +57,11 @@ case "$COMP_WORDBREAKS" in
 *)   COMP_WORDBREAKS="$COMP_WORDBREAKS:"
 esac
 
+# __gitdir accepts 0 or 1 arguments (i.e., location)
+# returns location of .git repo
 __gitdir ()
 {
-	if [ -z "$1" ]; then
+	if [ -z "${1-}" ]; then
 		if [ -n "$__git_dir" ]; then
 			echo "$__git_dir"
 		elif [ -d .git ]; then
@@ -67,6 +76,8 @@ __gitdir ()
 	fi
 }
 
+# __git_ps1 accepts 0 or 1 arguments (i.e., format string)
+# returns text to add to bash PS1 prompt (includes branch name)
 __git_ps1 ()
 {
 	local g="$(git rev-parse --git-dir 2>/dev/null)"
@@ -111,14 +122,31 @@ __git_ps1 ()
 			fi
 		fi
 
-		if [ -n "$1" ]; then
-			printf "$1" "${b##refs/heads/}$r"
+		local w
+		local i
+
+		if test -n "${GIT_PS1_SHOWDIRTYSTATE-}"; then
+			if test "$(git config --bool bash.showDirtyState)" != "false"; then
+				git diff --no-ext-diff --ignore-submodules \
+					--quiet --exit-code || w="*"
+				if git rev-parse --quiet --verify HEAD >/dev/null; then
+					git diff-index --cached --quiet \
+						--ignore-submodules HEAD -- || i="+"
+				else
+					i="#"
+				fi
+			fi
+		fi
+
+		if [ -n "${1-}" ]; then
+			printf "$1" "${b##refs/heads/}$w$i$r"
 		else
-			printf " (%s)" "${b##refs/heads/}$r"
+			printf " (%s)" "${b##refs/heads/}$w$i$r"
 		fi
 	fi
 }
 
+# __gitcomp_1 requires 2 arguments
 __gitcomp_1 ()
 {
 	local c IFS=' '$'\t'$'\n'
@@ -131,6 +159,8 @@ __gitcomp_1 ()
 	done
 }
 
+# __gitcomp accepts 1, 2, 3, or 4 arguments
+# generates completion reply with compgen
 __gitcomp ()
 {
 	local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -143,22 +173,23 @@ __gitcomp ()
 		;;
 	*)
 		local IFS=$'\n'
-		COMPREPLY=($(compgen -P "$2" \
-			-W "$(__gitcomp_1 "$1" "$4")" \
+		COMPREPLY=($(compgen -P "${2-}" \
+			-W "$(__gitcomp_1 "${1-}" "${4-}")" \
 			-- "$cur"))
 		;;
 	esac
 }
 
+# __git_heads accepts 0 or 1 arguments (to pass to __gitdir)
 __git_heads ()
 {
-	local cmd i is_hash=y dir="$(__gitdir "$1")"
+	local cmd i is_hash=y dir="$(__gitdir "${1-}")"
 	if [ -d "$dir" ]; then
 		git --git-dir="$dir" for-each-ref --format='%(refname:short)' \
 			refs/heads
 		return
 	fi
-	for i in $(git ls-remote "$1" 2>/dev/null); do
+	for i in $(git ls-remote "${1-}" 2>/dev/null); do
 		case "$is_hash,$i" in
 		y,*) is_hash=n ;;
 		n,*^{}) is_hash=y ;;
@@ -168,15 +199,16 @@ __git_heads ()
 	done
 }
 
+# __git_tags accepts 0 or 1 arguments (to pass to __gitdir)
 __git_tags ()
 {
-	local cmd i is_hash=y dir="$(__gitdir "$1")"
+	local cmd i is_hash=y dir="$(__gitdir "${1-}")"
 	if [ -d "$dir" ]; then
 		git --git-dir="$dir" for-each-ref --format='%(refname:short)' \
 			refs/tags
 		return
 	fi
-	for i in $(git ls-remote "$1" 2>/dev/null); do
+	for i in $(git ls-remote "${1-}" 2>/dev/null); do
 		case "$is_hash,$i" in
 		y,*) is_hash=n ;;
 		n,*^{}) is_hash=y ;;
@@ -186,9 +218,10 @@ __git_tags ()
 	done
 }
 
+# __git_refs accepts 0 or 1 arguments (to pass to __gitdir)
 __git_refs ()
 {
-	local i is_hash=y dir="$(__gitdir "$1")"
+	local i is_hash=y dir="$(__gitdir "${1-}")"
 	local cur="${COMP_WORDS[COMP_CWORD]}" format refs
 	if [ -d "$dir" ]; then
 		case "$cur" in
@@ -218,6 +251,7 @@ __git_refs ()
 	done
 }
 
+# __git_refs2 requires 1 argument (to pass to __git_refs)
 __git_refs2 ()
 {
 	local i
@@ -226,6 +260,7 @@ __git_refs2 ()
 	done
 }
 
+# __git_refs_remotes requires 1 argument (to pass to ls-remote)
 __git_refs_remotes ()
 {
 	local cmd i is_hash=y
@@ -470,6 +505,7 @@ __git_aliases ()
 	done
 }
 
+# __git_aliased_command requires 1 argument
 __git_aliased_command ()
 {
 	local word cmdline=$(git --git-dir="$(__gitdir)" \
@@ -482,6 +518,7 @@ __git_aliased_command ()
 	done
 }
 
+# __git_find_subcommand requires 1 argument
 __git_find_subcommand ()
 {
 	local word subcommand c=1
@@ -563,7 +600,7 @@ _git_add ()
 	--*)
 		__gitcomp "
 			--interactive --refresh --patch --update --dry-run
-			--ignore-errors
+			--ignore-errors --intent-to-add
 			"
 		return
 	esac
@@ -628,7 +665,6 @@ _git_branch ()
 	done
 
 	case "${COMP_WORDS[COMP_CWORD]}" in
-	--*=*)	COMPREPLY=() ;;
 	--*)
 		__gitcomp "
 			--color --no-color --verbose --abbrev= --no-abbrev
@@ -759,6 +795,20 @@ _git_describe ()
 	__gitcomp "$(__git_refs)"
 }
 
+__git_diff_common_options="--stat --numstat --shortstat --summary
+			--patch-with-stat --name-only --name-status --color
+			--no-color --color-words --no-renames --check
+			--full-index --binary --abbrev --diff-filter=
+			--find-copies-harder
+			--text --ignore-space-at-eol --ignore-space-change
+			--ignore-all-space --exit-code --quiet --ext-diff
+			--no-ext-diff
+			--no-prefix --src-prefix= --dst-prefix=
+			--inter-hunk-context=
+			--patience
+			--raw
+"
+
 _git_diff ()
 {
 	__git_has_doubledash && return
@@ -766,16 +816,9 @@ _git_diff ()
 	local cur="${COMP_WORDS[COMP_CWORD]}"
 	case "$cur" in
 	--*)
-		__gitcomp "--cached --stat --numstat --shortstat --summary
-			--patch-with-stat --name-only --name-status --color
-			--no-color --color-words --no-renames --check
-			--full-index --binary --abbrev --diff-filter=
-			--find-copies-harder --pickaxe-all --pickaxe-regex
-			--text --ignore-space-at-eol --ignore-space-change
-			--ignore-all-space --exit-code --quiet --ext-diff
-			--no-ext-diff
-			--no-prefix --src-prefix= --dst-prefix=
+		__gitcomp "--cached --pickaxe-all --pickaxe-regex
 			--base --ours --theirs
+			$__git_diff_common_options
 			"
 		return
 		;;
@@ -823,6 +866,8 @@ _git_format_patch ()
 			--not --all
 			--cover-letter
 			--no-prefix --src-prefix= --dst-prefix=
+			--inline --suffix= --ignore-if-in-upstream
+			--subject-prefix=
 			"
 		return
 		;;
@@ -930,15 +975,42 @@ _git_ls_tree ()
 	__git_complete_file
 }
 
+# Options that go well for log, shortlog and gitk
+__git_log_common_options="
+	--not --all
+	--branches --tags --remotes
+	--first-parent --no-merges
+	--max-count=
+	--max-age= --since= --after=
+	--min-age= --until= --before=
+"
+# Options that go well for log and gitk (not shortlog)
+__git_log_gitk_options="
+	--dense --sparse --full-history
+	--simplify-merges --simplify-by-decoration
+	--left-right
+"
+# Options that go well for log and shortlog (not gitk)
+__git_log_shortlog_options="
+	--author= --committer= --grep=
+	--all-match
+"
+
+__git_log_pretty_formats="oneline short medium full fuller email raw format:"
+
 _git_log ()
 {
 	__git_has_doubledash && return
 
 	local cur="${COMP_WORDS[COMP_CWORD]}"
+	local g="$(git rev-parse --git-dir 2>/dev/null)"
+	local merge=""
+	if [ -f "$g/MERGE_HEAD" ]; then
+		merge="--merge"
+	fi
 	case "$cur" in
 	--pretty=*)
-		__gitcomp "
-			oneline short medium full fuller email raw
+		__gitcomp "$__git_log_pretty_formats
 			" "" "${cur##--pretty=}"
 		return
 		;;
@@ -950,23 +1022,22 @@ _git_log ()
 		;;
 	--*)
 		__gitcomp "
-			--max-count= --max-age= --since= --after=
-			--min-age= --before= --until=
+			$__git_log_common_options
+			$__git_log_shortlog_options
+			$__git_log_gitk_options
 			--root --topo-order --date-order --reverse
-			--no-merges --follow
+			--follow
 			--abbrev-commit --abbrev=
 			--relative-date --date=
-			--author= --committer= --grep=
-			--all-match
-			--pretty= --name-status --name-only --raw
-			--not --all
-			--left-right --cherry-pick
+			--pretty=
+			--cherry-pick
 			--graph
-			--stat --numstat --shortstat
-			--decorate --diff-filter=
-			--color-words --walk-reflogs
-			--parents --children --full-history
-			--merge
+			--decorate
+			--walk-reflogs
+			--parents --children
+			$merge
+			$__git_diff_common_options
+			--pickaxe-all --pickaxe-regex
 			"
 		return
 		;;
@@ -990,6 +1061,7 @@ _git_merge ()
 	--*)
 		__gitcomp "
 			--no-commit --no-stat --log --no-log --squash --strategy
+			--commit --stat --no-squash --ff --no-ff
 			"
 		return
 	esac
@@ -1149,8 +1221,12 @@ _git_config ()
 		__gitcomp "$(__git_merge_strategies)"
 		return
 		;;
-	color.branch|color.diff|color.status)
+	color.branch|color.diff|color.interactive|color.status|color.ui)
 		__gitcomp "always never auto"
+		return
+		;;
+	color.pager)
+		__gitcomp "false true"
 		return
 		;;
 	color.*.*)
@@ -1367,7 +1443,7 @@ _git_config ()
 
 _git_remote ()
 {
-	local subcommands="add rm show prune update"
+	local subcommands="add rename rm show prune update"
 	local subcommand="$(__git_find_subcommand "$subcommands")"
 	if [ -z "$subcommand" ]; then
 		__gitcomp "$subcommands"
@@ -1375,7 +1451,7 @@ _git_remote ()
 	fi
 
 	case "$subcommand" in
-	rm|show|prune)
+	rename|rm|show|prune)
 		__gitcomp "$(__git_remotes)"
 		;;
 	update)
@@ -1403,7 +1479,7 @@ _git_reset ()
 	local cur="${COMP_WORDS[COMP_CWORD]}"
 	case "$cur" in
 	--*)
-		__gitcomp "--mixed --hard --soft"
+		__gitcomp "--merge --mixed --hard --soft"
 		return
 		;;
 	esac
@@ -1444,12 +1520,8 @@ _git_shortlog ()
 	case "$cur" in
 	--*)
 		__gitcomp "
-			--max-count= --max-age= --since= --after=
-			--min-age= --before= --until=
-			--no-merges
-			--author= --committer= --grep=
-			--all-match
-			--not --all
+			$__git_log_common_options
+			$__git_log_shortlog_options
 			--numbered --summary
 			"
 		return
@@ -1465,13 +1537,14 @@ _git_show ()
 	local cur="${COMP_WORDS[COMP_CWORD]}"
 	case "$cur" in
 	--pretty=*)
-		__gitcomp "
-			oneline short medium full fuller email raw
+		__gitcomp "$__git_log_pretty_formats
 			" "" "${cur##--pretty=}"
 		return
 		;;
 	--*)
-		__gitcomp "--pretty="
+		__gitcomp "--pretty=
+			$__git_diff_common_options
+			"
 		return
 		;;
 	esac
@@ -1547,7 +1620,8 @@ _git_svn ()
 	local subcommands="
 		init fetch clone rebase dcommit log find-rev
 		set-tree commit-diff info create-ignore propget
-		proplist show-ignore show-externals
+		proplist show-ignore show-externals branch tag blame
+		migrate
 		"
 	local subcommand="$(__git_find_subcommand "$subcommands")"
 	if [ -z "$subcommand" ]; then
@@ -1558,13 +1632,15 @@ _git_svn ()
 			--follow-parent --authors-file= --repack=
 			--no-metadata --use-svm-props --use-svnsync-props
 			--log-window-size= --no-checkout --quiet
-			--repack-flags --user-log-author $remote_opts
+			--repack-flags --use-log-author --localtime
+			--ignore-paths= $remote_opts
 			"
 		local init_opts="
 			--template= --shared= --trunk= --tags=
 			--branches= --stdlayout --minimize-url
 			--no-metadata --use-svm-props --use-svnsync-props
-			--rewrite-root= $remote_opts
+			--rewrite-root= --prefix= --use-log-author
+			--add-author-from $remote_opts
 			"
 		local cmt_opts="
 			--edit --rmdir --find-copies-harder --copy-similarity=
@@ -1584,7 +1660,8 @@ _git_svn ()
 		dcommit,--*)
 			__gitcomp "
 				--merge --strategy= --verbose --dry-run
-				--fetch-all --no-rebase $cmt_opts $fc_opts
+				--fetch-all --no-rebase --commit-url
+				--revision $cmt_opts $fc_opts
 				"
 			;;
 		set-tree,--*)
@@ -1598,13 +1675,13 @@ _git_svn ()
 			__gitcomp "
 				--limit= --revision= --verbose --incremental
 				--oneline --show-commit --non-recursive
-				--authors-file=
+				--authors-file= --color
 				"
 			;;
 		rebase,--*)
 			__gitcomp "
 				--merge --verbose --strategy= --local
-				--fetch-all $fc_opts
+				--fetch-all --dry-run $fc_opts
 				"
 			;;
 		commit-diff,--*)
@@ -1612,6 +1689,21 @@ _git_svn ()
 			;;
 		info,--*)
 			__gitcomp "--url"
+			;;
+		branch,--*)
+			__gitcomp "--dry-run --message --tag"
+			;;
+		tag,--*)
+			__gitcomp "--dry-run --message"
+			;;
+		blame,--*)
+			__gitcomp "--git-format"
+			;;
+		migrate,--*)
+			__gitcomp "
+				--config-dir= --ignore-paths= --minimize
+				--no-auth-cache --username=
+				"
 			;;
 		*)
 			COMPREPLY=()
@@ -1672,7 +1764,6 @@ _git ()
 
 	if [ -z "$command" ]; then
 		case "${COMP_WORDS[COMP_CWORD]}" in
-		--*=*) COMPREPLY=() ;;
 		--*)   __gitcomp "
 			--paginate
 			--no-pager
@@ -1736,6 +1827,7 @@ _git ()
 	show)        _git_show ;;
 	show-branch) _git_show_branch ;;
 	stash)       _git_stash ;;
+	stage)       _git_add ;;
 	submodule)   _git_submodule ;;
 	svn)         _git_svn ;;
 	tag)         _git_tag ;;
@@ -1751,25 +1843,32 @@ _gitk ()
 	local cur="${COMP_WORDS[COMP_CWORD]}"
 	local g="$(git rev-parse --git-dir 2>/dev/null)"
 	local merge=""
-	if [ -f $g/MERGE_HEAD ]; then
+	if [ -f "$g/MERGE_HEAD" ]; then
 		merge="--merge"
 	fi
 	case "$cur" in
 	--*)
-		__gitcomp "--not --all $merge"
+		__gitcomp "
+			$__git_log_common_options
+			$__git_log_gitk_options
+			$merge
+			"
 		return
 		;;
 	esac
 	__git_complete_revlist
 }
 
-complete -o default -o nospace -F _git git
-complete -o default -o nospace -F _gitk gitk
+complete -o bashdefault -o default -o nospace -F _git git 2>/dev/null \
+	|| complete -o default -o nospace -F _git git
+complete -o bashdefault -o default -o nospace -F _gitk gitk 2>/dev/null \
+	|| complete -o default -o nospace -F _gitk gitk
 
 # The following are necessary only for Cygwin, and only are needed
 # when the user has tab-completed the executable name and consequently
 # included the '.exe' suffix.
 #
 if [ Cygwin = "$(uname -o 2>/dev/null)" ]; then
-complete -o default -o nospace -F _git git.exe
+complete -o bashdefault -o default -o nospace -F _git git.exe 2>/dev/null \
+	|| complete -o default -o nospace -F _git git.exe
 fi

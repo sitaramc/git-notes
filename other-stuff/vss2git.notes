@@ -63,7 +63,7 @@ because I do not know any other way of doing this if you don't already know
     mkdir svnco
     svn checkout file://$PWD/svnrepo svnco
 
-### convert to git
+### convert svn to git
 
 This is, naturally, the easiest of all, especially if you don't intend to go
 back :)
@@ -147,7 +147,7 @@ Anyway, your bottom line should be:
 
 There is another method, achieved by hacking a perl script that was supposed
 to convert [to SVN](http://www.riseup.com/~brettw/dev/VSS2Subversion.html), to
-make it go [to perl](../tools/vss2git.pl) instead.  Pros and cons:
+make it go [to git](../tools/vss2git.pl) instead.  Pros and cons:
 
   * (+) no CRLF problem
   * (+) easier to use: you just need msysgit and this program, no messing
@@ -174,7 +174,7 @@ no harm keeping two tools around...!
 #### #perlmodinstalls installing the perl modules
 
 Note: I *did* indeed have to install DBD::SQLite2 manually.  Also, Text::Glob
-also had to be installed using `perl -MCPAN -e shell` followed by `install
+had to be installed using `perl -MCPAN -e shell` followed by `install
 Text::Glob`; for some reason the "-e install ..." thing didn't work
 
     for m in Module::Build XML::Simple Time::CTime DBD::SQLite2 DBI Tie::IxHash Text::Glob Data::UUID; do
@@ -218,4 +218,3 @@ Text::Glob`; for some reason the "-e install ..." thing didn't work
          std::string ucLeaf = fpath.leaf();
 
 </font>
-

@@ -10,7 +10,9 @@
 [alias]
 	s   = status
         b   = branch
-        ba  = branch -a -v
+        ba  = branch -a -v -v
+        bs  = !git-branch-status
+        bsi = !git-branch-status -i
 
         ci  = commit
         co  = checkout
@@ -46,7 +48,23 @@
         kdo     = !gitk --date-order
         kado    = !gitk --all --date-order
         kasd    = !gitk --all --simplify-by-decoration
+
+        # checkpoint and checkpoint recover
+        cp      = !git stash save $(date +%F--%T) && git stash pop --index
+        cpr     = "!f() { git fsck | grep commit | cut -d' ' -f3 | while read hash; do git rev-parse --verify --no-revs --quiet $hash^2 2>/dev/null && echo $hash | xargs git rev-list --since=${1:-1day} -1; done | xargs -i git log --graph --oneline --format='%Cblue%h %Cgreen(%ar) %Creset%s' -3 '{}'; }; f"
+
 [rerere]
 	enabled = 1
 [diff]
 	mnemonicprefix = true
+	tool = meld
+[merge]
+	tool = meld
+[gui]
+	editor = gvim
+[guitool "edit"]
+	cmd = gvim -f $FILENAME
+	noconsole = yes
+	needsfile = yes
+[push]
+	default = matching
