@@ -1,0 +1,111 @@
+# all about branches and product maintenance
+
+^^[[TOC]]^^
+
+----
+
+<sup>
+**SVN folks -- please read this first**
+
+People coming from SVN often don't realise what branches are really supposed
+to be: **A branch is an alternate reality for your project**.  (Even if you're
+not a sci-fi fan, that should be easy enough to understand).
+
+If you've been raised on SVN or CVS, it'll really help to unlearn SVN's
+needless mixing up of branches and tags in the same namespace as the
+subdirectories of your project, before you start seriously using branches in
+git.
+</sup>
+
+----
+
+### local and remote branches
+
+The git repository is really just a DAG (directed acyclic graph) of commits.
+Each commits points to its parent or parents (merge commits have more than one
+parent).  A branch in git is merely a pointer to some commit in the DAG.  When
+you checkout a branch, git makes your working tree look like the files that
+existed when that commit was made.  When you make a commit on top of this, git
+updates the "branch" to point to the new "head" commit.
+
+This is conceptually the same as adding a new item to a linked list and moving
+the "head" pointer to the new item, if you remember your data structures
+course from many years ago.
+
+A developer's repository will typically have several branches residing in it,
+although of course only one is "checked out" at any given time into the
+working tree.
+
+Apart from local branches (like `master`, `next`, and maybe `v1.2`,
+`some-new-feature`), etc., you will also have a set of branches called
+**origin/branchname** (example: `origin/master`).  These are *your copy* of
+the corresponding branch from the "origin" server.  You should [never commit
+to them directly](../concepts/detached-head.html).
+
+And the most important thing is, you can have any other branches you wish!  Go
+wild -- no one will stop you, and it's quite difficult to lose data so have
+fun!
+
+### topic branches
+
+As you read about workflows in modern VCSs, you'll often hear about topic
+branches. According to the [git
+glossary](http://www.kernel.org/pub/software/scm/git/docs/gitglossary.html#def_topic_branch),
+a topic branch is:
+
+>   *A regular git branch that is used by a developer to identify a conceptual
+    line of development. Since branches are very easy and inexpensive, it is
+    often desirable to have several small branches that each contain very well
+    defined concepts or small incremental yet related changes.*
+
+A topic branch could represent any self-contained, pretty much
+independent-of-others, line of development.  A specific bug, a new feature, a
+refactor, a set of enhancements to one core features, etc., can all be managed
+as topics in their own right.
+
+### product maintenance
+
+Let's say your version tree looks like this:
+
+    V3 ---o---o--- V4 ---o---o--- (master)
+     \             \
+      \---V3.1      \
+                     \---V4.1
+
+In this picture, V3 and V4 are tags representing specific versions.  V3.1 and
+V4.1 are maintenance branches to represent ongoing work in fixes for their
+respective base versions.  And "master" is where on-going development for (the
+future) V5 is happening.
+
+The simplest way to manage the flow of patches and fixes is this:
+
+  * when a change is small enough to not need a topic branch, ***commit it on the
+    oldest branch that needs the change***
+
+  * for larger changes, create a branch for every topic (feature, bugfix, cust
+    specific change, etc).  ***fork it at the oldest branch that needs this
+    change***
+
+    In this situation, if you find a bug that is applicable to V4 but not to
+    V3, you'd fork a "topic branch" for that bug at V4.  On the other hand, if
+    the bug applies to V3 also, you'd fork there.  It may also happen that the
+    bug does not apply to V3 but does apply to V3.1; if so, fork it at the
+    current tip of V3.1
+
+  * Periodically merge the old branches into newer ones so the new branches
+    get the benefit of accumulated bug fixes on the older branches.  This
+    means merge V3 into V3.1, V3.1 into V4, etc.
+
+The exception to these rules is if you have bugs on older versions that do not
+apply to newer versions.  Merging fixes that are relevant *only* to V3, into
+the V4 branch, is meaningless, and may even get you conflicts.  The way to
+deal with those is as follows:
+
+  * create a new branch called, say, V3maint
+  * fixes that apply *only* to V3 go on V3maint
+  * fixes that apply *from* V3, to all future versions, go on V3.1
+  * periodically, V3.1 is merged into both V4 as well as to V3maint
+
+Note that V3maint will never get merged into V4 or V3.1, preserving the
+condition that commits made in V3maint are not picked up by the other CC
+admins.
