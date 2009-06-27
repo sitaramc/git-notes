@@ -1,0 +1,133 @@
+# git -- URLs galore
+
+[[TOC 5]]
+
+----
+
+### the chief penguin wrangler speaks :-)
+
+  * Linus on merging: <http://git.or.cz/gitwiki/LinusTalk200705Transcript>
+  * linus explaining merging (what should be automatic and what should not) in
+    a mailing list <http://marc.info/?t=119198137100002&r=1&w=2>
+  * some important comments on Linus's google-talk video, especially about
+    branching and merging:
+    <http://codicesoftware.blogspot.com/2007/05/linus-torvalds-on-git-and-scm.html>
+
+### basic stuff/concepts
+
+  * <http://eagain.net/articles/git-for-computer-scientists> -- absolute
+    **must read**
+  * <http://cworth.org/hgbook-git/tour/> -- I cannot emphasise how useful this
+    URL has been in getting started!
+  * <http://git.or.cz/gitwiki/GitCheatSheet>
+  * who says git is harder than SVN?  Try <http://git.or.cz/course/svn.html>
+  * very nice, pictorial, explanation at
+    <http://www.kernel.org/~junio/200607-ols.pdf>
+
+### advanced stuff/best practices
+
+  * release engineering, branches never-merged-back, etc.,
+    <http://gitster.livejournal.com/2009/01/14/>
+
+### digging into git
+
+  * <http://article.gmane.org/gmane.comp.version-control.git/46609> -- how
+    `git am -3` works
+
+### opinions/discussion/DVCSs in general
+
+  * a somewhat longer, more philosophical article on git:
+    <http://www.betaversion.org/~stefano/linotype/news/106/>
+  * on tracking content instead of files: <http://marc.info/?l=git&m=116473016012824>
+  * descriptive article on the advantages of a DVCS and speculative branching
+    and low overhead repos and so on:
+    <http://griddlenoise.blogspot.com/2007/12/distributed-vcss-are-great-enablers-or.html>
+  * very informative comment on the advantages of a distributed system:
+    <http://weblogs.mozillazine.org/preed/2006/11/version_control_system_shootou.html#comment-486521>
+  * <http://keithp.com/blogs/Repository_Formats_Matter/>  -- discusses git
+    from a small project point of view; you can retain your central model even
+    with git
+  * <http://blogs.gnome.org/newren/2007/11/24/local-caching-a-major-distinguishing-difference-between-vcses/>
+
+  * on git being very liberal: <http://tomayko.com/writings/the-thing-about-git>
+    * Version control systems have traditionally required a lot of up-front
+      planning followed by constant interaction to get changes to the right
+      place at the right time and in the right order. And woe unto thee if a
+      rule is broken somewhere along the way, or you change your mind about
+      something, or you just want to fix this one thing real quick before
+      having to commit all the other crap in your working copy.
+
+### advocacy
+
+  * features unique to git: <http://gitster.livejournal.com/16077.html>
+  * <http://lwn.net/Articles/317154/>: *git bisect "is well-nigh
+    single-handedly responsible for reducing our average bugreport-to-fix time
+    from 4 days to 6 hours".*
+  * on why git is so revolutionary.  This is actually the most "concept-ish"
+    of all the praising articles on git, and yet the most tangible because he
+    keeps on pumping us with examples of stuff he and others had done which
+    could ALL be replaced by git:
+    <http://www.advogato.org/person/apenwarr/diary/371.html>.  Has stuff like "I
+    wanted to build distributed filesystem, but git beat me to it; I wanted a
+    file backup system, but git beat me to it", etc., essentially saying that
+    git is a platform for building whatever you want, not just a VCS.  Or how
+    about a "hash indexed backup system" to store backups from different
+    systems efficiently?
+
+### other VCSs -- comparision, criticism, etc
+
+look, don't expect too much praise for any of the other systems, except
+possibly Hg -- and even that might be back-handed ;-)
+
+#### SVN
+
+...but also see the [main article on subversion](../other-stuff/svn.html) for
+a lot more; SVN is the most used VCS in terms of what potential git users are
+*currently* using, so it has its own page.
+
+  * <http://blog.mwolson.org/tech/why_i_dislike_subversion.html>
+
+#### Visual Source <font size=-5>un</font>Safe
+
+  * data integrity issues in VSS: <http://www.developsense.com/testing/VSSDefects.html>
+
+#### Clearcase
+  * <http://creativekarma.com/ee.php/weblog/comments/why_clearcase_sucks/>
+  * <http://evilparty.org/~orc/2004/08/03/001/index.html>
+  * <http://selenic.com/pipermail/mercurial/2007-April/012864.html>
+  * <http://www.digitaltorque.ca/2006/12/18/clearcase-making-easy-things-hard/>
+  * <http://www.germane-software.com:8080/ser/aikido/clearcase-sucks>
+  * <http://www.littleredbat.net/mk/blog/story/63/> -- git to the rescue :-)
+  * <http://www.trolocsis.com/wp/2007/04/18/the-joys-of-clearcase/>
+  * <http://codicesoftware.blogspot.com/2008/04/break-up-clearcase-bad-love-affair.html>
+
+#### Hg
+
+  * <http://weblog.masukomi.org/2008/2/4/some-thoughts-about-git> (cf Hg)
+  * <http://weblogs.mozillazine.org/preed/2007/04/version_control_system_shootou_1.html>
+    :-)
+
+#### darcs
+
+All this is moot -- the GHC (Glasgow Haskell Compiler) people themselves moved
+from Darcs to git :-)
+
+Think about it.  Darcs was the poster child of "mainstream" use of Haskell
+(i.e., outside the ivory towers).  And the people who maintain the standard
+Haskell compiler decided it was too slow or something.
+
+  * <http://blog.moertel.com/articles/2007/12/10/how-i-stopped-missing-darcs-and-started-loving-git#comment-856>
+    a very cogent comparision with Darcs from someone who used Darcs for 3
+    years and git for 1 year
+
+#### perforce
+
+  * <http://kb.perforce.com/UserTasks/WorkingDisconnected>
+  * <http://luqui.org/blog/archives/2007/02/19/perforce-sucks/>
+  * very interesting stuff.  SVN guys will like this :-)
+    <http://www.harukizaemon.com/2006/09/no-really-perforce-does-suck.html>
+
+### funny stuff
+
+  * <http://changelog.complete.org/posts/698-If-Version-Control-Systems-were-Airlines.html>
+    -- esp the last 2 "airlines".  No wonder I like git so much :-)
