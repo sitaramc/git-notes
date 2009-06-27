@@ -1,0 +1,77 @@
+# repository security
+
+^^Someone asked me how they could control read/write access to portions of the
+repository (this is in a corporate setting, needless to say).  This is my take
+on this.^^
+
+----
+
+Before we dig into the main topic, I want to get some terminology clear.  I've
+noticed that sometimes people used to certain VCSs use the word "repository"
+to mean something more than one project, like perhaps the entire "server".  A
+"repository" in git is the source code and history for **one** "project".
+
+With that done, let's move on...
+
+By default, a git repository is either full access, or no access.  An
+intermediate level (read-only access) can also be setup fairly easily -- you
+can either use `git daemon` to provide read-only access to anyone who can
+reach the machine, or you can make it more fine grained by [installing
+gitosis](./0-installing/9-gitosis-server-install.html).
+
+But the questioner also asked: how do we ensure that some version of the
+software that is considered "sacred" is not touched by anyone except a duly
+anointed "priest".  (OK, those are not the words they used, but I'm in a
+religious mood today, so humor me ;-)
+
+There are several ways for a priest to achieve the kind of separation
+required.  In increasing order of paranoia, they are:
+
+  * the priest maintains a branch in the same repository that everyone uses,
+    and he tags (even signs with his GPG private key, if needed) the commit
+    that represents the current "guarded" version.  Developers are told they
+    should not push to that branch.
+
+    > **Side bar**: from a configuration management perspective, the SHA that
+    git uses is a **powerful** way of ensuring that the code is **precisely**
+    what one has signed off on.  This goes well beyond all current ways of
+    recording a baseline known to ISO9000/CMM5 type quality regimes.  Just
+    record the first 10-12 digits of the SHA in the CR (Configuration
+    Register)!  Anyone can checkout that particular commit from the repository
+    to get exactly the same code; every single byte in every single file will
+    be identical.  No need to mess around with checking versions of individual
+    components, dates, time stamps, and what not.
+
+    To see why it is sufficient to merely *tell* developers not to push, let's
+    ask the question: what if someone does push onto that branch?
+
+    The answer is, really: nothing much.  No one can change the existing SHA,
+    so all one has to do is look at the configuration register, pick the SHA
+    that *ought to be at the top*, and reset the branch to that SHA.
+
+  * The second option is essentially the same as above, but the repository has
+    a hook to enforce the restriction on who is allowed to push to that
+    particular branch.  (Git provides a lot of hooks, and they're very easy to
+    setup and test).
+
+    You can enforce this in one line of code, actually (this should go into
+    `.git/hooks/update` and the file should be made executable
+
+        #!/bin/bash
+        [[ $1 == refs/heads/master && $USER != priest ]] && exit 1
+        exit 0
+
+    OK that's 3 lines, but you get the idea :-)
+
+    Of course, you may want to embellish a little -- maybe print something
+    informative about the error when someone tries to push, or do other
+    interesting things like send email to the priest that someone was trying
+    to push (even though the push failed), etc.
+
+  * The final option is that the priest maintains a separate *sacred
+    repository*.  He/she pulls and pushes from the developer-writable
+    repositories, and -- when satisfied -- updates the sacred repository.
+    We're not talking about a branch in the common repo -- this is a whole
+    another repo to which everyone else has (at best) only read access.
+
+    This is usually overkill, IMO.
