@@ -12,6 +12,8 @@
   * some important comments on Linus's google-talk video, especially about
     branching and merging:
     <http://codicesoftware.blogspot.com/2007/05/linus-torvalds-on-git-and-scm.html>
+  * Linus on "clean" "history"
+    <http://www.mail-archive.com/dri-devel@lists.sourceforge.net/msg39091.html>
 
 ### basic stuff/concepts
 
@@ -23,6 +25,43 @@
   * who says git is harder than SVN?  Try <http://git.or.cz/course/svn.html>
   * very nice, pictorial, explanation at
     <http://www.kernel.org/~junio/200607-ols.pdf>
+
+#### ...for SVN and other Centralised VCS users
+
+  * If you always wondered what exactly was meant by "**commit-then-merge
+    versus merge-then-commit**", take a couple of minutes to read
+    <http://www.ericsink.com/entries/dvcs_dag_1.html>.  You'll also understand
+    what a DAG (directed acyclic graph) is, in case you didn't know, with very
+    nice ilustrations at an easy reading pace.
+
+    This site belongs to someone who is making a commercial version control
+    system, and is documenting his findings and thoughts very laboriously.
+    While I don't always agree with him, he (a) certainly writes well, and I
+    absolutely love his sense of humour, and (b) is refreshingly honest about
+    his biases in [his followup blog
+    post](http://www.ericsink.com/entries/dvcs_dag_2.html).
+
+  * <http://codeclimber.blogspot.com/2009/05/git-solves-all-your-branching-and.html>
+    talks about the reluctance to try branching when coming from a
+    painful-to-branch model like SVN.  The fact is, in git, branching is one
+    of those rare beasts: easy *and* powerful.
+
+### #tut detailed tutorials
+
+  * about the best darn doc on using the 3 GUIs that come with git:
+    <http://nathanj.github.com/gitguide/tour.html> has a Windows slant but
+    except for the "installation" pieces, the rest is just as applicable to
+    Linux
+
+  * another *very useful* resource is the [gitready](http://gitready.com/)
+    site, where you'll find lots of tips and techniques.  In particular, they
+    explain things very graphically (for example, if you always wondered what
+    rebase is, try [intro to
+    rebase](http://gitready.com/intermediate/2009/01/31/intro-to-rebase.html),
+    then maybe [pull with
+    rebase](http://gitready.com/advanced/2009/02/11/pull-with-rebase.html) or
+    [squashing commits with
+    rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)).
 
 ### advanced stuff/best practices
 

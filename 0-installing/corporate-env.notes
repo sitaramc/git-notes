@@ -116,7 +116,7 @@ You will get a terminal screen.  Now type in the following commands:
     git config --global user.name  "Your Name"
 
     # this setting is new in modern gits and is very useful
-    git config push.default nothing
+    git config --global push.default nothing
 
     # these 3 settings let you edit files from within "git gui"
     # "write.exe" is wordpad; change it whatever you want

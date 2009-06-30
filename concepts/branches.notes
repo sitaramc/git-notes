@@ -5,16 +5,22 @@
 ----
 
 <sup>
-**SVN folks -- please read this first**
 
-People coming from SVN often don't realise what branches are really supposed
-to be: **A branch is an alternate reality for your project**.  (Even if you're
-not a sci-fi fan, that should be easy enough to understand).
+**CVS/SVN folks -- please read this first**
 
-If you've been raised on SVN or CVS, it'll really help to unlearn SVN's
-needless mixing up of branches and tags in the same namespace as the
-subdirectories of your project, before you start seriously using branches in
-git.
+SVN and CVS treat a branch as another subdirectory of your project.
+Conversely, you can also pretend a subdirectory is a branch.  In other words,
+branches (and tags) share the same namespace as the subdirectories of your
+project.
+
+This is not the right way to think of branches.  **A branch is merely an
+alternate reality for your project**.  That's the simplest way to put it.
+Each commit is a "snapshot" of the state of your code at a certain point in
+time, and each branch (consisting of a series of commits) represents a
+different timeline than the other branches do.
+
+Thus, branches and subdirectories have *nothing* to do with each other.
+
 </sup>
 
 ----

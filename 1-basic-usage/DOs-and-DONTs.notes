@@ -36,7 +36,7 @@ If you intend to use the command line more than the GUI, please do check out
 [my gitconfig](../tools/my.gitconfig.txt) for many useful examples that will
 save you lots of time and trouble.
 
-#### every bare repository
+#### (admin) every bare repository
 
 ^^[What is a bare repo?](../concepts/bare.html)^^
 
@@ -47,6 +47,22 @@ Make sure all updates are logged:
 You may also like this to begin with:
 
     git config receive.denyDeletes true
+
+### write useful, readable, commit messages
+
+A good description of this is at <http://www.tpope.net/node/106>.  But
+briefly, try and stick to the following guidelines:
+
+  * the first line of the commit message (often called a "subject") should be
+    a *summary* of the entire commit
+  * it should not be more than about 70 characters long
+  * it should include any reference info (like bug number, issue number, etc)
+    if applicable
+  * the rest of the message ("body") can be pretty much anything, but leave a
+    blank line between the "subject" and the "body"
+
+Git uses the "subject" part in many places and it is very useful to have a
+short, meaningful subject line for each commit.
 
 ## DONTs
 

@@ -21,7 +21,8 @@ any VCS before or are coming from, say, SVN.</font>**
 
 Once you've done that, and are ready to start **using** git, there's a really
 thorough introduction to the GUI tools, including lots of screenshots, at
-<http://nathanj.github.com/gitguide/>.
+<http://nathanj.github.com/gitguide/>.  You can also find other such links
+[here](../other-stuff/git-links.html#tut).
 
 The page has an excellent example "project" that is simple enough that you can
 concentrate on the git features being demonstrated, and the author goes into
@@ -39,14 +40,3 @@ However, note these two minor points:
     pulling from someone's IP address, etc.), may work differently in a
     corporate environment.
 
-----
-
-Another *very useful* resource is the [gitready](http://gitready.com/) site,
-where you'll find lots of tips and techniques.  In particular, they explain
-things very graphically (for example, if you always wondered what rebase is,
-try [intro to
-rebase](http://gitready.com/intermediate/2009/01/31/intro-to-rebase.html),
-then maybe [pull with
-rebase](http://gitready.com/advanced/2009/02/11/pull-with-rebase.html) or
-[squashing commits with
-rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)).
