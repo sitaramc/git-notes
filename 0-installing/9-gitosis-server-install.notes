@@ -2,47 +2,182 @@
 
 ^^[[TOC]]^^
 
+----
+
+### IMPORTANT -- overview of ssh
+
+Here's a secret: ***gitosis is far more ssh magic than git magic***!
+
+Most problems in setting up gitosis are because people don't realise this, and
+even if they did they don't know ssh well enough to help themselves.  If you
+don't understand how ssh public key authentication works, or how the
+`~/.ssh/authorized_keys` file can be used to restrict users, etc., you will
+have endless amounts of trouble getting gitosis to work, because you'll be
+attacking the wrong problem.
+
+So please please please understand this before tearing your hair out and
+blaming ***git/gitosis*** for whatever is going wrong with your setup :-)
+
+#### ssh basics
+
+Let's start with some basics, focusing *only* on the pieces relevant to
+`gitosis`.  If this is not detailed enough, please use google and learn more
+from somewhere, or maybe buy the OReilly ssh book.
+
+  * You can login to an ssh server by typing a password, but ssh can also use
+    ***public-private keys*** (also called "key pairs") for authentication.
+    `gitosis` *requires* you to use this mechanism for your users -- they
+    cannot log in using passwords.  Hopefully by the time you finish reading
+    this document you will understand why :-)
+
+    The way you set this up is you generate a key pair on your workstation,
+    and give the server the public key.  (I need not add that the "private"
+    key must be, well, kept *private*!)
+
+  * **generating a key pair on your workstation** is done by running the
+    command `ssh-keygen -t rsa`.  This produces two files in `~/.ssh`.  One is
+    `id_rsa`; this is the **private** key -- ***never*** let it out of your
+    machine.  The other is `id_rsa.pub`, which is the corresponding public
+    key.  This public key is usually just one long line of text.
+
+    * on Windows machines with msysgit installed, you should do this from
+      within a "git bash" window.  The command will report the full path where
+      the files have been written; make a note of this, and use those files in
+      any of the description that follows
+
+  * **adding your public key to the server's `~/.ssh/authorized_keys` file**
+    is how ssh uses pubkeys to authenticate users.  Let's say
+    sita@work.station is trying to log in as git@serv.er.  What you have to do
+    is take the `~/.ssh/id_rsa.pub` file for user sita on work.station and
+    append its contents (remember it's only one line) to
+    `~/.ssh/authorized_keys` for user git on serv.er.
+
+    The `authorized_keys` file can have multiple public keys (from many
+    different people) added to it so any of them can log in to git@serv.er.
+
+    In the normal case (not gitosis, but your normal everyday shell access),
+    there's a command that does this, `ssh-copy-id`, which also fixes up
+    permissions etc., as needed, since sshd is a little picky about allowing
+    pubkey access if permissions on the server are loose.  Or you can do it
+    manually, as long as you know what you're doing and you're careful not to
+    erase or overwrite the existing contents of `~/.ssh/authorized_keys` on
+    the server!
+
+    But in the gitosis case, it's different; we'll get to that in a minute.
+
+    * **troubleshooting pubkey authentication failures**: if you are unable to
+      get ssh access to the server after doing all this, you'll have to look
+      in `/var/log/secure` or `/var/log/auth.log` or some such file on the
+      server to see what specific error `sshd` is complaining about.
+
+  * **restricting users to specific commands** is very important for gitosis.
+    If you read `man sshd` and look for "authorized_keys file format", you'll
+    see a lot of options you can add to the public key line, which restrict
+    the incoming user in various ways.  In particular, note the `command=`
+    option, which means "regardless of what the incoming user is asking to do,
+    forcibly run this command instead".
+
+    Also note that when there are many public keys (i.e., lines) in the
+    `authorized_keys` file, each line can have a *different* set of options
+    and `command=` values.
+
+    **This is the backbone of what makes gitosis work; please make sure you
+    understand this**
+
+#### how does gitosis use all this ssh magic?
+
+##### authorising the main gitosis admin
+
+As you follow the rest of this document to install gitosis, incuding the
+script mentioned below, you will create a user called "git", and later you
+will run a command called `gitosis-init` (as the "git" user, via the sudo
+mechanism).
+
+This command requires the `id_rsa.pub` file of the person who will be the main
+gitosis administrator on its standard input.  So you should first copy this
+file from your workstation to the server using normal, password-based, access.
+It is this `gitosis-init` command that adds the public key supplied to the
+`~/.ssh/authorized_keys` for the "git" user.
+
+After this, you (because you have the *corresponding* private key) can
+clone/push/pull the `gitosis-admin` repository from the server.
+
+##### adding other users
+
+In the main part of this document, I've set out [how to add new users and
+projects](#admin).  But how does it actually work?  For example, how does it
+add new users to the `~/.ssh/authorized_keys` file over on the server?
+
+It's time to switch from ssh magic to git magic for a change.
+
+Git allows you to create "hooks" -- usually shell scripts that are run before
+or after various actions.  `man githooks` will tell you all you want to know,
+but in particular, there's one called `post-update` that we're interested in.
+
+The `post-update` hook is run on the remote side whenever you do a `git push`
+and the git push succeeds.  When you setup gitosis, it installs a
+`post-update` hook for the `gitosis-admin` repo that basically updates the
+authorized_keys file if you have added new users and/or keys.
+
+So:
+
+  * git is responsible for running the hook when a push succeeds, and
+  * gitosis provides the code in that hook, (which updates the authorized_keys
+    file), so that
+  * ssh can allow the newly added users to log in.
+
+##### restricting shell access/distinguishing one user from another
+
+These are two different questions you ought to be having by now: how does
+gitosis restrict what I can do (all those access rights), and in fact how does
+it distinguish between me and someone else, since we're all logging in as the
+same remote user "git".
+
+The answer is the `command=` we talked about before.  If you look in the
+authorized_keys file, you'll see entries like this (I chopped off the ends of
+course; they're pretty long lines):
+
+    command="gitosis-serve sitaram",[more options] ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA18S2tM9T...
+    command="gitosis-serve user2",[more options] ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEArXtCT...
+
+As you can see, the command that runs is always `gitosis-serve USERNAME` for
+whatever user is logging in.  `ssh` does this, not git or gitosis.
+
+Then, when `gitosis-serve` gets control, it looks at the first argument
+("sitaram", "user2", etc) to determine who you are.  Also, before calling
+`gitosis-serve`, ssh sets up an environment variable called
+`SSH_ORIGINAL_COMMAND` containing the actual git command that your workstation
+sent out, and this tells gitosis which repository you want to access, and
+whether you're reading or writing.
+
+Now gitosis has all the information it needs, it looks at its internal copy of
+`gitosis.conf`, and either allows or rejects the request.
+
 ### installing git on the server
 
+OK enough background, review, and hand waving.  On to the real stuff...
+
   * install git using your system's normal install mechanisms
-  * (optional) upgrade git to the latest by downloading and compiling it from
-    git://git.kernel.org/pub/scm/git/git.git
-    * bypassing the proxy to do this is outside the scope of this document,
-       at least for now
-    * installing git from sources must be done after installing *some*
-       version of git, otherwise the version number does not get picked up
-       properly -- long story!
-    * make sure you `git checkout v1.6.1` or whatever is the latest
-       version that `git tag` shows you before you start
-    * installing the dependencies required to compile git is also out of scope!
-       However, you can set `NO_CURL`, `NO_EXPAT`, and `NO_TCLTK`.  The first
-       two will prevent http-pull/push from being built, but I never use those
-       protocols anyway, so I don't care :-)  The third one will prevent the
-       GUI tools from being built, which does not matter on a server
-    * after installing this, remove the distro-installed git using
-       `urpme` or `aptitude remove`.  If this automatically removes
-       anything else (like libdigest-sha1-perl and liberror-perl on ubuntu),
-       install them back manually -- just in case!
-
-#### a word on cloning external repos
-
-Bypassing the proxy to clone external repos (git, gitosis) is out of the scope
-of this document, but if you can't bypass it, and you have the clone somewhere
-else, you can do the following:
-
-    # on the machine where you have the clone
-    git checkout master
-    # make sure it is the right version etc
-    git bundle create /tmp/temp.bdl master
-
-    # now carry that file across from that machine to the one where you
-    # want to install (somehow), then
-    mkdir project       # git, gitosis, whatever
-    cd project
-    git init
-    git pull /tmp/temp.bdl master:master
-
-That's it!
+  * (optional) check <http://www.kernel.org/pub/software/scm/git/> to see how
+    old your distro-supplied git is.  If it's more than 6-12 months old,
+    consider upgrading manually.  You can get the latest source code from that
+    same URL.
+  * some tips on compiling git:
+    * installing git from sources must be done after installing *some* version
+      of git, otherwise the version number does not get picked up properly --
+      long story!
+    * installing the dependencies required to compile git is out of scope of
+      this document!  However, you can set `NO_CURL`, `NO_EXPAT`, and
+      `NO_TCLTK`.  The first two will prevent http-pull/push from being built,
+      but I never use those protocols anyway, so I don't care :-)  The third
+      one will prevent the GUI tools from being built, which does not matter
+      on a server
+    * after installing this, remove the distro-installed git using `urpme` or
+      `aptitude remove`.  Distros will usuall place git in some other place
+      than a normal compile, and having two versions causes confusion.
+      However, if this automatically removes anything else (like
+      libdigest-sha1-perl and liberror-perl on ubuntu), install them back
+      manually -- just in case!
 
 ### installing gitosis
 
@@ -59,16 +194,48 @@ That's it!
        your **desktop** or **laptop** (usually found in
        `~/.ssh/id_rsa.pub`) needs to be copied over to the gitosis server
 
-### back to your desktop -- cloning the admin repo
+### #admin back to your desktop -- adding users and projects
 
-How do you admin gitosis?
+#### How do you admin gitosis?
 
 Simple: there's a repo called `gitosis-admin` which you clone on your
 desktop.  You are allowed to do this because your public key was used in
-installing and initialising gitosis (see above)!
+installing and initialising gitosis (see above).
 
 After that, maintaining/managing rights is a simple matter of adding people's
 public keys, changing the config file (a very simple file), and pushing!
+
+Here's a bit more detail on all that:
+
+  * clone the `gitosis-admin` repository on the workstation where you created
+    the public key used in the gitosis-init
+  * collect the public key file from for each user you want to add (they may
+    have to run `ssh-keygen -t rsa` first).  Name these files with simple
+    names ending in `.pub`.  Example: `sitaram.pub`, `user2.pub`, etc.
+  * put these files in the `keydir/` subdirectory of your gitosis clone
+  * edit the file `gitosis.conf` to add projects and users.  User names should
+    be the part before the `.pub` (in our example: `sitaram`, `user2`, etc)
+  * `git add` all the files, `git commit`, and then `git push`
+
+#### what about adding new projects?
+
+While normal git does not let you *create* a repository on a remote machine by
+doing a "push", gitosis does.  You can take any local repository, and use it
+to seed/create a gitosis repository as follows (of course, the admin must have
+given you write permissions for that repository in his `gitosis.conf`):
+
+    cd some/local/repo
+    # check it out, make sure it looks good; this will be the starting shape
+    # of your new project
+    git remote add origin git@your.gitosis.server:yourproject.git
+    # you should have write access to "yourproject" for the next step to work
+    got push origin master:master
+
+At this point, gitosis sees you trying to push to a project that you have
+permissions for, but doesn't exist yet.  There's a special case in the gitosis
+code for that, which just creates the repo and then accepts the pushed data.
+
+And you're done.
 
 ### setting up gitweb
 
@@ -109,6 +276,22 @@ To allow web access to the git repositories, do the following:
     forever after that, even if you remove that line.  You have to explicitly
     set `gitweb=no` and push before the project gets removed from the
     `gitosis/projects.list` file.
+
+### troubleshooting
+
+1.  a basic sanity check is to just try and `ssh git@your.gitosis.server`.  If
+    everything is setup properly, you should get an error that says something
+    like `Need SSH_ORIGINAL_COMMAND`.
+
+    This proves that ssh authenticated you by your private key, found that the
+    corresponding public key line specifies `command=gitosis-serve
+    youruserid`, and ran gitosis-serve, which promptly complained because it
+    was expecting something very specific.
+
+2.  if you managed to clone the gitosis-admin repo, but changes you made to it
+    are not taking effect, check if the hook is being executed at all.  See
+    the last section of comments in [this
+    script](../tools/install.gitosis.txt).
 
 ### creating a separate "pushlog"
 
