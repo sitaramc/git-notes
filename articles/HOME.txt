@@ -1,0 +1,108 @@
+# how I version all the important stuff in my `$HOME`
+
+[[TOC]]
+
+----
+
+First things first: git does not track permissions except the first "x" in
+`rwxrwxrwx`.  Do not use this for anything where ownership or permissions are
+important.
+
+### my needs
+
+I want to version control
+
+  * some of my dot-files, not all of them
+  * all the dozens of custom scripts in my `~/bin`
+  * some notes and other files in `~/notes`, `~/docs`, etc. (for example) that
+    are related to these scripts
+
+### basic idea
+
+The basic idea is you put your project in a directory called `sitastuff` and
+`git init` that.  Here're the details:
+
+1.  put everything in this directory that does not *have to* be in `$HOME` and
+    is willing to be placed elsewhere by using an environment variable.  For
+    example, `.wgetrc`, `.curlrc`, `.less`, `.vimrc`
+
+2.  make environment variables pointing to them, like so, and put them all in
+    one file which we'll call "extra.bashrc".  For example:
+
+        export SITASTUFF=~/sitastuff
+        export LESSKEY=$SITASTUFF/.less
+        export VIMINIT="so $SITASTUFF/.vimrc"
+        export CURL_HOME=$SITASTUFF
+        export WGETRC=$SITASTUFF/.wgetrc
+
+3.  make a directory called `symlinks` within `sitastuff`
+
+4.  find all the stuff that *must* be in `$HOME` and put it in here.  For
+    example, `.irssi`, `.lftprc`, etc.
+
+5.  to your `extra.bashrc` script add the following lines
+
+        for i in $sitastuff/symlinks/*
+        do
+            ln -s $i $HOME
+        done 2>/dev/null
+
+6.  move `~/bin` to `~/sitastuff/bin`, and add another line to your
+    `extra.bashrc` which appends `~/sitastuff/bin` to the PATH.  Also move your
+    `~/notes` and `~/docs` or whatever.  If you wish, you can move them into
+    the `symlinks` directory to have them accessible straight from `$HOME`.
+
+Now all you do is add one line to your normal .bashrc
+
+    source ~/sitastuff/extra.bashrc
+
+### advantages
+
+1.  `git status` is much more meaningful (see below); a very big advantage
+
+2.  when I have to start working on a new machine, I clone this repo, add that
+    one line to the default `.bashrc`, and I'm in business
+
+3.  more importantly, when I have to *stop* using that machine (as in, it
+    belongs to some other project but I was helping them with something for a
+    short while), I just delete `~/sitastuff`, remove that one line from the
+    `~/.bashrc`, and their system is back to where it was.
+
+##### about that `git status` thing...
+
+Some people just do a `git init` in `$HOME` and add stuff as they need.  This
+has two problems: `git status` output is too long and pretty much useless, and
+so adding new files is something you have to remember.
+
+Using the symlink method mitigates problem 1.  It also mitigates problem 2 for
+situations where the top level directory is already tracked.  My classic
+example is `~/.irssi`.  Once this is inside `~/sitastuff` (actually inside
+`~/sitastuff/symlinks`) and is being tracked, if I put a new script inside it,
+`git status` will show me I have a new script and I can remember to add it.
+
+Of course, neither method can tell you about a new file that you should be
+adding, if it's mixed in with all the other junk in `$HOME`.
+
+### criticism
+
+Some people are very pedantic about the fact that git is meant to track whole
+trees of connected files, and using it like this is "abusing git".  I was told
+(by a veritable legend in the perl world, and now you can guess who that is!)
+to "stop abusing git".  He was polite (as usual -- he never seems to get
+ruffled; would love to meet him someday; during my days on clpm I really
+admired the guy) but he seemed to feel very strongly about this and almost
+seemed upset at what I was doing!
+
+From my point of view, all the stuff I do this with is essentially code.  My
+toolkit, if you like.  For instance, bits of my .vimrc are connected with some
+scriptlets I write, which may in turn rely on .lftprc for something or other.
+I can't honestly say they're all completely unrelated files, they needs
+versioning in the source code sense, not the zfs sense, and I have to work on
+them on multiple machines, and it all has to sync up.  There really isn't any
+better way that I know of.  I mean it *has* to be a VCS, not just a fancy file
+system.  And I'm certainly not about to learn some other VCS at this age :-)
+
+So, at least until PETVCS (people for the ethical treatment of version control
+systems) starts a demonstration outside my door, I will continue to do this.
+
+And they have to be naked, or it doesn't count :-)
