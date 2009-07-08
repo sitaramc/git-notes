@@ -4,9 +4,52 @@
 
 ----
 
+### why gitosis
+
+Gitosis is separate from git, and needs to be installed and configured.  So...
+why do we bother?
+
+Gitosis is useful in any server that is going to host multiple projects, each
+with many developers, where some sort of access control is required.
+
+In theory, this can be done with plain old Unix permissions: each user is a
+member of one or more groups, each group "owns" one or more repositories, and
+using unix permissions (especially the setgid bit -- `chmod g+s`) you can
+allow/disallow users access to repos.
+
+But there are several disadvantages here:
+
+  * every user needs a userid and password on the server.  This is usually a
+    killer...!
+  * adding/removing access rights involves complex `usermod -G ...` mumblings
+    which most admins would rather not deal with, thanks to you-know-who
+  * *viewing* (aka auditing) the current set of permissions requires running
+    multiple commands to list directories and their permissions/ownerships,
+    users and their group memberships, and then correlating all these manually
+  * auditing historical permissions or permission changes is pretty much
+    impossible without extraneous tools
+  * errors or omissions in setting the permissions exactly can cause problems
+    of either kind: false accepts or false rejects
+  * without going into ACLs it is not possible to give someone read-only
+    access to a repo; they either get read-write access or no access.
+
+Gitosis does away with all this:
+
+  * it uses ssh magic to remove the need to give actual unix userids to
+    developers -- demystifying this is the subject of the next section
+  * it uses a simple but powerful config file format to specify access rights,
+    allowing both users *and* repositories to be grouped meaningfully
+  * access control changes are affected by modifying this file, (which itself
+    is revision controlled in a special repository), committing the changes,
+    and pushing the commit to the server
+  * this also makes auditing trivial, both in terms of current access rights
+    and historically
+  * finally, the config file allows distinguishing between read-only and
+    read-write access
+
 ### IMPORTANT -- overview of ssh
 
-Here's a secret: ***gitosis is far more ssh magic than git magic***!
+Here's a secret: ***gitosis uses far more ssh magic than git magic***!
 
 Most problems in setting up gitosis are because people don't realise this, and
 even if they did they don't know ssh well enough to help themselves.  If you
