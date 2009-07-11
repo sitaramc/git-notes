@@ -14,6 +14,7 @@
     <http://codicesoftware.blogspot.com/2007/05/linus-torvalds-on-git-and-scm.html>
   * Linus on "clean" "history"
     <http://www.mail-archive.com/dri-devel@lists.sourceforge.net/msg39091.html>
+  * <http://www.kernel.org/pub/software/scm/git/docs/howto/recover-corrupted-blob-object.txt>
 
 ### basic stuff/concepts
 
@@ -68,10 +69,11 @@
   * release engineering, branches never-merged-back, etc.,
     <http://gitster.livejournal.com/2009/01/14/>
 
-### digging into git
+### digging into git/troubleshooting
 
   * <http://article.gmane.org/gmane.comp.version-control.git/46609> -- how
     `git am -3` works
+  * <http://www.kernel.org/pub/software/scm/git/docs/howto/recover-corrupted-blob-object.txt>
 
 ### opinions/discussion/DVCSs in general
 
@@ -119,6 +121,14 @@
 
 look, don't expect too much praise for any of the other systems, except
 possibly Hg -- and even that might be back-handed ;-)
+
+#### CVS
+
+  * <http://stackoverflow.com/questions/802573/difference-between-git-and-cvs/824241#824241>
+    -- no summary possible; it's very well written and covers a lot of ground.
+    It starts off with "even if you use version control for single developer,
+    on single machine (single account), there are a few differences between
+    Git and CVS", listing 10 points there :-)  A "must read".
 
 #### SVN
 
@@ -172,3 +182,7 @@ Haskell compiler decided it was too slow or something.
 
   * <http://changelog.complete.org/posts/698-If-Version-Control-Systems-were-Airlines.html>
     -- esp the last 2 "airlines".  No wonder I like git so much :-)
+
+### git and I :)
+
+  http://colabti.org/irclogger/irclogger_log/git?date=2009-08-08#l839
