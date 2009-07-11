@@ -79,6 +79,19 @@ Computing deltas is definitely more CPU hungry (as well as memory hungry), but
 -- except on the initial clone -- it happens incrementally so any
 decent/recent dual-core CPU should be able to handle it very fast.
 
+>   ----
+>   ^^Further details on this, courtesy charon on #git:
+
+>   Even when computing deltas to send, git reuses packs.  This means that
+    objects that are already packed are not delta compressed again --
+    send-pack just uses the existing delta-compressed form.  Anyway it doesn't
+    really send the _entire_ pack, only the parts that are relevant, so this
+    works fine.
+
+>   As a result, cpu usage on the server is now mostly in the "counting
+    objects" phase (i.e., figuring out what to send), which is not much of a
+    load.^^
+
 ### memory
 
 A machine with about 512 MB ***free*** RAM will probably work fine for most
