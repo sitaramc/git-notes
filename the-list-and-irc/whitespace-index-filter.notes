@@ -1,0 +1,51 @@
+# fixup whitespace errors
+
+When you have whitespace errors in a repo and want to fix them all together,
+here's what you do.  Written by doener circa 2009-07-12 19:23
+
+So let's say the following code is in `~/git-scripts/ws-fix.sh`
+
+    #!/bin/bash
+
+    # from doener (who else!)
+    # to be called as an index-filter
+
+    if git rev-parse --quiet --verify $GIT_COMMIT^ >/dev/null
+    then
+            against=$(map $(git rev-parse $GIT_COMMIT^))
+            git reset -q $against -- .
+    else
+            # Initial commit: diff against an empty tree object
+            against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+            git rm --cached -rfq --ignore-unmatch '*'
+    fi
+
+    git diff --full-index $against $GIT_COMMIT | git apply --cached --whitespace=fix
+
+Notes:
+
+  * the `map` translates the original sha1 to the sha1 of the rewritten
+    commit.  The diff needs to go against the rewritten one, so that the patch
+    applies without conflicts/fuzz.
+
+  * run this like: `git filter-branch --index-filter '. ~/git-scripts/ws-fix.sh'`
+
+  * a pictorial representation of what this script does each time it is
+    called (also from doener a few minutes later when I still couldn't get
+    it!):
+
+        Original:
+
+        A---B---C---D---E
+
+        Rewritten so far: (1 == rewritten A, and so on)
+
+        1---2---3
+
+        To create 4 we do:
+
+        map D^ == map C == 3
+
+        so: git diff 3 D | git apply ....
+
+
