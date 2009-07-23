@@ -374,10 +374,11 @@ Here's how to make that happen.
 
 3.  copy the hook to all existing directories.  While you're about it, make
     sure the "logs" directory exists in all of them by setting a global
-    option.
+    option, as well as disable remote deletion of branches.
 
         su - git
         git config --global core.logAllRefUpdates true
+        git config --global receive.denyDeletes true
         cd ~/repositories
         for i in *.git
         do

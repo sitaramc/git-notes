@@ -33,11 +33,11 @@ So, the short answer, for a gitosis-administered central repo, is this:
         LogLevel VERBOSE
 
   * (as the "git" user) in each repository of interest (or globally, by adding
-    `--global`), do the following.  The second command is useful even in
+    `--global`; highly recommended for servers), do the following.  The second command is useful even in
     general, but in this case the relevance is that deleting a branch wipes
     out its reflog too, so you want to prevent that:
 
-        git config logAllRefUpdates true
+        git config core.logAllRefUpdates true
         git config receive.denyDeletes true
 
 That's it.  Of course, if your system logs get deleted after about 4 weeks or

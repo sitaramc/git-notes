@@ -90,8 +90,10 @@ will have access to.  We'll use `/var/gitrepos` in our examples.
     git init --bare --shared
     chgrp -R proj1 .
 
-    # git does not set this flag by default; I wish it would!
-    git config core.logallrefupdates true
+    # git does not set these flags by default, but on servers, they are very
+    # useful
+    git config --global core.logAllRefUpdates true
+    git config --global receive.denyDeletes true
 
 Note: that last step above (setting the config variable) is **very
 important**.

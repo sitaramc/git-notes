@@ -40,12 +40,12 @@ save you lots of time and trouble.
 
 ^^[What is a bare repo?](../concepts/bare.html)^^
 
-Make sure all updates are logged:
+Make sure all updates are logged and remote deletion of branches is disabled.
+If this is a "git server" (all repos are bare), you should seriously consider
+just adding the `--global` option to the two commands below, so you don't have
+to remember to do this on each repo.
 
     git config core.logAllRefUpdates true
-
-You may also like this to begin with:
-
     git config receive.denyDeletes true
 
 ### write useful, readable, commit messages
