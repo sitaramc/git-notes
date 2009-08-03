@@ -52,6 +52,69 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
     it, the project you cloned *from* is traditionally called the "origin" of
     your clone
 
+#### terminology related to being "distributed"
+
+##### clone versus checkout
+
+In a *distributed* VCS, every developer's workstation has a full copy of the
+entire repository.  It is therefore called a **clone** -- you **clone** the
+remote repository, you don't merely *checkout* the latest version from it.
+
+So where does *checkout* come in?  In git, you **checkout** a *branch* from
+your local repo, so this happens *after* the clone.  Remember this is a full
+repo, so you already have all the branches that the parent repo had when you
+cloned.
+
+By default, after the clone is done, git will **checkout** the branch that was
+currently checked out the same branch that the parent currently has checked
+out.  However, you can checkout some other branch at any time (and if you're
+using git, you will checkout and manage multiple branches on your local repo
+all the time, otherwise you're not really *using* git!)
+
+##### accessing remote repositories
+
+Every remote repository (often called just a **remote**) has a URL associated
+with it, depending on how your local repo is able to reach it.  The simplest
+URL is for a repo that is on the same machine, which can then use the *file*
+protocol: `file:///home/sitaram/path/to/repo.git`.
+
+Anonymous access (read-only) repositories can be grabbed using the *git*
+protocol; for example, Linus Torvalds' version of the current Linux kernel is
+at `git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git`.
+Read-only repos can also use the HTTP protocol, although this is not as
+efficient for continuous use.
+
+A remote repository to which you have write access will almost certainly use
+*ssh* as the underlying authentication protocol, so the remote URL might look
+like `ssh://sitaram@172.1.7.2/full/path/to/repo.git`.
+
+##### naming remote repositories
+
+You can refer to, (or fetch from, and push to) many remote repos in *your*
+clone, because they all have different URLs.  After a while it gets
+inconvenient to use the full URLs in your `git fetch` and `git push` commands,
+so git allows you to give an easy to remember "nickname" for each "remote".  I
+could, for instance, do this:
+
+    git remote add sejal ssh://sitaram@sejal.herlab.ourcompany.com/path/to/repo.git
+
+After this I could refer to the longer URL by the shortname "sejal" and it
+would be the same thing.
+
+##### origin
+
+So now you know what a nickname is, you can understand what "origin" means.
+"origin" is just the default name given to the remote repository when you do a
+`git clone`.  So for example, if I do
+
+    git clone ssh://sitaram@sejal.herlab.ourcompany.com/path/to/repo.git
+
+then, after the clone completes, git automatically creates a remote with the
+nickname `origin`, which points to
+`ssh://sitaram@sejal.herlab.ourcompany.com/path/to/repo.git`.  It's just a
+convenience thing.  You can delete that nickname, you can rename it to
+something else, etc., if you like.
+
 #### what is a "bare" repository?
 
 This has been moved into it's [own page](bare.html) now.
