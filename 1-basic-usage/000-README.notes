@@ -4,12 +4,6 @@
 
 ----
 
-**<font color="red">You can start with a [basic intro](intro.html) to the
-concepts behind git.  This will be useful to anyone, whether you've never used
-any VCS before or are coming from, say, SVN.</font>**
-
-----
-
 **A note to Linux users**:
 
 >   ^^A lot of this is written for Windows.  If you're using Linux, you ought to
@@ -19,8 +13,11 @@ any VCS before or are coming from, say, SVN.</font>**
 
 ----
 
-Once you've done that, and are ready to start **using** git, there's a really
-thorough introduction to the GUI tools, including lots of screenshots, at
+First, get past the basics of git from the red-colored links on the [main
+page](../index.html).
+
+Once you're ready to start **using** git, there's a really thorough
+introduction to the GUI tools, including lots of screenshots, at
 <http://nathanj.github.com/gitguide/>.  You can also find other such links
 [here](../other-stuff/git-links.html#tut).
 

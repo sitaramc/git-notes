@@ -11,6 +11,9 @@ to be kept together to **build** the software.  Example: Linux
   * one **team** can work on multiple projects, so there could be multiple
     repositories on each desktop
 
+A **working tree** or **worktree** is the *current* set of files that are
+being worked on, tested, etc.
+
 A **branch** in a project is an active line of development
 
   * **master** is the conventional name for the main development tree of a
@@ -20,6 +23,7 @@ A **branch** in a project is an active line of development
     __v2.6.4__ to designate released versions
   * these are only conventions, not rules, but they seem to work well in
     general
+  * more detail about branches is in the next section
 
 A **feature** is a part of a project that is large and complex enough that
 it's day-to-day commits would be too noisy to include in the main project.
@@ -29,32 +33,119 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
     This means it regularly acquires changes made in the main line, and -- at
     stable points in its development cycle -- merges its changes back into the
     main line
-  * small projects may not have any feature branches.  That doesn't mean they
-    don't have any features :-)
 
 ### git-specific terminology
 
-#### branch, master, head, HEAD, etc
+#### working tree, repository, bare repository
 
-  * a branch is "an active line of development"
+  * a **working tree** in git is the same as anywhere else.  When you edit,
+    compile, test, etc., it is your working tree files that are used
+
+  * a normal **repository** in git consists of the working tree, plus **one**
+    extra directory at the root of the project tree (meaning at the top
+    directory of your project), called `.git`.  Inside this `.git` are a bunch
+    of files and directories which you need not worry about (and should not
+    mess with unless you know what you're doing)
+
+  * a **bare repository** in git is a very special animal: it is a repository
+    *without* a working tree (so you cannot edit, compile, test etc., in it).
+    Central (or server) repos, meant only for people to push to and clone/pull
+    from, are usually bare.  Read more about it [here](../concepts/bare.html)
+    if you like
+
+#### commits, SHAs
+
+  * a **commit** records the content of the project files at a point in time
+
+  * every commit in git is represented by a globally unique 160-bit value (40
+    hex digits) which is a cryptographically secure hash of the commit data.
+    This is often called the **SHA** or SHA-1, after the algorithm used.
+
+    ^^"Globally unique" means no other commit in any other repository in any
+    other project anywhere in the world will have the same SHA.  You can
+    become very, very, famous in the cryptography world if you find two
+    different commits with the same SHA :-)^^
+
+#### parent commits, commit tree
+
+  * every commit builds on top of one or more previous commits, called
+    **parents**.  Normal commits have only one parent, while "merge" commits
+    have two.  The very first commit in the tree has no parents; this is called
+    a "root commit".
+
+    ^^A repo can have more than one "root commit", but this is rare^^
+
+  * every commit records the SHAs of its parent(s).  It's as if every commit
+    has an arrow pointing to its parents, like a back pointer in a linked list
+
+      * thus, merge commits have two arrows pointing out
+      * and a "fork" (where you created a new branch) has two or more arrows
+        pointing **in**, because it's the parent for more than one commit
+
+  * as a result, the entire repo can look like a **tree**.  Strictly speaking,
+    this is a DAG -- [directed acyclic
+    graph](http://eagain.net/articles/git-for-computer-scientists/)
+
+#### head, branch, tag
+
+  * a commit that does not have any "child" commits is a **head**.  If you
+    think of all the commits and those arrows as a tree or you've done graph
+    theory in computer science you could also call it a "leaf"
+
+  * clearly you can have many "head" nodes; every time you "fork" or create a
+    branch and make a commit on the new branch, you have a new "head"
+
+  * a **branch** is merely a symbolic name given to a "head" node.
+
+    When you checkout a branch and make a new commit on it, the "branch" now
+    points to the *new* head node.  In other words, a branch is a pointer that
+    *moves as you make commits*.
+
+    A branch represents an active line of development; you use different
+    branches to track different lines of development.  Without branches,
+    working on multiple features or versions simultaneously would be a
+    nightmare!
+
+    A repository can track many branches, but the working tree is associated
+    with only one branch at a time
+
+  * a **tag** is also a symbolic name given to a commit.  Tags don't "move" as
+    you make new commits -- they stay where they are.
+
+    Tags are used to mark specific milestones in a project, like "v1.3", or
+    "v2.9", etc.
+
+#### reachability
+
+  * you can start from a commit X and follow the parent SHAs ("arrows") until
+    you come to a root commit.  The commits you found in this process are all
+    said to be **reachable** from X
+
+  * if you have commit X in some other repo, git guarantees that that repo
+    also has all these "reachable" commits.
+
+    ^^[If you know about grafts or shallow clones, you're too advanced to be
+    reading this document ;-)]^^
+
+  * when you merge a branch into the currently checked out branch, git uses
+    reachability to determine what commits to actually bring in.  All the
+    commits reachable from the branch being merged, which are not already
+    reachable from the current branch, are pulled in and applied
+
+#### master, HEAD, index
+
   * *master*: default branch in a project (main development tree), by
     convention
-  * *head*: tip of a branch
-  * a repository can track many branches, but the working tree is associated
-    with only one branch at a time
   * *HEAD*: tip of the branch associated with the working tree; this is where
     commits go.  Normally.  There is also something called a 'detached HEAD'
     that you should be aware of.  See the article on the [detached
     HEAD](detached-head.html) for more.
   * *index*: a staging area for the next commit; when you commit, the current
     index is turned into a real commit object
-  * *origin*: when you clone an existing project in order to start working on
-    it, the project you cloned *from* is traditionally called the "origin" of
-    your clone
 
-#### terminology related to being "distributed"
+### terminology related to being "distributed"
 
-##### clone versus checkout
+#### clone versus checkout
 
 In a *distributed* VCS, every developer's workstation has a full copy of the
 entire repository.  It is therefore called a **clone** -- you **clone** the
@@ -71,7 +162,7 @@ out.  However, you can checkout some other branch at any time (and if you're
 using git, you will checkout and manage multiple branches on your local repo
 all the time, otherwise you're not really *using* git!)
 
-##### accessing remote repositories
+#### accessing remote repositories
 
 Every remote repository (often called just a **remote**) has a URL associated
 with it, depending on how your local repo is able to reach it.  The simplest
@@ -88,7 +179,7 @@ A remote repository to which you have write access will almost certainly use
 *ssh* as the underlying authentication protocol, so the remote URL might look
 like `ssh://sitaram@172.1.7.2/full/path/to/repo.git`.
 
-##### naming remote repositories
+#### naming remote repositories
 
 You can refer to, (or fetch from, and push to) many remote repos in *your*
 clone, because they all have different URLs.  After a while it gets

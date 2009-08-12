@@ -16,25 +16,31 @@ you're still perfecting the code -- you cannot do this with a centralised VCS.
 <font color="red">If you...
 
   * have **no idea what git is** and wonder what the fuss is all about, and
-    why it's become so popular, [this article](other-stuff/git-lfy.html),
-    which I wrote for LFY (July 2008 issue), is a good place to start
+    why it's become so popular, see [this article](other-stuff/git-lfy.html),
+    which I wrote for LFY (July 2008 issue)
 
-  * want to learn **the basic concepts**, without getting bogged down in the
-    details, [start here](1-basic-usage/index.html)
+  * want a basic intro to the most important concepts behind git, see [this
+    presentation](1-basic-usage/intro.html)
 
   * know something about version control, and are trying to understand **why
-    git is so powerful**, this [presentation](other-stuff/gittalk.html) may
-    help, (although it is meant to be interactive and you'll be missing the
-    demos)
+    git is so powerful**, spend some time on [this
+    presentation](other-stuff/gittalk.html).
+
+  * need a quick refresh of the terminology once in a while, read
+    [this](concepts/0-terminology.html).
 
 </font>
+
+Note that the presentations are meant to be interactive, with someone talking
+through the slides, but have enough detail that you can read them yourself if
+you like.
 
 ----
 
 ##### Beyond the basics
 
 If you know a little about git and/or have attended one of my talks, you can
-follow the links at the top.
+follow the links below.
 
 ----
 
