@@ -1,192 +1,125 @@
-# Maintaining customer specific branches
+# customer branches
 
-^^[[TOC]]^^
+<!-- http://colabti.org/irclogger/irclogger_log/git?date=2009-08-15#l585 -->
+
+Here's a question that someone asked (both question and response have been
+heavily edited):
+
+>   Hello. I have a Ruby on Rails application. This is currently managed using
+>   GIT. I have another business that wants a customised copy of this site. Is
+>   it possible to use GIT to do this?
+
+>   Currently I have one site in directory "custA". I want to make a copy in
+>   "custB" which is a branch. They are the same base system with customer
+>   specific modifications.  How does this work?
+
+>   For example, on custA, I make commits 1, 2, 3.  In custB, only commits 1
+>   and 3 are relevant.  Is it possible to pull only specific commits across?
+>   Would I be better served using a central repository and then using
+>   different branches, one for each site?
+
+>   What is the "best" way to do this using Git?
+
+There are several issues actually being raised here, so we'll look at them one
+at a time.
 
 ----
 
-The following document explains how to maintain a 'common' branch,
-with one or more 'customer specific' branches that hang off of the
-common branch.  The inspiration was a question about maintaining
-'work' and 'home' configurations which differ slightly from a
-'common' configuration, which leads to the same sort of problem.
+#### SVN-itis
 
-### The basic rules
+The first thing to note is that the question reflects what I have started
+calling `SVN-itis` -- where "branch" and "(sub)directory" are conflated :-)
 
-The basic rules are best described by Junio in
-<http://permalink.gmane.org/gmane.comp.version-control.git/110489>
+Some [basic
+terminology](../concepts/0-terminology.html) is
+probably useful, if you're really new to git, or perhaps some info on
+[branches in git](../concepts/branches.html), but
+neither of these quite manage a cure for SVN-itis.  So let's lay it out:
 
-  * You make edits to common files only on the common branch.
-  * You merge from common to deployment, never the other way.
+>   In git, there is **no connection** between a branch and a subdirectory.
+Subdirectories are whatever your project needs them to be, and branch names
+are whatever you want them to be.  You can have a branch whose name happens to
+be the same as that of one of your project directories, if you really need to.
 
-This document shows how one might do that.  [Junio also helped
-with comments on a previous draft of this text.  However, any
-errors or other problems that remain are mine.]
+So "custA" is **not** a directory.  Neither is "custB"; nor indeed any other
+branch.  And if you have a directory called "include" or "src" or
+"Documentation", that does **not** become a branch in your repo!
 
-### Terminology
+When you checkout a branch called "custA", your "working tree" is populated
+with the customer "A" specific version of your code.  It's very likely that
+the actual directory structure for this version is pretty much the same as,
+say, for customer "B", and both of them are similar to the directory structure
+of the main branch.
 
-We use the following terminology:
+#### cherry-pick versus merge
 
-'common' is the branch representing the base product.  All
-regular customers get this version.
+[also see `git help workflows`]
 
-'special' is a branch for a specific customer.  This customer
-needs changes unique to his environment, which should not be
-merged back into the common branch.  However, this branch must
-regularly get the benefit of changes in the mainline 'common'
-branch.  (This is the genesis of the two rules above).
+"*Is it possible to pull only specific commits across?*"
 
-If you have more than one special customer the same logic
-will apply for each of them separately, although if you have
-too many such customers you may also want to look at [Never
-merging back](http://gitster.livejournal.com/26540.html)
-for an additional tip on this.
+Well certainly yes; this is called **cherry-picking**, and git can do that
+from the command line, or from the GUI.  But it is **not** the right thing to
+do in this circumstance, or indeed many other similar ones.
 
-Also, we assume the actual development and testing needs to
-be done on one branch, so you will have a mix of 'common'
-and 'special' changes all together.
+In terms of "history", a cherry-pick is the same as "take a diff of *that*
+commit versus it's parent, and apply that same change *here* in *this* branch,
+and commit".  Git does not remember that you pulled this change in any way
+whatsoever, and does not associate these two commits (the one you picked, and
+the new one made here as a result) in any long term way to ease maintenance.
+[Experts: *patch-id* is not relevant here for this discussion so leave it
+alone ok? :-)]
 
-### The nitty gritty
+Secondly, if the feature you implemented was spread across more than one
+commit (as any non-trivial feature *should*!), you have to remember to
+cherry-pick *all* of them.  In the *right order*!  Miss one, or pick them in
+the wrong order, and things go bad.
 
-#### Before you start
+When you **merge** a branch, on the other hand, git remembers that you merged
+it.  And since you only deal with the tip of the branch, not individual
+commits, it's git's job to make sure that they all come in, and in the right
+order.  In particular, (as `git help workflows` says), 
 
-The history looks like this in the beginning:
+    ...a merge can carry over the changes from 1, 10, or 1000 commits with
+    equal ease, which in turn means the workflow scales much better...
 
-    -----o          <- special branch (current)
-        /
-    ---o            <- common branch
+So the long term way to do this is by merging.  Just remember that when you
+merge a branch, *all* the changes in that branch are brought in (merging is
+*not* a selective operation) so it is best to *create a different branch for
+each logically separate set of changes*.
 
-The 'special' branch has been tested for the feature you are
-working on, and this represents a stable point in the development
-to try and re-organise the code, separate out 'common' code from
-'special' code, etc.
+#### customer specific branches
 
-Before you start, make a temporary branch TEMP from
-'special'; leave special where it was.
+The idea is you use one common branch, and two (or as many as you need)
+customer specific branches.  All common changes go into the master, and each
+customer branch gets changes that pertain only to that customer.  Periodically
+(when master is considered to be at a stable point), you'll merge changes from
+master into the customer branch (`git checkout custA; git merge master`).
+This brings in newer "common" code into the customer branch. You will
+**never** merge the other way -- that would pollute master with
+customer-specific code.
 
-    git checkout -b TEMP special
+When you make a delivery to customer A, you checkout the "custA" branch and
+send that.  And of course similarly for other customers.
 
-You now make some changes for the special customer, which
-also involve some 'common' changes that need to be ported
-back to the common branch.  The topology now looks like
-this, where A, B, C, are changes that logically belong on
-'common', and 1, 2, 3, are changes that are specific to this
-customer.
+Now let's say you acquire a new customer, "C", and a bit later find a feature
+that customers A and C want, but B doesn't.  You create (aka "fork") a branch
+off of master (`git checkout -b AC_feature master`), code/test it, making
+commits as you go, and then merge it into A and C (`git checkout A; git merge
+AC_feature` and similarly for customer C).  You do **not** code it in A and
+then rely on merging A into C, because that would get all of A into C.
 
-Notice that the 2 sets of changes are intermixed because
-that is how the development happened, and that there is even
-one commit where common and special changes are mixed
-(perhaps you realised this only later).
+If, sometime later, you find a minor bug in that feature, you make the change
+in the same branch (`git checkout AC_feature; edit/test/commit`), and then you
+merge it into `custA` and `custC` as above.
 
-    -----o--A--B1--2--3--C          <- "TEMP" branch (current)
-        /
-    ---o                            <- common
+#### Summary
 
-Meanwhile, just to make things interesting, the common
-branch has also had some other, unrelated changes which you
-eventually want on the special branch as well.
+The main thing we're avoiding in all this is cherry-picking specific commits
+because you only wanted a part of that code in this branch -- cherry-picking
+is certainly doable, but it is not scalable and in the long term it's a pain.
 
-    -----o--A--B1--2--3--C          <- "TEMP" branch (current)
-        /                                            
-    ---o--X--Y                      <- common
+Of course, you do have to be disciplined about which branch you make each
+commit in, in order to keep things properly separated.
 
-#### Separating 'common' and 'special'
-
-The first thing to do is to tease the tangled commits apart
-using rebase.
-
-Using `git rebase -i special`, get the topology into this
-shape.  Note that we have split the "B1" commit into B and 1
-separately.  `git help rebase` has a very simple and clear
-section on splitting commits, so I will not detail that
-here.
-
-    -----o--A--B--C--1--2--3        <- "TEMP" branch (current)
-        /                                              
-    ---o--X--Y                      <- common
-
-At this point, the tree that results should be identical to the one you
-started this exercise with, so ideally there should be no need to test.  You
-can, if you wish, check that the trees are indeed the same
-
-    git diff TEMP@{1} TEMP
-
-The `@{1}` notation specifies the shape of the TEMP branch before the rebase
-started.
-
-#### #utcb Updating and testing the 'common' branch
-
-Now switch to the 'common' branch and cherry pick the
-changes that belong on 'common'.  The simplest way to cherry
-pick is gitk.
-
-    git checkout common
-    gitk
-    # and cherry pick first A, then B, then C, in order
-
-At this point, your TEMP branch has still not changed from when you started
-this re-organisation.  However, you have now introduced 3 new commits onto
-the 'common' branch, so that set of changes needs to be tested to make sure
-things are fine.
-
-    -----o--A--B--C--1--2--3        <- "TEMP" branch
-        /                                              
-    ---o--X--Y--A'--B'--C'          <- common (current)
-
-Be sure you test the new functionality before proceeding.  This test will
-likely be different from your tests on the TEMP branch, because only part of
-the new code in TEMP goes to 'common'.  If the test failed or required fixups,
-do them in the context of the 'common' case only, right here on the 'common'
-branch.  **Note that this affects the rebase coming up later!**
-
-#### Merging 'common' into 'special'
-
-Once that test is done, merge from 'common' to 'special'
-
-    git checkout special
-    git merge common
-
-which results in the following topology:
-
-           A--B--C--1--2--3     <- TEMP
-          /
-     ----o-----------------o    <- special (current)
-        /                 /
-    ---o--X--Y--A'--B'--C'
-
-#### Fixing up 'special'
-
-Now all we need is to get commits 1, 2, and 3 onto 'special'.  Although this
-is easiest done by using 'rebase', that will only work if your [updating and
-testing on 'common'](#utcb) did not cause any changes or fixups (that is, the
-changes A, B, and C are still identical to the changes A', B', and C'.
-
-In the general case, therefore, cherry-pick is better, as long as you make
-sure you don't miss any commits:
-
-    gitk
-    # and cherry pick first 1, then 2, then 3, in order
-
-This gives you the following topology (in which we have ignored the TEMP
-branch)
-
-                             1'--2'--3'     <- special (current)
-                            /
-     ----o-----------------o
-        /                 /
-    ---o--X--Y--A'--B'--C'
-
-#### Final sanity check
-
-At this point you should *definitely* re-test all the changes you made, to
-make sure nothing got missed out.  If there were no 'X' and 'Y' commits on
-the 'commits' branch, you could try
-
-    git diff TEMP special
-
-to check that the tree is still the same as before.  But again, in the
-general case, you probably will have commits 'X' and 'Y' included so it is
-necessary to re-test.
-
-Once all this is done, you don't need TEMP anymore, and can delete it:
-
-    git branch -d TEMP
+But [here](special-branch-fixups.html) is one way to fix up things if you did
+not manage to do that for some reason.
