@@ -1,14 +1,89 @@
-# how I version all the important stuff in my `$HOME`
+# git as a backup/sync tool
+
+working title for the movie being made of this epic:
+
+<center>
+***To Abuse or not to Abuse***
+</center>
+
+----
 
 [[TOC]]
 
 ----
 
-First things first: git does not track permissions except the first "x" in
-`rwxrwxrwx`.  Do not use this for anything where ownership or permissions are
-important.
+### UGFWIINI
 
-### my needs
+All this is largely UGFWIINI ("using git for what it is not intended").  Being
+a generic backup/sync tool is one of those things that git was not really
+meant to do.
+
+At the same time, I'm a great fan of
+[Macgyver](http://www.imdb.com/title/tt0088559/), so to hell with the "not
+intended" stuff, mmmkay? :-)
+
+### how to decide if git is it
+
+There are a few questions you have to ask yourself if you're considering git
+as a generic backup/sync tool:
+
+1.  do I really want branching and merging?
+
+    Other forms of this question are:
+
+      * will the history of these files have alternative timelines? (ie, will
+        it be more than just a straight line)
+      * if I ever revisit or rollback to a prior version, will it be based on
+        something *other than* time?  (ie., not just "last night", "last
+        week", "1st of the month", etc.)
+      * will the commits be manual and will I be making meaningful commit
+        messages?  (ie it's not just automated to run via cron or something)
+
+    If the answer to most, or all, of these questions is "no", you're using a
+    very powerful VCS as nothing more than a backup tool.
+
+2.  are all the files really related?  On the rare occasions when I do restore
+    something, will I be restoring the entire state of the working tree (ie,
+    not just a few files/directories)?
+
+    If it is quite common to restore only part of the tree from an older
+    version, then it is likely that the set of files in the repo are not
+    related to each other.
+
+3.  do I really want all versions of my files, forever, or say 2 years old
+    (for example)?  Will I ever need to see such files?
+
+    This is not about disk space -- git doesn't need a lot anyway.  It's about
+    adding complexity to an otherwise simple task.  If you never want to see
+    such old files again, why use git?
+
+For most people considering git for **backup**, the closest, correct, choice
+is [rdiff-backup](http://rdiff-backup.nongnu.org/) which is available, and
+maybe even installed by default, in most distributions of Linux.  It uses the
+same sort of space saving techniques that rsync uses to store files, which is
+not as efficient as git but good enough for most people.  It also has a handy
+"remove-older-than" option to prune old backups.
+
+There are many other similar schemes that build on rsync; investigate or ask
+around.
+
+The best choice for **synchronisation** is
+[unison](http://www.cis.upenn.edu/~bcpierce/unison/).  It has a few quirks
+(like being overly version sensitive) but if you install the same version on
+both sides it's a wonderful program.
+
+Both of these work over ssh, so security is taken care of sensibly.
+
+### how I version all the important stuff in my `$HOME`
+
+Having said all that, I do version *some parts* of my home envionment using
+git.  Here's how.
+
+**First things first**: git does **not** track permissions except the first
+"x" in `rwxrwxrwx`.  Do not use this for anything where ownership or
+permissions are important.
+
+#### my needs
 
 I want to version control
 
@@ -17,7 +92,7 @@ I want to version control
   * some notes and other files in `~/notes`, `~/docs`, etc. (for example) that
     are related to these scripts
 
-### basic idea
+#### basic idea
 
 The basic idea is you put your project in a directory called `sitastuff` and
 `git init` that.  Here're the details:
@@ -56,7 +131,7 @@ Now all you do is add one line to your normal .bashrc
 
     source ~/sitastuff/extra.bashrc
 
-### advantages
+#### advantages
 
 1.  `git status` is much more meaningful (see below); a very big advantage
 
@@ -83,20 +158,20 @@ example is `~/.irssi`.  Once this is inside `~/sitastuff` (actually inside
 Of course, neither method can tell you about a new file that you should be
 adding, if it's mixed in with all the other junk in `$HOME`.
 
-### criticism
+#### criticism
 
 Some people are very pedantic about the fact that git is meant to track whole
 trees of connected files, and using it like this is "abusing git".  I was told
 (by a veritable legend in the perl world, and now you can guess who that is!)
 to "stop abusing git".  He was polite (as usual -- he never seems to get
-ruffled; would love to meet him someday; during my days on clpm I really
-admired the guy) but he seemed to feel very strongly about this and almost
+ruffled; would love to meet him someday; during my days on clpm I really grew
+to admire the guy) but he seemed to feel very strongly about this and almost
 seemed upset at what I was doing!
 
 From my point of view, all the stuff I do this with is essentially code.  My
 toolkit, if you like.  For instance, bits of my .vimrc are connected with some
 scriptlets I write, which may in turn rely on .lftprc for something or other.
-I can't honestly say they're all completely unrelated files, they needs
+I can't honestly say they're all completely unrelated files, they need
 versioning in the source code sense, not the zfs sense, and I have to work on
 them on multiple machines, and it all has to sync up.  There really isn't any
 better way that I know of.  I mean it *has* to be a VCS, not just a fancy file
@@ -105,4 +180,4 @@ system.  And I'm certainly not about to learn some other VCS at this age :-)
 So, at least until PETVCS (people for the ethical treatment of version control
 systems) starts a demonstration outside my door, I will continue to do this.
 
-And they have to be naked, or it doesn't count :-)
+And they have to be young, female, and un[der]-dressed, or it doesn't count :-)
