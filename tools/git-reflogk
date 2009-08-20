@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Usage: ./reflogk [N]
+# optional argument N (defaults to 10) to limit how many reflog entries to go
+# back
+
+# shows the following, using gitk:
+# - unreachable entries among the first N reflog entries, cropped at their
+#   common merge-base (which ought to be far enough away!)
+# - the topmost references that are not reachable from some other
+#   reference
+
+# sound confusing?  try it...!
+
+# grab top N entries from the reflog
+refs=`git reflog -${1:-10} | cut -f1 -d' '  | sort -u`
+
+# find their common merge-base
+export common
+for r in $refs
+do
+    common=$(git merge-base ${common:-$r} $r)
+done
+echo $common
+
+# for each ref, we use the special construct that says "just this commit and
+# *not* any of its parents" (see git help rev-parse)
+for r in $(git for-each-ref '--format=%(objectname)')
+do
+    parents="$parents $r^!"
+done
+gitk HEAD $refs $parents --not $common
