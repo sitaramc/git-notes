@@ -26,23 +26,5 @@ moon is not my style (very low ROI!), but doener gave me this:
     git fsck --unreachable | grep commit | cut -d\  -f3 |
     xargs git log --no-walk --merges --grep='^\(WIP on \|On \)\((no branch)\|[^ ]\+\):'
 
-and it was strangely compelling; I knew about `--merges` but not `--no-walk`,
-and I anticipate using it a lot more in future :-)
-
-I then realised that checking for the "triangular" shape is better than
-grepping for WIP:
-
-    for h in $(git fsck --unreachable | grep commit | cut -d\  -f3)
-    do
-        [[ $(git rev-parse $h^) == $(git rev-parse $h^2^) ]] 2>/dev/null &&
-        git log -1 --format='%h (%ar) %s' -1 $h
-    done
-
-And if you really want to see the triangles:
-
-    for h in $(git fsck --unreachable | grep commit | cut -d\  -f3)
-    do
-        [[ $(git rev-parse $h^) == $(git rev-parse $h^2^) ]] 2>/dev/null &&
-        git log --format='%h (%ar) %s' -2 --graph $h &&
-        echo
-    done
+I knew about `--merges` but not `--no-walk`, and I anticipate using it a lot
+more in future :-)
