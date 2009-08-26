@@ -1,0 +1,16 @@
+2009-08-08 17:53 Sat 
+17:17:50  <     wereHamster> evilissimo: take a look at grafts and man git-filter-branch
+17:17:51  <          Gitbot> evilissimo: the git-filter-branch manpage can be found at
+                             http://git.or.cz/man/git-filter-branch
+17:26:14  <sitaram         > evilissimo: maybe http://sitaramc.github.com/concepts/grafting.html also :-)  [been a while
+                             since I wrote it though]
+17:33:25  <          charon> sitaram: heh. i should go to the district magistrate and ask for a filter-branch ;)
+17:35:11  <          charon> sitaram: on a more serious note, i think the last example is rather misleading
+17:35:38  <          charon> of course you can change history like that, but since a5 keeps its tree, the difference
+                             between a1 and a5 will still have all the changes of a2-a4
+17:35:55  <          charon> similarly for a4..a9 having the changes a5-a8
+17:36:31  <          charon> well, ok, the latter would be the case for a normal merge too...
+17:36:55  <sitaram         > charon: aaah... lemme check
+17:37:57  <          charon> making a9 look like a merge is also rather weird unless it had no changes of its own to begin
+                             with
+17:38:57  <          charon> i think this particular trick should be an example for rebase --onto, not grafts :)
