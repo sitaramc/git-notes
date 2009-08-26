@@ -26,19 +26,23 @@
         ls  = log   -C --stat --decorate
         lsp = log   -C --stat -p --decorate
 
-        lg  = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s'
-        lga = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all
+        lgbw= log   --graph '--format=%h %ar %d %s'
+        lg  = log   --graph '--format=%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s'
+        lga = log   --graph '--format=%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all
         # this is the most commonly used one, it turns out!
-        l19 = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all -19
+        l19 = log   --graph '--format=%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all -19
         # and this one can be a real lifesaver on a complex tree
-        lsd = log   --graph '--pretty=tformat:%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all --simplify-by-decoration
+        lsd = log   --graph '--format=%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --all --simplify-by-decoration
+        # log left-right; requires argument like A...B (3 dots)
+        lglr= log   --graph '--format=%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --boundary --left-right --cherry-pick
 
         rl  = reflog show --date=relative
 
         ru  = remote update
 
         # "show-branch -g=N" can't be aliased for N easily, so we stop here:
-        sb  = show-branch --sha1-name
+        sb  = show-branch             --current
+        sbs = show-branch --sha1-name --current
 
         ls-del  = ls-files -d
         ls-mod  = ls-files -m   # this will include deleted files also
@@ -61,13 +65,16 @@
         # when was this file last updated, on each local branch
         wwflu = "!f() { for b in $(git rev-parse --symbolic --branches); do echo -e `git log --format=%at:%ar -1 $b -- \"$1\"`\\\\t$b; done | sort -r |cut -f2 -d: ; }; f"
 
+        # branch fast-forward: update from origin if it's a fast-forward
+        bff = "!f() { for i; do [[ $(git rev-parse $i) == $(git merge-base $i origin/$i) ]] && git checkout $i && git merge origin/$i && git checkout -; done; }; f"
+
 [rerere]
 	enabled = 1
 [diff]
 	mnemonicprefix = true
-	tool = meld
+	tool = kdiff3
 [merge]
-	tool = meld
+	tool = kdiff3
 [gui]
 	editor = gvim
 [guitool "edit"]
@@ -76,3 +83,5 @@
 	needsfile = yes
 [push]
 	default = matching
+[mergetool]
+	keepBackup = false

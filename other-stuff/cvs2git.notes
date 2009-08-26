@@ -4,6 +4,13 @@
 
 ----
 
+Update 2009-10-08: It has been pointed out that cvsimport, which I recommend
+against using below, can do incremental imports.  If this is important to you
+(it wasn't, to me, and it never will be), then this document is probably no
+use to you.  Sorry...
+
+----
+
 First: do **NOT** use the builtin `git cvsimport` unless your repository is
 very simple and linear.  Problems I had using it on a moderately complex repo
 include missing tags, branches grafted to the wrong place (by comparing with a
@@ -55,7 +62,7 @@ seemed to deal with a lot more nuances, so I used that instead.
     would now be:
 
         cat ~-/cvs2svn-tmp/git-{blob,dump}.dat | git fast-import
- 
+
 ### #patch Appendix
 
 These are the changes I made to the options file:
@@ -70,17 +77,17 @@ These are the changes I made to the options file:
      # translated into a git-style name by the author_transforms map.
     -ctx.username = 'cvs2svn'
     +ctx.username = 'someone'
-     
+
      # CVS uses unix login names as author names whereas git requires
      # author names to be of the form "foo <bar>".  The default is to set
     @@ -59,7 +59,7 @@ author_transforms={
-     
+
          # This one will be used for commits for which CVS doesn't record
          # the original author, as explained above.
     -    'cvs2svn' : ('cvs2svn', 'admin@example.com'),
     +    'someone' : ('someone', 'someone@my.company.com'),
          }
-     
+
      # This is the main option that causes cvs2svn to output to git rather
     @@ -115,7 +115,7 @@ run_options.add_project(
          # The path to the part of the CVS repository (*not* a CVS working
@@ -88,6 +95,6 @@ These are the changes I made to the options file:
          # (i.e., a module) within a larger CVS repository.
     -    r'test-data/main-cvsrepos',
     +    r'../cvsroot/myproj',
-     
+
          # See cvs2svn-example.options for more documention about symbol
          # transforms that can be set using this option.

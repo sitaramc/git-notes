@@ -59,10 +59,14 @@ as a generic backup/sync tool:
 
 For most people considering git for **backup**, the closest, correct, choice
 is [rdiff-backup](http://rdiff-backup.nongnu.org/) which is available, and
-maybe even installed by default, in most distributions of Linux.  It uses the
-same sort of space saving techniques that rsync uses to store files, which is
-not as efficient as git but good enough for most people.  It also has a handy
-"remove-older-than" option to prune old backups.
+maybe even installed by default, in most distributions of Linux.  It stores
+the most recent version as is (you can do a plain `cp` to restore), and older
+versions as "reverse deltas" using the rsync algorithm.  So, what rsync does
+only for network bandwidth, rdiff-backup extends to disk space as well!  This
+is still not as efficient as git (because the topmost revision is not
+compressed), but good enough for most people.  It also has a handy
+"remove-older-than" option to prune old backups, which can make this whole
+thing pretty much fire and forget using a script+cron.
 
 There are many other similar schemes that build on rsync; investigate or ask
 around.

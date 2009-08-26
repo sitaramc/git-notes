@@ -27,11 +27,17 @@ print_relation()
 {
     while read b
     do
-        git --no-pager log --oneline --left-right $1...$b |
+        # XXX hah! guess what that $2 is doing there :-)
+        git --no-pager log --oneline --left-right $1.$2.$b |
             ( [[ -n $verbose ]] && cat || cut -c1 | sort | uniq -c ) |
             prefix_hdr $1...$b
     done
 }
+
+if ! git update-index --ignore-submodules --refresh; then
+    # dirty; show git status
+    git status
+fi
 
 current_branch=$(git symbolic-ref HEAD) || die you seem to be on a detached HEAD or something
 current_branch=${current_branch##refs/heads/}; echo ===== $current_branch =====; echo
@@ -46,7 +52,7 @@ then
     # what local branches are not merged into it
     git branch --no-merged $current_branch |
         print_relation $current_branch |
-        prefix_hdr "(local, NOT merged)"
+        prefix_hdr "(local, NOT in integration branch)"
 
     # what's in it that's not in the sum of all other branches
     j=
@@ -55,7 +61,7 @@ then
         [[ $i == $current_branch ]] || j="$j ^$i"
     done
     git --no-pager log --graph '--format=%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' $current_branch $j |
-        prefix_hdr "EXTRA commits in integration branch"
+        prefix_hdr "(EXTRA commits in integration branch)"
 fi
 
 # are we in step with the similarly named remote branch?
@@ -69,20 +75,21 @@ instep()
         then
             echo $r/$1
         fi
-    done | print_relation $1
+    # XXX hah! guess what that . is doing there :-)
+    done | print_relation $1 .
 }
 
-instep $current_branch | prefix_hdr "TRACKING status, current branch"
+instep $current_branch | prefix_hdr "(TRACKING status, current branch)"
 
 for b in $local_branches
 do
     [[ $b == $current_branch ]] || instep $b
-done | prefix_hdr "TRACKING status, other branches"
+done | prefix_hdr "(TRACKING status, other branches)"
 
 if [[ -n $verbose ]]
 then
     git branch --merged $current_branch |
-        prefix_hdr "local, merged branches"
+        prefix_hdr "(local, merged branches)"
     git branch -r --merged $current_branch |
-        prefix_hdr "remote, merged branches"
+        prefix_hdr "(remote, merged branches)"
 fi
