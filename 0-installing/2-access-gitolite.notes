@@ -1,0 +1,103 @@
+# (user) installing git and setting it up to use a gitolite server
+
+[[TOC]]
+
+### generating a public key
+
+Gitolite uses RSA public keys to authenticate users -- there are no passwords.
+You have to generate a public/private "key pair" and send your git admin the
+public key so that he can add it to the server.
+
+  * double click on the "Git bash" icon on your desktop to open a bash
+    terminal
+
+  * you need to generate an RSA key pair (a public key and a private key) for
+    yourself.
+
+    <font color="#cc0000">
+
+    >  - - - - - - -
+    >  **A brief security note**
+    >
+    >  * your **private** key should be kept really safe; anyone who can
+    >    access that can impersonate you.  Lock your desktop when you leave it
+    >    for longer than a few minutes, etc.  In terms of remote hacks, if
+    >    your machine is not on the public internet (which is typical for most
+    >    corporate desktops), you may be relatively safe.
+    >
+    >  * you can protect your private key with a pass-phrase if you wish.
+    >    You can use something called `ssh-agent` to avoid typing in the
+    >    pass-phrase for every operation that accesses the server.  Contact
+    >    me if you need help with this.
+    >  - - - - - - -
+
+    </font>
+
+  * with that out of the way, type in the following command:
+
+        ssh-keygen -t rsa
+
+    * hit enter when it asks you for a filename -- *don't* change the default
+    * when it asks you for a passphrase, you have two choices.  Either hit
+      enter for "no passphrase", or choose some long string and type it in.
+      Twice.
+    * On Unix, `ssh-agent` makes it quite painless to use a passphrase, while
+      keeping your private key secured all the time.  This might work on
+      Windows also; I'm not sure.
+
+  * the output of that command will be two files: a private key and a public
+    key.  You need to send your git admin the **public** key by email
+    * the program will clearly say "your public key has been saved in ..." and
+      give a long filename.  Send only that file
+    * **do NOT send the private key!!**  Make sure the file name ends in
+      `.pub`
+
+  * identify yourself to git, so that your name and email show up correctly in
+    commits.  Type in the following commands:
+
+        git config --global user.name "Your Name Here"
+        git config --global user.email your@email.here
+
+    Now wait until the git admin does his part and confirms that your public
+    key has been stored in the server.
+
+### cloning an existing project
+
+Once you've received confirmation from your git admin that he has added your
+public key to the server and told you what project(s) you can push and pull,
+you can start work.  You may want to practice git using the "testing"
+repository, if your admin has set one up, or directly work on your project if
+it was already ready to be cloned:
+
+  * create an empty folder somewhere
+  * right-click the folder name and choose "git bash here"
+  * in the resulting command prompt, type in
+
+        git clone git@your.gitolite.server:testing.git
+        # (or maybe) git clone git@your.gitolite.server:MYPROJ.git
+
+If that worked, you can `cd testing` or `cd MYPROJ` and:
+
+  * run some git commands from the command line
+  * run `git gui` to stage and unstage files, commit, and push
+  * run `gitk --all` to get a bird's eye view of all your branches, both local
+    and remote
+
+These two GUI tools are very powerful; if you don't like the command line, you
+can quite easily stick to them and get by.  Please see the [user
+documentation](../1-basic-usage/use-git.html) for more on this.
+
+### creating a new project
+
+If you want to create a new project from an existing code base, and add it to
+the gitolite server for others to start collaborating on, you need to do the
+following:
+
+  * discuss with the git admin what the name of the project should be and pick
+    one.  We'll assume it's called MYPROJ in the description below
+  * when the admin has created the project, just clone it the usual way.  This
+    will be an "empty" clone, so you can start putting in whatever you want
+    into it and push.
+
+Just remember that cloning an empty clone requires git version 1.6.2 or later
+;-)
