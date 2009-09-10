@@ -1,0 +1,179 @@
+# gitolite/gitosis troubleshooting
+
+----
+
+[[TOC]]
+
+----
+
+Here's how to troubleshoot gitosis problems.  I'll update this document as and
+when I think of more stuff.
+
+>   ----
+
+>   **(shameless plug!)**
+
+>   *Ideally, you should be using
+>   [gitolite](../0-installing/9-gitolite-basics.html), because it does so
+>   [much more](http://github.com/sitaramc/gitolite), but if you have to use
+>   gitosis, and you're having trouble, I'd like to help anyway :-)*
+
+>   *However, gitolite does not require so much troubleshooting.  The error
+>   messages include more information, and it is usually pretty clear what got
+>   stuck.  Also, gitolite does not use "push to admin" (see below for
+>   details), which eliminates half the problems with gitosis.  And it only
+>   focuses on ssh-based access, ignoring extraneous things like gitweb or
+>   git-deamon.*
+
+>   *Thus the **only part** of this document that applies to gitolite is the
+>   one on "ssh magic" (naturally).*
+
+>   ----
+
+### terminology
+
+in this document:
+
+  * **local** means your workstation or the user's workstation.  I might
+    disambiguate as **admin** or **user** when that distinction is needed
+  * **server** means the "git" user on the server
+  * **authkeys** means `~/.ssh/authorized_keys` -- it's too long to type all
+    the time :-)
+
+### ssh magic
+
+I assume you've read [this](../0-installing/9-gitolite-basics.html) -- all the
+information you'll ever need on the ssh magic required is in there.
+
+Anyway here's a loose checklist:
+
+  * for any valid user, typing in `ssh git@server` should come back saying
+    `need SSH_ORIGINAL_COMMAND`.
+
+    If you are asked for a password, gitolite/gitosis has not recognised you.
+    Your pubkey is not in the `~/.ssh/authorized_keys` file on the server.  Or
+    it is but ssh doesn't like the permissions of something along the way.
+    This is why I like `ssh-copy-id` -- it checks and fixes most of this, but
+    anyway, make sure that none of the directories leading up to and including
+    `/home/git/.ssh/authorized_keys` has `g+w` or `o+w` set [thanks to Ilari
+    for this].
+
+    If you get a shell *without* being asked for a password, it means your
+    public key is already known to the `~/.ssh/authorized_keys` file on the
+    server, and has a *normal* login (no restrictions).  You cannot use the
+    same pubkey for gitolite/gitosis access.  See below for why.
+
+  * make sure your local ssh client is sending out the *right* public key, if
+    you have more than one.  Use `ssh -v git@server` and look for "Offering
+    public key" and "Server accepts key" messages
+
+  * make sure your pubkey exists only **once** on the server's authkeys file.
+    Here's a quick check, on the server:
+
+        cat ~/.ssh/authorized_keys | perl -ne 's/.*(ssh-dss|ssh-rsa) (\S*).*/$2/;
+            next unless length() > 200;
+            print "line $. dup of line $seen{$_}\n" if $seen{$_}; $seen{$_} = $.'
+
+    sshd only sees the *first* matching pubkey in authkeys when a pubkey is
+    offered by an incoming login, so if you have duplicates, something is
+    wrong somewhere.
+
+    For this same reason, it is not possible (without doing all sorts of
+    extraneous tricks I will not go into) to use the *same* pubkey for *both*
+    shell access *and* gitolite/gitosis access on the same server
+
+### "push to admin"
+
+>   ----
+
+>   ***gitolite-specific notes**: gitolite **does not** do "push to admin", as
+>   I call it. It's a cute feature, and I liked it at first.  Then I saw how
+>   much trouble it causes newbies, how much code is used to support it, and
+>   how often this code is actually **needed**!  It couldn't be "lite" if it
+>   had all that baggage :-)*
+
+>   *gitolite expects an admin to be an admin and log into the server when
+>   needed!  If that's too often for your comfort, you should consider
+>   gitorious instead.*
+
+>   *(**Note**: that is **not** the original reason for gitolite's existence
+>   -- the real wins in gitolite are per-branch permissions etc., see
+>   [here](http://github.com/sitaramc/gitolite) for more on that and other
+>   neat stuff).*
+
+>   ----
+
+I assume you did everything upto the `gitosis-init` thing and it all went
+fine.
+
+  * admin can't clone
+
+    the key you used for the `gitosis-init` is not the one being offered by
+    your local ssh client; see "ssh magic" above
+
+  * admin can clone but cant push
+
+    maybe the key changed between the clone and the push?  try cloning again
+    into a brand new directory and committing and pushing from there.  If you
+    still see the same problem check the `~/.gitosis.conf` file on the server
+    to make sure it allows you write access to the gitosis-admin repo.  If
+    necessary, add a line saying `loglevel = DEBUG` at the top of that file
+    and try again, and use that info to see where you're being blocked
+
+  * admin can push but the changes dont take effect
+
+      * Most common cause is
+        `/home/git/repositories/gitosis-admin.git/hooks/post-update` not
+        having the `x` bit on:
+
+            # check
+            ls -al /home/git/repositories/gitosis-admin.git/hooks/post-update
+            # fix
+            chmod 755 /home/git/repositories/gitosis-admin.git/hooks/post-update
+
+        if the "check" showed that the file already has `x` bit set, then
+        there is some other problem.
+
+      * To drill deeper, note that the two files which are actually in play
+        when someone logs in, are:
+
+            ~/.ssh/authorized_keys
+            ~/.gitosis.conf
+
+      * These two files should get updated everytime you add a new user, and
+        the updates must be consistent:
+
+          * the pubkey must get added as a line in the authkeys file
+          * this line must have a `command="gitosis-serve username"` at the
+            start
+          * the `username` seen in the line added above must be exactly the
+            same as the one you added in `~/.gitosis.conf`, and have the
+            rights you expect them to have
+          * note that the "comment" field of the authkey line (the stuff
+            *after* the long key) is *irrelevant*
+
+        **And, er, umm, watch out for typos -- we're all human**.  And
+        (sadly), gitosis is not too particular about minor mis-spellings in
+        your config file.  It will silently ignore, for instance, if you type
+        `member` for `members`, an error which I believe it ought to catch and
+        complain bitterly about.
+
+      * The `~/.gitosis.conf` file is actually a symlink to
+        `/home/git/repositories/gitosis-admin.git/gitosis.conf`.  One
+        unfortunate person once had that symlink broken, no idea why, which of
+        course breaks the whole thing.  So check that too :-)
+
+### normal user access
+
+This section assumes the admin stuff works fine, and it's just a normal user
+that now has a problem.
+
+  * user can't clone
+
+    the key they sent you to add to `keydir` is not the one being offered by
+    their local ssh client; see "ssh magic" above
+
+  * user can clone but cant push
+
+    add a line saying `loglevel = DEBUG` at the top of the `gitosis.conf` file
+    and try again, and use that info to see where they're being blocked.
