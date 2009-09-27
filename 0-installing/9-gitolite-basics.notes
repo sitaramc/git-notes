@@ -14,7 +14,12 @@ branch.
 However, large parts of this document are actually about ssh, which is the
 real magic behind *both* these tools.  So please do read it even if you're
 using gitosis.  I'm sure it will still be useful, because **it's quite likely
-that your problem is more about ssh, even if you didn't know it** :-)^^
+that your problem is more about ssh, even if you didn't know it** :-)
+
+This document is only a "how", not a "how **to**".  The gitosis-version of
+this document was both, because gitosis didn't have much docs.  Gitolite has
+[lots](http://github.com/sitaramc/gitolite/tree/pu/doc/), and you should
+really use those to install and use it :-)^^
 
 ----
 
@@ -161,7 +166,7 @@ off the ends of course; they're pretty long lines):
     command="[path]/gl-auth-command usertwo",[more options] ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEArXtCT...
 
 First, it finds out which of the public keys in this file match the incoming
-login.  That's rypto stuff, and I won't go into it.  Once the match has been
+login.  That's crypto stuff, and I won't go into it.  Once the match has been
 found, it will run the command given on that line; e.g., if I logged in, it
 would run `[path]/gl-auth-command sitaram`.  So the first thing to note is
 that such users do not get "shell access", which is good!
