@@ -20,13 +20,7 @@ when I think of more stuff.
 
 >   *However, gitolite does not require so much troubleshooting.  The error
 >   messages include more information, and it is usually pretty clear what got
->   stuck.  Also, gitolite does not use "push to admin" (see below for
->   details), which eliminates half the problems with gitosis.  And it only
->   focuses on ssh-based access, ignoring extraneous things like gitweb or
->   git-deamon.*
-
->   *Thus the **only part** of this document that applies to gitolite is the
->   one on "ssh magic" (naturally).*
+>   stuck.*
 
 >   ----
 
@@ -83,25 +77,6 @@ Anyway here's a loose checklist:
     shell access *and* gitolite/gitosis access on the same server
 
 ### "push to admin"
-
->   ----
-
->   ***gitolite-specific notes**: gitolite **does not** do "push to admin", as
->   I call it. It's a cute feature, and I liked it at first.  Then I saw how
->   much trouble it causes newbies, how much code is used to support it, and
->   how often this code is actually **needed**!  It couldn't be "lite" if it
->   had all that baggage :-)*
-
->   *gitolite expects an admin to be an admin and log into the server when
->   needed!  If that's too often for your comfort, you should consider
->   gitorious instead.*
-
->   *(**Note**: that is **not** the original reason for gitolite's existence
->   -- the real wins in gitolite are per-branch permissions etc., see
->   [here](http://github.com/sitaramc/gitolite) for more on that and other
->   neat stuff).*
-
->   ----
 
 I assume you did everything upto the `gitosis-init` thing and it all went
 fine.
