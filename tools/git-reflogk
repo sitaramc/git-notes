@@ -25,8 +25,6 @@ echo $common
 
 # for each ref, we use the special construct that says "just this commit and
 # *not* any of its parents" (see git help rev-parse)
-for r in $(git for-each-ref '--format=%(objectname)')
-do
-    parents="$parents $r^!"
-done
+parents=$(git for-each-ref --format='%(objectname)^! %(objecttype) %(*objecttype)' |
+    grep commit | cut -d' ' -f1)
 gitk HEAD $refs $parents --not $common
