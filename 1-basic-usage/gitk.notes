@@ -43,10 +43,14 @@ All these are from the commit list (the top pane):
 ### the main menu
 
   * reload: if you're doing stuff on the command line in another screen, and
-    want those changes reflected in gitk, hit `Ctrl-F5`.  (`F5` may also work;
-    at this time I'm not quite sure what the difference is, but Ctrl-F5 seems
-    to work more often than F5.  If someone knows, please tell me so I can
-    update this document).
+    want those changes reflected in gitk, hit `F5`.
+
+    `F5` updates the refs and shows you their new values *while still showing
+    you the old ones*.  It is most useful after operations like rebase,
+    because you can compare the previous branch head with the new one.
+
+    (`Ctrl-F5`, on the other hand, is a total refresh, throwing away
+    everything that was previously shown.)
 
   * list/choose references: to quickly go to a particular reference, hit `F2`.
     If there are too many, you can specify a glob pattern in the box at the
