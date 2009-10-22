@@ -65,6 +65,11 @@ __git_ps1_plus()
                         s/^# Untracked files:/untracked=untracked;/p
                         s/^#	\([^ ].*\)/(( untracked_files += 1 ));/p
                     }
+                    /^# Unmerged paths:/,/^# [A-Z]/ {
+                        s/^# Unmerged paths:/unmerged=unmerged;/p
+                        s/^#	unmerged: *\([^ ].*\)/(( unmerged_files += 1 ));/p
+                        s/^#	both modified: *\([^ ].*\)/(( unmerged_files += 1 ));/p
+                    }
                     /^# Changed but not updated:/,/^# [A-Z]/ {
                         s/^# Changed but not updated:/modified=modified;/p
                         s/^#	unmerged: *\([^ ].*\)/(( unmerged_files += 1 ));/p
