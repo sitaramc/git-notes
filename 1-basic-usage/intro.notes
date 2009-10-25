@@ -194,7 +194,7 @@ intro-images/dag-br-tag.png
 
 = remotes
 
-(bad?  it's useless!)
+(ok that's not a bad picture; it's HORRIBLE picture!)
 
 intro-images/remote.png
 
@@ -266,7 +266,7 @@ intro-images/remote.png
        *** (read-write using DAV == Loch Ness monster)
        *** (meaning I've heard it exists, but I haven't seen it!)
   * for a corporate environment
-    ** just install 'gitosis' and be done!
+    ** just install 'gitolite' and be done!
 
 = normal workflow activities
   * checkout a branch

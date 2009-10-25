@@ -11,7 +11,7 @@ been tested...  I'd like to be involved in the first run through this.
 
 ## constraints
 
-To keep things more general, we'll do this without gitosis, the special
+To keep things more general, we'll do this without gitolite, the special
 software that makes administering multiple git projects and users so easy.  We
 will be assuming the following environment:
 
@@ -127,7 +127,7 @@ You will get a terminal screen.  Now type in the following commands:
     git config guitool.Edit.needsfile yes
 
 (Side note: if you're going to use passwordless auth on ssh, you need this.
-For more details, go [here](../0-installing/2-access-gitosis.html)).
+For more details, go [here](../0-installing/2-access-gitolite.html)).
 
     ssh-keygen -t rsa
 

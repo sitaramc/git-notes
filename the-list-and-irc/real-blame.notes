@@ -5,6 +5,20 @@
 ^^
 
 ----
+## WARNING: THIS DOCUMENT IS OBSOLETE
+
+Just install gitolite -- it'll produce a much better log than anything you'll
+get from this document.  See the "better logging" section of
+<http://github.com/sitaramc/gitolite/blob/master/doc/3-faq-tips-etc.mkd>
+
+**I'm keeping this document around only to show you how difficult this is
+without gitolite ;-)**
+
+Gitolite is at <http://github.com/sitaramc/gitolite>
+
+... and now, on to the document
+
+----
 
 Someone on IRC postulated that git does not track who pushed a series of
 commits into a server, and could allow one dev to blame some other dev by
