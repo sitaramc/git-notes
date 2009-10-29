@@ -13,7 +13,7 @@ or why this is.
 
 Forget git for a bit and think about linked lists from your data structures
 course.  You have a pointer to the node at the top of the list (we'll call
-this pointer 'list_top'), and each node in the list has a pointer to the
+this pointer `list_top`), and each node in the list has a pointer to the
 parent node, etc.
 
 And you know how to add a new node to this linked list.  In pseudo-code:
@@ -49,7 +49,7 @@ Now suppose you add a new node to the list on top of the *current node*:
 This is the same code as before, except temp has taken the place of list_top
 this time.
 
-But 'temp' is a temporary variable, and unless you somehow save it's value
+But 'temp' is a temporary variable, and unless you somehow save its value
 into some 'global' (or 'static') variable, you risk losing that commit you
 just made, oops, I mean the new node you added to the linked list :-)
 

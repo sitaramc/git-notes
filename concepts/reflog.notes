@@ -44,6 +44,7 @@
   * I particularly like setting
 
         git config --global core.logAllRefUpdates true
+        git config --global receive.denyDeletes true
 
     on bare repositories so that even if an over-zealous team member
     force-pushes a bad revision, the reflog on the server will let me find the

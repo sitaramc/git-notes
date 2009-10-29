@@ -69,8 +69,8 @@ Possible variations are:
 One thing you *cannot* do is to roll the entire socat command into the
 environment variable.  Git passes the host and port as two arguments to the
 proxy command, but socat expects them in the syntax you see above, so you
-*will*need to wrap it in a script as I have done.  I guess you could argue
-*that this is a point in favour of corkscrew etc. ;-)
+*will* need to wrap it in a script as I have done.  I guess you could argue
+that this is a point in favour of corkscrew etc. ;-)
 
 ### proxying the **ssh** protocol
 
