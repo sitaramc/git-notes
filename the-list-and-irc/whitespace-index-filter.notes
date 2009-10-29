@@ -48,4 +48,14 @@ Notes:
 
         so: git diff 3 D | git apply ....
 
+Other possibilities:
 
+If the whitespace problem causing conflicts is something like indentation
+shift, etc., and is not amenable to `git apply --whitespace=fix`, the
+following may work.  We assume the "remote" version is the one with the
+unnecessary indentation changes:
+
+    git show :1:filename > filename
+    git diff -b :1:filename :3:filename | git apply
+    # (might need munging; the diff header has :1: and :3: in it...)
+    git merge-one-file :1:filename :2:filename $(git hash-object -w filename) filename
