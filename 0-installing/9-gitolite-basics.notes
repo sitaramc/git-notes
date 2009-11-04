@@ -238,12 +238,19 @@ OK enough background, review, and hand waving.  On to the real stuff...
   * clone gitolite: `git clone git://github.com/sitaramc/gitolite.git`
     * if you're behind a firewall and can't clone, send me an email
 
-### installing and running it
+### #install installing and running it
 
-Once you've obtained it, follow the instructions in the INSTALL (or similarly
-named) file, or use the `src/install.pl` script for a default install.  Take a
-look at the other files in the source tree for information on administration,
-special cases, errors, faqs, etc.
+If you're really impatient, here's the shortest possible "**how to install
+gitolite right from your workstation**":
+
+1.  get passwordless (pubkey) access to `git@server`
+2.  clone the gitolite repo and cd to it
+3.  run `src/00-easy-install.sh -q git server`
+
+If you don't know what item #1 above means, or have any other problems, stop
+being impatient, and read the real docs in the gitolite repo instead of this
+one :) The INSTALL (or similarly named) file in the "doc/" directory is a good
+start.
 
 ### troubleshooting
 
