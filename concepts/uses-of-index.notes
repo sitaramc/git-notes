@@ -30,6 +30,22 @@ operation.
 That should be sufficient background to appreciate (in abstract terms) the
 following discussion.
 
+### staging helps you split up one large change into multiple commits
+
+Let's say you worked on a large-ish change, involving a lot of files and quite
+a few different subtasks.  You didn't actually commit any of these -- you were
+"in the zone", as they say, and you didn't want to think about splitting up
+the commits the right way just then.  (And you're smart enough not to make the
+whole thing on honking big commit!)
+
+Now the change is all tested and working, you need to commit all this
+properly, in several clean commits each focused on one aspect of the code
+changes.
+
+With the index, just stage each set of changes and commit until no more
+changes are pending.  Really works well with `git gui` if you're into that
+too, or you can use `git add -p` or, with newer gits, `git add -e`.
+
 ### staging helps in reviewing changes
 
 Staging helps you "check off" individual changes as you review a complex
@@ -40,8 +56,8 @@ Before you commit, you'll probably review the whole change by using `git
 diff`.  If you stage each change as you review it, you'll find that you can
 concentrate better on the changes that are not yet staged.
 
-`git gui` is great here.  It's two left panes show unstaged and staged
-changes respectively, and you can move files between those two panes
+`git gui` is great here.  It's two left panes show unstaged and staged changes
+respectively, and you can move files between those two panes
 (stage/unstage) just by clicking on the icon to the left of the filename.
 
 Even better, you can even stage *partial changes* to a file.  In the right
