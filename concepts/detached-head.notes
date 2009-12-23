@@ -88,6 +88,7 @@ HEAD to become detached (ouch!) are<sup>[[1]](#fn)</sup>:
     git checkout master^        # parent of master
     git checkout HEAD~2         # grandparent of current HEAD
     git checkout origin/master  # a non-local branch
+    git checkout tagname        # since you cant commit to a tag!
 
 These will all make `.git/HEAD` contain the actual (40-hex-digit) hash of the
 corresponding commit instead of some string like `ref: refs/heads/branch`.
