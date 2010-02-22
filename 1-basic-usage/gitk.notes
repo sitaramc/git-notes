@@ -150,7 +150,10 @@ There are several ways to navigate the tree quickly.
     Your "current" commit is still the same; this is just a way of
     "connecting" two pieces of the graph that are otherwise too far away.
 
-(I do not know what "Follows:" or "Precedes:" mean... sorry)
+  * "Follows:" and "Precedes:" show the nearest tag before and after the
+    commit for each branch that the commit is a part of.  For example, if you
+    find the commit for a bugfix or a feature you want, this will tell you the
+    minimum version you should upgrade to.
 
 ### some other tricks
 
