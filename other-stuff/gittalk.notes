@@ -52,6 +52,7 @@
     ** no network access except via "shares", so local teams only
     ** no atomic commits!
     ** no merge tracking
+    ** repository corruption
 
 = what's different about git?
   * cryptographically secure integrity checks builtin

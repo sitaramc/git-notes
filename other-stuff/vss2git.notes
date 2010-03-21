@@ -1,4 +1,7 @@
-# converting Visual Source unSafe to GIT
+# converting Visual Source Shredder to GIT
+
+[Thanks to http://martinfowler.com/bliki/VersionControlTools.html for the
+new expansion of VSS]
 
 This is a 2 step process.  For large values of 2, as they say :)  But the nice
 thing is it can all be done in Linux; no need to use a Windows machine as long

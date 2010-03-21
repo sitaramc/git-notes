@@ -140,7 +140,15 @@ a lot more; SVN is the most used VCS in terms of what potential git users are
 
 #### Visual Source <font size=-5>un</font>Safe
 
-  * data integrity issues in VSS: <http://www.developsense.com/testing/VSSDefects.html>
+  * data integrity issues in VSS:
+    <http://www.developsense.com/testing/VSSDefects.html>
+  * from <http://martinfowler.com/bliki/VersionControlTools.html>: *Before I
+    finish with those behind the threshold, I just want to say a few things
+    about a particularly awful tool: Visual Source Safe, or as I call it:
+    Visual Source Shredder. We see this less often now, thank goodness, but if
+    you are using it we'd strongly suggest you get off it. Now. Not just is it
+    a pain to use, I've heard too many tales of repository corruption to trust
+    it with anything more valuable than foo.txt.*
 
 #### Clearcase
   * <http://creativekarma.com/ee.php/weblog/comments/why_clearcase_sucks/>
