@@ -1,5 +1,6 @@
 [user]
 	name = Sitaram Chamarty
+	email = sitaram@atc.tcs.com
 # [core]
 # 	pager = cat
 [color]
@@ -8,7 +9,7 @@
 	pager = less -R
 	compression = 6
 [alias]
-	s   = status
+	s   = status -s
         b   = branch
         ba  = branch -a -v -v
         bs  = !git-branch-status
@@ -65,8 +66,8 @@
         # when was this file last updated, on each local branch
         wwflu = "!f() { for b in $(git rev-parse --symbolic --branches); do echo -e `git log --format=%at:%ar -1 $b -- \"$1\"`\\\\t$b; done | sort -r |cut -f2 -d: ; }; f"
 
-        # branch fast-forward: update from origin if it's a fast-forward
-        bff = "!f() { for i; do [[ $(git rev-parse $i) == $(git merge-base $i origin/$i) ]] && git checkout $i && git merge origin/$i && git checkout -; done; }; f"
+        # branch fast-forward: update from upstream if it's a fast-forward
+        bff = "!f() { for i; do [[ $(git rev-parse $i) == $(git merge-base $i $i@{upstream}) ]] && git checkout $i && git merge $i@{upstream} && git checkout -; done; }; f"
 
 [rerere]
 	enabled = 1
@@ -85,3 +86,13 @@
 	default = matching
 [mergetool]
 	keepBackup = false
+
+# from http://www.jukie.net/~bart/conf/gitconfig
+
+[alias]
+        lsfiles = ls-files --exclude-per-directory=.gitignore \
+                         --exclude-from=.git/info/exclude \
+                         -v -d -o -m -s -u
+        cat   = -p cat-file -p
+
+        top = !eval cd "$(pwd)/$(git rev-parse --show-cdup)" && pwd

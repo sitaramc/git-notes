@@ -132,7 +132,7 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
     commits reachable from the branch being merged, which are not already
     reachable from the current branch, are pulled in and applied
 
-#### master, HEAD, index
+#### master, HEAD
 
   * *master*: default branch in a project (main development tree), by
     convention
@@ -140,8 +140,29 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
     commits go.  Normally.  There is also something called a 'detached HEAD'
     that you should be aware of.  See the article on the [detached
     HEAD](detached-head.html) for more.
-  * *index*: a staging area for the next commit; when you commit, the current
+
+#### index
+
+  * a staging area for the next commit; when you commit, the current
     index is turned into a real commit object
+
+  * the **index** is also called **stage** or **cache**
+
+  * **staging** a file (`git add file`) marks its *current* contents
+      for inclusion in the next commit
+
+  * **unstaging** a file (`git reset file`, or in the case of a new
+      file, `git rm --cached file`) undoes all staging since the last
+      commit
+
+  * the **unstaged changes** are the difference between index and
+    working tree (`git diff`)
+
+  * the **uncommitted but staged changes** are the difference between
+    HEAD and index (`git diff --cached`)
+
+  * see [uses of index](uses-of-index.html) for the cool things you
+    can do with it
 
 ### terminology related to being "distributed"
 
@@ -156,11 +177,11 @@ your local repo, so this happens *after* the clone.  Remember this is a full
 repo, so you already have all the branches that the parent repo had when you
 cloned.
 
-By default, after the clone is done, git will **checkout** the branch that was
-currently checked out the same branch that the parent currently has checked
-out.  However, you can checkout some other branch at any time (and if you're
-using git, you will checkout and manage multiple branches on your local repo
-all the time, otherwise you're not really *using* git!)
+By default, after the clone is done, git will **checkout** the same branch
+that was currently checked out in the repository you're cloning from.
+However, you can checkout some other branch at any time (and if you're using
+git, you will checkout and manage multiple branches on your local repo all the
+time, otherwise you're not really *using* git!)
 
 #### accessing remote repositories
 
