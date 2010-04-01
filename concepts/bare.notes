@@ -5,6 +5,17 @@
 ^^
 
 ----
+<center>
+***Update for git 1.7.0 and above***
+</center>
+
+>   As of git 1.7.0, the default value for `receive.denyCurrentBranch` has
+>   changed from "warn" to "refuse".  As a result, on 1.7.0 and above, by
+>   default, you will not get into this sort of trouble.  However, this
+>   document is still useful as a detailed explanation of what precisely this
+>   problem is.  Just pretend, as you read along, that you're on a pre-1.7.0
+>   system or that someone set `receive.denyCurrentBranch` to "warn", "ignore"
+>   or 'false'.
 
 ### what is a bare repo?
 
@@ -158,10 +169,10 @@ nicely in git, but I haven't tried them yet.  Ideas:
 
 ### how do I prevent the problem from happening again?
 
-Well one option is to tell people to stop pushing and shoving :-)
+The best option is upgrade to git 1.7.0 or later!
 
-Jokes apart, if you or others will continue to push into this repo, you have
-to make it a bare repo.
+If you cannot upgrade, and if you or others will continue to push into this
+repo, you have to make it a bare repo.
 
 To make it a "real" bare repo, just delete all the files except `.git`, then
 `mv .git/* .; rmdir .git`.  Finally, edit the file called `config` and change
