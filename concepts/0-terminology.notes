@@ -88,23 +88,18 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
 
 #### head, branch, tag
 
-  * a commit that does not have any "child" commits is a **head**.  If you
-    think of all the commits and those arrows as a tree or you've done graph
-    theory in computer science you could also call it a "leaf"
+  * a **branch** represents an active line of development; you use different
+    branches to track different lines of development.  Without branches,
+    working on multiple features or versions simultaneously would be a
+    nightmare!
 
-  * clearly you can have many "head" nodes; every time you "fork" or create a
-    branch and make a commit on the new branch, you have a new "head"
-
-  * a **branch** is merely a symbolic name given to a "head" node.
+  * in practice, a branch is a symbolic name that points to the most recent
+    commit on that line of development.  This "tip" commit is called the
+    **head** of that branch.
 
     When you checkout a branch and make a new commit on it, the "branch" now
     points to the *new* head node.  In other words, a branch is a pointer that
     *moves as you make commits*.
-
-    A branch represents an active line of development; you use different
-    branches to track different lines of development.  Without branches,
-    working on multiple features or versions simultaneously would be a
-    nightmare!
 
     A repository can track many branches, but the working tree is associated
     with only one branch at a time
