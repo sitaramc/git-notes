@@ -60,9 +60,8 @@ Gitolite does away with all this:
   * it uses a simple but powerful config file format to specify access rights
   * access control changes are affected by modifying this file, adding or
     removing user's public keys, and "compiling" the configuration
-  * this also makes auditing trivial -- all the data is in one place.
-    Versioning these configuration files is optional, but recommended, to get
-    historical audit data
+  * this also makes auditing trivial -- all the data is in one place, and
+    changes to the configuration are also logged, so you can audit them.
   * finally, the config file allows distinguishing between read-only and
     read-write access, not only at the repository level, but at the branch
     level within repositories.
