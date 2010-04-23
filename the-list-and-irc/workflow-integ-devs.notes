@@ -188,18 +188,17 @@ Here's a typical gitolite conf file:
     @myteam = dev1 dev2 ... devN
 
     repo myrepo
-        RW+         = integrator
-        R           = @myteam
+        RW+                 = integrator
+        RW+ dev/USER/       = @myteam
 
-That's it?  How does, say `dev5`, get access to write to `dev/dev5/something`?
+That's it?  How does, say `dev5` (assuming he is a member of `@myteam`), get
+access to write to `dev/dev5/something`?
 
-That is a unique feature of gitolite :-)  Using the latest version of
-gitolite, make sure the following line exists in the file `~/.gitolite.rc`
+That is a unique feature of gitolite :-)  When a rule has the string `/USER/`
+in the "refex" (see gitolite documentation for details), it replaces it with
+the name of the user invoking the push.  This is effectively the same as
+manually adding one line like this
 
-     $PERSONAL="refs/heads/dev";
+        RW+ dev/sitaram/    = sitaram
 
-After this, any valid user called X, can read/write/delete/rewind any branch
-whose name start with `dev/X/`.  This is effectively the same as manually
-adding one line for each developer like this:
-
-        RW+ dev/sitaram     = sitaram
+for each member of `@myteam`.
