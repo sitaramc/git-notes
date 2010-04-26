@@ -47,6 +47,16 @@
     painful-to-branch model like SVN.  The fact is, in git, branching is one
     of those rare beasts: easy *and* powerful.
 
+  * <http://www.lwn.net/Articles/381796/> Subversion is unable to separate the
+    steps "fix bug A" and "integrate with bugfixes B C D and E, having been
+    checked in while you've been working on A". Mr. Corporate Manager wants
+    this feature.
+
+    Subversion cannot do that unless you create a branch for everything.
+    *Poof* your workflow is now an order of magnitude more complicated than
+    git or hg (which is IMHO even less complicated than SVN, once you let go
+    of the centralized-repo, poisoned-by-CVS mindset.)
+
 ### #tut detailed tutorials
 
   * about the best darn doc on using the 3 GUIs that come with git:
