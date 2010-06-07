@@ -1,0 +1,33 @@
+# create on push
+
+If you want to create a repo on a push, here's how you do it:
+
+  * put the following code somewhere on the server and make it executable.
+    Let's say you called it `/usr/local/bin/ac-grp` (which stands for
+    auto-creating-git-receive-pack ;-)
+
+        #!/bin/bash
+
+        if [ ! -d $1 ]
+        then
+            git init --bare $1
+        fi >&2
+        exec git-receive-pack "$@"
+
+  * on the client side, instead of:
+
+        git push user@host:reponame master
+
+    try
+
+        git push --receive-pack=/usr/local/bin/ac-grp user@host:reponame master
+
+  * if you want to make this permanent, (and this is untested, so if you use
+    it and it works please let me know):
+
+        cd /usr/local/bin   # or wherever your git binaries are
+        mv git-receive-pack git-receive-pack.original
+        vim /usr/local/bin/ac-grp
+            # and change the last line to refer to git-receive-pack.original
+            # instead of git-receive-pack
+        mv ac-grp git-receive-pack
