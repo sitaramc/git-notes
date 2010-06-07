@@ -10,6 +10,7 @@
 	compression = 6
 [alias]
 	s   = status -s
+
         b   = branch
         ba  = branch -a -v -v
         bs  = !git-branch-status
@@ -41,6 +42,7 @@
 
         ru  = remote update
 
+        sl  = stash list
         # "show-branch -g=N" can't be aliased for N easily, so we stop here:
         sb  = show-branch             --current
         sbs = show-branch --sha1-name --current
