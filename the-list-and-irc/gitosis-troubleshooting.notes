@@ -13,10 +13,9 @@ when I think of more stuff.
 
 >   **(shameless plug!)**
 
->   *Ideally, you should be using
->   [gitolite](../0-installing/9-gitolite-basics.html), because it does so
->   [much more](http://github.com/sitaramc/gitolite), but if you have to use
->   gitosis, and you're having trouble, I'd like to help anyway :-)*
+>   *Ideally, you should be using [gitolite][gl], because it does so
+>   [much more][mm], but if you have to use gitosis, and you're having
+>   trouble, I'd like to help anyway :-)*
 
 >   *However, gitolite does not require so much troubleshooting.  The error
 >   messages include more information, and it is usually pretty clear what got
@@ -36,10 +35,14 @@ in this document:
 
 ### ssh magic
 
-I assume you've read [this](../0-installing/9-gitolite-basics.html) -- all the
-information you'll ever need on the ssh magic required is in there.
+In order to effectively troubleshoot gitosis problems, you'll have to first
+understand the advanced features of ssh that are in play here.  The best way
+to do that is to read [this][gssh].  Even though that link is about gitolite,
+everything except the section on "restricting branch level actions" applies
+equally to gitosis -- which was, after all, the inspiration for gitolite.  So
+please go ahead and read that for info about ssh magic.
 
-Anyway here's a loose checklist:
+With that out of the way, here's a loose checklist:
 
   * for any valid user, typing in `ssh git@server` should come back saying
     `need SSH_ORIGINAL_COMMAND`.
@@ -152,3 +155,7 @@ that now has a problem.
 
     add a line saying `loglevel = DEBUG` at the top of the `gitosis.conf` file
     and try again, and use that info to see where they're being blocked.
+
+[gssh]: http://github.com/sitaramc/gitolite/blob/pu/doc/gitolite-and-ssh.mkd
+[gl]: http://github.com/sitaramc/gitolite
+[mm]: http://github.com/sitaramc/gitolite#other_features
