@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# sample post-commit hook to force push your commit to a backup repo (but to a
+# ref that is under your namespace, a la gitolite's personal branches).
+# Useful if your hard disk is so crappy it could die at any instant ;-)
+
+# NOTE: requires a remote called "backup_repo" to be setup first
+# NOTE: uses $USER as the name of the developer; change it if needed
+
+b=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
+
+[ "$b" = "HEAD" ] && {
+    echo detached HEAD -- I will not be autopushing this anywhere today
+    exit
+}
+
+git push backup_repo +HEAD:refs/heads/dev/$USER/$b
