@@ -258,15 +258,23 @@ intro-images/remote.png
 
 = err... clone?  from where?
   * git servers and protocols (note: git does NO access control!)
-    ** ssh (read+write, access control by ssh)
-    ** file protocol (locally mounted files, read+write, access control by OS)
-    ** git protocol (read only, access control by OS/firewall etc)
+    ** ssh (RW, access control by ssh)
+    ** file protocol (RW, access control by OS)
+    ** git protocol (RO, access control by OS/firewall etc)
        *** needs git daemon to be started first
-    ** http (read only, access control by Apache)
-       *** (read-write using DAV == Loch Ness monster)
-       *** (meaning I've heard it exists, but I haven't seen it!)
-  * for a corporate environment
-    ** just install 'gitolite' and be done!
+    ** old style http (RO, access control by Apache)
+       *** RW possible but painful; requires WebDAV
+    ** new style http (RW, access control by apache)
+       *** requires git 1.6.6 or better on both server and client
+
+= many users/repos?
+  * just install 'gitolite' and be done!
+  * gitolite can provide fine-grained access control
+  * works over sshd or apache
+    ** sshd (or httpd) authenticates the user
+    ** passes the username to gitolite
+    ** gitolite uses the authenticated username, looks at the config file, and
+       makes the authorisation decision
 
 = normal workflow activities
   * checkout a branch
