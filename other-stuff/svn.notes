@@ -26,8 +26,12 @@ maintainability, indicated in parens as **P** or **M**) are:
     almost impossible to have 2 branches merging regularly in SVN without a
     lot of pain for the integration team)
 
-  * **(M)** handles file renames correctly; helps in refactoring (in SVN, if you
-    rename a file, you lose all the history for that file)
+  * **(M)** handles file renames correctly; helps in refactoring (in SVN, a
+    rename is handled as a delete of the old file plus an add of the new file,
+    and it is only tracked as such if you explicitly told svn about the
+    rename.  That is not the only brittle aspect; renames and merges don't mix
+    well, apparently.  Also, SVN may [become confused][wpsvn1] when files are
+    modified and renamed in the same commit.)
 
   * **(P, M)** devs can create local branches without polluting the central server
     -- experimental features can be developed and tested "on the side", with
@@ -151,3 +155,7 @@ That's a ratio of almost 20:1 in size over SVN.
     is particularly powerful and convincing
   * <http://developers.slashdot.org/comments.pl?sid=1079921&cid=26321869> from
     somewhere in the trenches
+
+----
+
+[wpsvn1]: http://en.wikipedia.org/wiki/Apache_Subversion#Current_limitations_and_problems

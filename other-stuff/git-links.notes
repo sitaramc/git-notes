@@ -79,6 +79,12 @@
   * release engineering, branches never-merged-back, etc.,
     <http://gitster.livejournal.com/2009/01/14/>
 
+  * Ingo Molnar (mingo) on reviewing merge commits versus rebased ones:
+    <http://lwn.net/Articles/409775/>
+
+  * Shawn on contrib/workdir/git-new-workdir:
+    <http://kerneltrap.org/mailarchive/git/2007/10/11/335637>
+
 ### digging into git/troubleshooting
 
   * <http://article.gmane.org/gmane.comp.version-control.git/46609> -- how

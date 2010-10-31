@@ -9,7 +9,8 @@
 	pager = less -R
 	compression = 6
 [alias]
-	s   = status -s
+	s   = status -s -b -uno
+        graphviz = "!f() { echo 'digraph git {' ; git log --pretty='format: %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"
 
         b   = branch
         ba  = branch -a -v -v
@@ -20,9 +21,14 @@
         co  = checkout
 
         d   = diff  -C
+        dw  = diff  -C -w
         ds  = diff  -C --stat
         dsp = diff  -C --stat -p
-        dw  = diff  -C --color-words
+        dcw = diff  -C --color-words
+
+        du  = diff  -C @{u}
+        dwu = diff  -C -w @{u}
+        dcwu= diff  -C --color-words @{u}
 
         l   = log   -C --decorate
         ls  = log   -C --stat --decorate
@@ -71,6 +77,9 @@
         # branch fast-forward: update from upstream if it's a fast-forward
         bff = "!f() { for i; do [[ $(git rev-parse $i) == $(git merge-base $i $i@{upstream}) ]] && git checkout $i && git merge $i@{upstream} && git checkout -; done; }; f"
 
+        # fixup, from charon, http://permalink.gmane.org/gmane.comp.version-control.git/154460
+        fixup = "!f() { git commit -m\"fixup! $(git log -1 --pretty=%s $1)\"; }; f"
+
 [rerere]
 	enabled = 1
 [diff]
@@ -82,6 +91,10 @@
 	editor = gvim
 [guitool "edit"]
 	cmd = gvim -f $FILENAME
+	noconsole = yes
+	needsfile = yes
+[guitool "mergetool"]
+	cmd = git mergetool -y -t kdiff3 $FILENAME
 	noconsole = yes
 	needsfile = yes
 [push]
