@@ -64,7 +64,7 @@ user.  Routine stuff like setting a password etc., are ignored here.
     # add the user
     useradd username
     # make him a member of the "proj1" group
-    usermod -G proj1 username
+    usermod -a -G proj1 username
 
 <a name="make_bare">
 

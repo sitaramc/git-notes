@@ -154,7 +154,7 @@ a lot more; SVN is the most used VCS in terms of what potential git users are
 
   * <http://blog.mwolson.org/tech/why_i_dislike_subversion.html>
 
-#### Visual Source <font size=-5>un</font>Safe
+#### Visual Source <font size=-5>un</font>Safe and TFS
 
   * data integrity issues in VSS:
     <http://www.developsense.com/testing/VSSDefects.html>
@@ -165,6 +165,8 @@ a lot more; SVN is the most used VCS in terms of what potential git users are
     you are using it we'd strongly suggest you get off it. Now. Not just is it
     a pain to use, I've heard too many tales of repository corruption to trust
     it with anything more valuable than foo.txt.*
+
+  * TFS rant <http://developers.slashdot.org/comments.pl?sid=1872398&cid=34258672>
 
 #### Clearcase
   * <http://creativekarma.com/ee.php/weblog/comments/why_clearcase_sucks/>
