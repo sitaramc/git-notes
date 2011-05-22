@@ -70,7 +70,7 @@ __git_ps1_plus()
                         s/^#	unmerged: *\([^ ].*\)/(( unmerged_files += 1 ));/p
                         s/^#	both modified: *\([^ ].*\)/(( unmerged_files += 1 ));/p
                     }
-                    /^# Changed but not updated:/,/^# [A-Z]/ {
+                    /^# Changes not staged for commit:/,/^# [A-Z]/ {
                         s/^# Changed but not updated:/modified=modified;/p
                         s/^#	unmerged: *\([^ ].*\)/(( unmerged_files += 1 ));/p
                         s/^#	modified: *\([^ ].*\)/(( modified_files += 1 ));/p

@@ -66,19 +66,13 @@
 
         # checkpoint and checkpoint recover
         cp      = !git stash save $(date +%F--%T) && git stash pop --index
-        cpr     = "!f() { git fsck | grep commit | cut -d' ' -f3 | while read hash; do git rev-parse --verify --no-revs --quiet $hash^2 2>/dev/null && echo $hash | xargs git rev-list --since=${1:-1day} -1; done | xargs -i git log --graph --oneline --format='%Cblue%h %Cgreen(%ar) %Creset%s' -3 '{}'; }; f"
-
-        # my merge-base!  DWIM damn it, DWIM DWIM DWIM!!!
-        mymb    = "!mymb() { local a; export a; for r; do a=$(git merge-base ${a:-$r} $r); done; echo $a; }; mymb"
+        cpr     = "!f() { git fsck | grep commit | cut -d' ' -f3 | while read hash; do git rev-parse --verify --no-revs --quiet $hash^2 2>/dev/null && echo $hash | xargs git rev-list --since=${1:-1day} -1; done | xargs -L 1 git log --format=%at:%h -1 | sort|cut -f2 -d: | xargs -L 1 git log --graph --oneline --format='%Cblue%h %Cgreen(%ar) %Creset%s' -3 ; }; f"
 
         # when was this file last updated, on each local branch
         wwflu = "!f() { for b in $(git rev-parse --symbolic --branches); do echo -e `git log --format=%at:%ar -1 $b -- \"$1\"`\\\\t$b; done | sort -r |cut -f2 -d: ; }; f"
 
         # branch fast-forward: update from upstream if it's a fast-forward
         bff = "!f() { for i; do [[ $(git rev-parse $i) == $(git merge-base $i $i@{upstream}) ]] && git checkout $i && git merge $i@{upstream} && git checkout -; done; }; f"
-
-        # fixup, from charon, http://permalink.gmane.org/gmane.comp.version-control.git/154460
-        fixup = "!f() { git commit -m\"fixup! $(git log -1 --pretty=%s $1)\"; }; f"
 
 [rerere]
 	enabled = 1
