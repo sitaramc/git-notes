@@ -59,8 +59,8 @@ as a generic backup/sync tool:
 
 ### alternatives to rolling your own
 
-...then at least use something like etckeeper, which hides all the issues that
-git has with being a true backup solution.
+You can use something like etckeeper, which hides all the issues that git has
+with being a true backup solution.
 
 Or go for 'bup', which is much more powerful, but still a work in progress
 (meaning I have not switched to it yet ;-)
