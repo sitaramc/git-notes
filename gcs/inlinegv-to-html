@@ -1,0 +1,108 @@
+#!/usr/bin/perl
+
+# - always run from the same dir as the file you're converting
+# - be sure you're ok with an "images" directory in that dir
+# - correct usage: md.pl -css < input | Markdown.pl | $0
+
+use strict;
+use warnings;
+
+my %colors = (
+    r   =>  'red',
+    g   =>  'green',
+    b   =>  'blue',
+    y   =>  'yellow',
+    o   =>  'orange',
+);
+
+# TODO change this to an mktemp created dir later
+system("mkdir -p images");
+my $sln="sl0000";
+my $figno="fig0000";
+
+my $slide;
+my $fig;
+my $size;
+while (<>) {
+    # flush_slide($slide) if /^<h3>/;
+
+    if (/<pre><code>\.gv/ .. m(</code></pre>)) {
+        # inside graphviz block
+
+        if (/^\.gv/ or m(</code></pre>)) {
+            flush_fig($figno, $fig, $size);
+            $fig = '';
+        }
+
+        if (/^\.gv(\S*)/ or /<pre><code>\.gv(\S*)/) {
+            $figno++;
+            $size = $1 || "8";
+            $slide .= "<img src=\"images/$figno\">\n";
+        }
+
+        next if /^\.gv/ or /<pre><code>\.gv/ or m(</code></pre>);
+
+        $fig .= $_;
+        next;
+    }
+
+    $slide .= $_;
+}
+
+open(OUT, ">index.html") and print OUT $slide and close OUT;
+
+# ------------------
+
+sub flush_fig {
+    my ($figno, $fig, $size) = @_;
+    $fig = gv($fig, $size);
+    open(DOT, "|/usr/bin/dot -Tpng -o images/$figno") or die "$!";
+        print DOT $fig and close DOT;
+}
+
+sub gv {
+    local $_ = shift;
+    my $size = shift;
+
+    # this contains a full gv in my language
+
+    my $prefix = "digraph G {\nrankdir=BT\ngraph [ labelloc = t ]\nedge[dir=back]\nnode[fontsize=12 height=0.1]";
+    my $suffix = "}";
+
+    # normalise whitespace
+    s/\h+/ /g;
+    s/^ //;
+    s/ $//;
+
+    # graph label (multi-line)
+    if (/^"([^"]*)"$/m) {
+        my $mlgl = $1;
+        $mlgl =~ s/\v/\\n/g;
+        s/^"([^"]*)"$/graph [ label = "$mlgl" ]/m;
+    }
+
+    # edges...
+
+        # .. becomes ->
+        s/ \.\. / -> /g;
+
+        # __ as the first arrow
+        s/^(\S+) __ (.*)$/$1 -> $2 [style = dashed, dir = none]/gm;
+
+    # node attributes
+
+        # __ at the start of a line
+        s/^__ (.*)$/$1 [ shape = none ]/mg;
+
+        # [] at the start of a line
+        s/^\[\] (.*)$/$1 [ shape = box ]/mg;
+
+        # [r] <space> nodename means fill color is red; similarly g/b
+        s/^\[([a-z])\] (.*)$/"$2 [style=filled, fillcolor=" . ($colors{$1} || 'pink') . "]"/gme;
+
+        # [yr] <space> nodename means yellow on red
+        s/^\[([a-z])([a-z])\] (.*)$/"$3 [style=filled, fillcolor=" . ($colors{$2} || 'pink') . ", fontcolor=" .  ($colors{$1} || 'blue') . "]"/gme;
+
+    $_ = "$prefix\n$_$suffix\n";
+    return $_;
+}

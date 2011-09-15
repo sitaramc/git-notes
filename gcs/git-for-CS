@@ -1,0 +1,864 @@
+# git for computer scientists -- my version
+
+[Inside joke: Hey I rewrote gitosis so why not this?]
+
+----
+
+In this document:
+
+  * <a href="#_basics">basics</a>
+      * <a href="#_the_4_git_object_types">the 4 git object types</a>
+      * <a href="#_what_is_a_SHA">what is a SHA</a>
+      * <a href="#_what_is_a_repo">what is a repo</a>
+  * <a href="#_why_are_the_arrows_backward_in_your_pictures_">**(why are the arrows backward in your pictures?)**</a>
+  * <a href="#_branches_and_tags">branches and tags</a>
+      * <a href="#_branch">branch</a>
+      * <a href="#_more_than_one_branch">more than one branch</a>
+      * <a href="#_more_than_one_parent_commit">more than one parent commit</a>
+      * <a href="#_current_branch_checked_out_branch">current branch/checked out branch</a>
+      * <a href="#_committing">committing</a>
+      * <a href="#_naming_non_leaf_nodes">naming non-leaf nodes</a>
+      * <a href="#_tags">tags</a>
+  * <a href="#_the_difference_between_branches_and_tags">the difference between branches and tags</a>
+  * <a href="#_digressions">digressions</a>
+      * <a href="#_what_is_a_git_URL_">what is a git URL?</a>
+      * <a href="#_what_is_a_remote_">what is a "remote"?</a>
+  * <a href="#_local_and_remote_repos">local and remote repos</a>
+      * <a href="#_remote_branches">remote branches</a>
+      * <a href="#_multiple_remotes">multiple remotes</a>
+      * <a href="#_fetching_and_merging_from_another_repo">fetching and merging from another repo</a>
+  * <a href="#_the_object_store">the object store</a>
+      * <a href="#_what_is_a_repo_again_">what is a repo (again)</a>
+      * <a href="#_a_REALLY_important_fact">a REALLY important fact</a>
+  * <a href="#_advanced_operations">advanced operations</a>
+      * <a href="#_merging">merging</a>
+      * <a href="#_cherry_pick">cherry-pick</a>
+      * <a href="#_rebasing">rebasing</a>
+  * <a href="#_the_pesky_checkout_versus_reset_debate">the pesky checkout versus reset debate</a>
+  * <a href="#_detached_HEAD_and_all_that">detached HEAD and all that</a>
+
+----
+
+<a name="_basics"></a>
+
+### basics
+
+<a name="_the_4_git_object_types"></a>
+
+#### the 4 git object types
+
+Git keeps all its data inside a special directory called `.git` at the top
+level of your repository.  Somewhere in there is what we will simply call the
+*object store* (if you're not comfortable with that phrase, pretend it's some
+sort of database).
+
+Git knows about 4 types of objects:
+
+  * **blob** -- each file that you add to the repo is turned into a blob
+    object.
+
+  * **tree** -- each directory is turned into a tree object.
+
+    Obviously, a tree object can contain other tree objects and blob objects,
+    just like a directory can contain other directories and files.
+
+  * **commit** -- a commit is a snapshot of your working tree at a point in
+    time, although it contains a lot of other information also.
+
+  * **tag** -- we will see this type a bit later.
+
+<a name="_what_is_a_SHA"></a>
+
+#### what is a SHA
+
+A commit is uniquely identified by a 160-bit hex value (the 'SHA').  This is
+computed from the tree, plus the following pieces of information:
+
+  * the SHA of the parent commit(s) -- every commit except the very first one
+    in the repo has at least one parent commit that the change is based upon.
+  * the commit message -- what you type in the editor when you commit
+  * the author name/email/timestamp
+  * the committer name/email/timestamp
+
+(Actually, all 4 git objects types are identified by SHAs, but of course
+they're computed differently for each object type.  However, the SHAs of the
+other object types are not relevant to this discussion).
+
+In the end, as I said, it's just a large, apparently random looking, number,
+which is actually a cryptographically-strong checksum.  It's usually written
+out as 40 hex digits.
+
+Humans are not expected to remember this number.  For the purposes of this
+discussion, think of it as something similar to a memory address returned by
+malloc().
+
+It is also GLOBALLY unique!  No commit in any repo anywhere in the world will
+have the same SHA.  (It's not a mathematical impossibility, but just so
+extremely improbable that we take it as fact.  If you didn't understand that,
+just take it on faith).
+
+An example SHA: `a30236028b7ddd65f01321af42f904479eaff549`
+
+<a name="_what_is_a_repo"></a>
+
+#### what is a repo
+
+A repository ('repo') is a graph of commits.  In our figures, we represent
+SHAs with numbers for convenience.  We also represent time going
+upward (bottom to top).
+
+    .gv
+    1 .. 2 .. 3 .. 4
+
+<a name="_why_are_the_arrows_backward_in_your_pictures_"></a>
+
+### **(why are the arrows backward in your pictures?)**
+
+So why are the arrows pointing backward?
+
+Well... every commit knows what its parent commit is (as described in the
+"what is a SHA" section above).  But it can't know what it's child commits are
+-- they haven't been made yet!
+
+Therefore a repo is like a single linked list.  It cannot be a double linked
+list -- this is because any change to the contents would change the SHA!
+
+    .gv
+    1 .. 2 .. 3 .. 4
+
+<a name="_branches_and_tags"></a>
+
+### branches and tags
+
+<a name="_branch"></a>
+
+#### branch
+
+Traditionally, the top of a linked list has a name.  That name is a BRANCH
+name.  We show branch names in green circles.
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    [g] master
+    4 __ master
+
+<a name="_more_than_one_branch"></a>
+
+#### more than one branch
+
+(a.k.a "more than one child commit")
+
+Remember we said a repo is a GRAPH?  Specifically, more than one child node
+may be pointing at the same parent node.  In this case, each 'leaf node' is a
+branch, and will have a name.
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7
+    2 .. 5 .. 6
+    [g] master
+    [g] devel
+    [g] feature_X
+    4 __ feature_X
+    6 __ devel
+    7 __ master
+
+<a name="_more_than_one_parent_commit"></a>
+
+#### more than one parent commit
+
+Well we can't keep creating more branches without eventually merging them
+back.  So let's say "feature X" is now tested enough to be merged into the
+main branch, so you `git merge feature_X`.  Here's what you get:
+
+    .gv
+    1 .. 2 .. 3 .. 4 .. 8
+    3 .. 7 .. 8
+    2 .. 5 .. 6
+    [g] master
+    [g] devel
+    [g] feature_X
+    4 __ feature_X
+    6 __ devel
+    8 __ master
+
+Notice that commit 8 now has 2 parents, showing that it is a "merge commit".
+
+At this point, it's quite common to delete the feature branch, especially if
+you anticipate no more "large" changes.  So you can run `git branch -d
+feature_X`, which gives you this:
+
+    .gv
+    1 .. 2 .. 3 .. 4 .. 8
+    3 .. 7 .. 8
+    2 .. 5 .. 6
+    [g] master
+    [g] devel
+    6 __ devel
+    8 __ master
+
+<a name="_current_branch_checked_out_branch"></a>
+
+#### current branch/checked out branch
+
+There is a notion of a 'currently checked out' branch.  This is denoted by a
+special ref called HEAD.  HEAD is a **symbolic** ref, which points to the
+'current branch'.
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7
+    2 .. 5 .. 6
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    [g] feature_X
+    4 __ feature_X
+    6 __ devel
+    7 __ master .. HEAD
+
+<a name="_committing"></a>
+
+#### committing
+
+When you make a new commit, the current branch moves.  Technically, whatever
+branch HEAD is pointing to will move.
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7 .. 8
+    2 .. 5 .. 6
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    [g] feature_X
+    4 __ feature_X
+    6 __ devel
+    8 __ master .. HEAD
+
+<a name="_naming_non_leaf_nodes"></a>
+
+#### naming non-leaf nodes
+
+It's not just 'leaf' nodes, but inner nodes can also have names.
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7 .. 8
+    2 .. 5 .. 6
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    [g] feature_X
+    4 __ feature_X
+    6 __ devel
+    8 __ master .. HEAD
+    [g] abandoned_branch
+    3 __ abandoned_branch
+
+<a name="_tags"></a>
+
+#### tags
+
+More commonly, inner nodes are TAGS.  We show tag names in yellow circles.
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7 .. 8
+    2 .. 5 .. 6
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    [g] feature_X
+    4 __ feature_X
+    6 __ devel
+    8 __ master .. HEAD
+    [y] "v1.0"
+    3 __ "v1.0"
+
+<a name="_the_difference_between_branches_and_tags"></a>
+
+### the difference between branches and tags
+
+The main difference between a branch and a tag is branches move, tags don't.
+When you make a commit with the "master" branch currently checked out, master
+will move to point to the new commit.
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7 .. 8 .. 9
+    2 .. 5 .. 6
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    [g] feature_X
+    4 __ feature_X
+    6 __ devel
+    9 __ master .. HEAD
+    [y] "v1.0"
+    3 __ "v1.0"
+
+<a name="_digressions"></a>
+
+### digressions
+
+<a name="_what_is_a_git_URL_"></a>
+
+#### what is a git URL?
+
+Git repos are accessed by providing a URL.  There are typically 4 kinds of Git
+URLs:
+
+  * ssh: like `ssh://git@server:reponame`
+  * http: like `http://server:reponame`
+  * git: like `git://server:reponame` -- note that this is an unauthenticated
+    protocol suitable only for allowing downloads of open source or similar
+    software
+  * local file: like `file:///full/path/to/reponame`
+
+<a name="_what_is_a_remote_"></a>
+
+#### what is a "remote"?
+
+A remote is a short name (like an alias) used to refer to a specific git
+repository.  Instead of always saying `git fetch git://sitaramc/gitolite`, you
+can add that as a remote and use that short name instead of the long URL.
+
+For convenience, a 'remote' called 'origin' is automatically created
+when you clone a repo, pointing to the repo you cloned from.
+
+<a name="_local_and_remote_repos"></a>
+
+### local and remote repos
+
+<a name="_remote_branches"></a>
+
+#### remote branches
+
+Git is a distributed version control system.  So when you clone someone's
+repo, you get all the branches in that one.  Remote branches are prefixed by
+the name of the remote, and we show them in orange.
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7 .. 8 .. 9
+    2 .. 5 .. 6
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "origin/devel"
+    [o] "origin/feature_X"
+    4 __ "origin/feature_X"
+    6 __ "origin/devel"
+    9 __ "origin/master"
+    9 __ master .. HEAD
+    [y] "v1.0"
+    3 __ "v1.0"
+
+<a name="_multiple_remotes"></a>
+
+#### multiple remotes
+
+You can have several remotes.
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7 .. 8 .. 9
+    2 .. 5 .. 6
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "origin/devel"
+    [o] "origin/feature_X"
+    [o] "sitas-repo/master"
+    [o] "sitas-repo/devel"
+    4 __ "origin/feature_X"
+    6 __ "origin/devel"
+    9 __ "origin/master"
+    6 __ "sitas-repo/devel"
+    9 __ "sitas-repo/master"
+    9 __ master .. HEAD
+    [y] "v1.0"
+    3 __ "v1.0"
+
+<a name="_fetching_and_merging_from_another_repo"></a>
+
+#### fetching and merging from another repo
+
+Now let's say Sita's repo had a couple of new commits on its master, and you
+run `git fetch sitas-repo`.  (We have pruned the graph a litle for clarity,
+showing only the relevant commits; the rest of the commits and branches are
+assumed to be present as in the previous picture).
+
+    .gv
+    ". . ." .. 9 .. 10 .. 11
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "sitas-repo/master"
+    9 __ "origin/master"
+    11 __ "sitas-repo/master"
+    9 __ master .. HEAD
+
+Now you want to merge Sita's master branch into yours.  Since your master does
+not have any commits that Sita's master doesn't have (i.e., Sita's master is
+like a superset of yours), running `git merge sitas-repo/master` will get you
+this:
+
+    .gv
+    "[ . . . ]" .. 9 .. 10 .. 11
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "sitas-repo/master"
+    9 __ "origin/master"
+    11 __ "sitas-repo/master"
+    11 __ master .. HEAD
+
+<a name="_the_object_store"></a>
+
+### the object store
+
+Git stores all your data in an "object store".  There are 4 types of objects
+in this store: files (called "blobs"), trees (which are directories+files),
+commits, and tags.  All objects are referenced by a 160-bit SHA.
+
+(Details, if you like: a blob is the lowest in the hierarchy.  One or more
+blobs and trees make a tree.  A commit is a tree, plus the SHA of its parent
+commit(s), the commit message, author/committer names and emails, and
+timestamps.  Under normal usage, you don't need to deal with all this).
+
+<a name="_what_is_a_repo_again_"></a>
+
+#### what is a repo (again)
+
+Earlier, we saw that a repo was a graph of commits.  At the file system level,
+however, it is basically a directory called `.git` which looks somewhat like
+this
+
+    $ ls -al .git
+    total 40
+    drwxrwxr-x 7 sitaram sitaram 4096 Sep 14 18:54 ./
+    drwx------ 3 sitaram sitaram 4096 Sep 14 18:54 ../
+    drwxrwxr-x 2 sitaram sitaram 4096 Sep 14 18:54 branches/
+    -rw-rw-r-- 1 sitaram sitaram   92 Sep 14 18:54 config
+    -rw-rw-r-- 1 sitaram sitaram   73 Sep 14 18:54 description
+    -rw-rw-r-- 1 sitaram sitaram   23 Sep 14 18:54 HEAD
+    drwxrwxr-x 2 sitaram sitaram 4096 Sep 14 18:54 hooks/
+    drwxrwxr-x 2 sitaram sitaram 4096 Sep 14 18:54 info/
+    drwxrwxr-x 4 sitaram sitaram 4096 Sep 14 18:54 objects/
+    drwxrwxr-x 4 sitaram sitaram 4096 Sep 14 18:54 refs/
+
+<a name="_a_REALLY_important_fact"></a>
+
+#### a REALLY important fact
+
+The really, **really** important thing to understand is that the object store
+doesn't care where the commit came from or what "branch" it is part of.
+
+Think back to these three diagrams.  The first is before you did a fetch.
+
+    .gv
+    "[ . . . ]" .. 9
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "sitas-repo/master"
+    9 __ "origin/master"
+    9 __ "sitas-repo/master"
+    9 __ master .. HEAD
+
+The next two figures are after `git fetch sitas-repo` and `git merge
+sitas-repo/master`, respectively.  The fetch command added two new commits (10
+and 11) to your object store, along with any other objects those commits
+reference.
+
+    .gv
+    "[ . . . ]" .. 9 .. 10 .. 11
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "sitas-repo/master"
+    9 __ "origin/master"
+    11 __ "sitas-repo/master"
+    9 __ master .. HEAD
+
+    .gv
+    "[ . . . ]" .. 9 .. 10 .. 11
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "sitas-repo/master"
+    9 __ "origin/master"
+    11 __ "sitas-repo/master"
+    11 __ master .. HEAD
+
+However, note that just because commits 10 and 11 are now in **your local
+"master" branch** does not mean *anything* as far as the object store is
+concerned.  All you did was move a pointer!
+
+This is why the linked list analogy works so well.
+
+<a name="_advanced_operations"></a>
+
+### advanced operations
+
+We'll now show some advanced operations with the aid of this same tree.
+
+<a name="_merging"></a>
+
+#### merging
+
+First, let's do merging.  The merge you saw earlier was what is called a
+"fast-forward" merge, because your local master did not have any commits that
+the remote branch you were merging did not have.
+
+In practice, this is rare, especially on an active project with many
+developers.  So let's see what that looks like.  The starting point was this:
+
+    .gv
+    "[ . . . ]" .. 9
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "sitas-repo/master"
+    9 __ "origin/master"
+    9 __ "sitas-repo/master"
+    9 __ master .. HEAD
+
+Now, you made some changes on your local master.  Meanwhile, sitas-repo has
+had some changes which you got by doing a fetch:
+
+    .gv
+    "[ . . . ]" .. 9 .. 10 .. 11
+    9 .. 12 .. 13
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "sitas-repo/master"
+    9 __ "origin/master"
+    11 __ "sitas-repo/master"
+    13 __ master .. HEAD
+
+When you merge, the end result will usually look like this:
+
+    .gv
+    "[ . . . ]" .. 9 .. 10 .. 11 .. 14
+    9 .. 12 .. 13 .. 14
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "sitas-repo/master"
+    9 __ "origin/master"
+    11 __ "sitas-repo/master"
+    14 __ master .. HEAD
+
+<a name="_cherry_pick"></a>
+
+#### cherry-pick
+
+A cherry-pick is not very commonly done -- in well designed workflows it
+should actually be rare.  However, it's a good way to illustrate an important
+concept in git.
+
+We said before that a commit represents a certain set of files and
+directories, but since most commits have only one parent, you can think of a
+commit as representing a set of changes too.  (In fact, most older VCSs do
+this).
+
+Let's say one of your collaborators (this mythical "Sita" again!) made a whole
+bunch of changes to his cpoy of the repo.  You don't like most of these
+changes, except one specific change which you would like to bring in to your
+repo.
+
+The starting point is this:
+
+    .gv
+    "[ . . . ]" .. 9 .. 12 .. 13 .. 14
+    9 .. 10 .. 11
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "sitas-repo/master"
+    9 __ "origin/master"
+    14 __ "sitas-repo/master"
+    11 __ master .. HEAD
+
+In this, sitas-repo has 3 commits on his master (12, 13, and 14) and you are
+only interested in the change that commit 13 made.
+
+Don't worry about the meaning of the `~1` for now (although you ought to be
+able to guess!), but here's the command you might run:
+
+    git cherry-pick sitas-repo/master~1
+
+This results in the following commit graph.
+
+    .gv
+    "[ . . . ]" .. 9 .. 12 .. 13 .. 14
+    9 .. 10 .. 11 .. "13a"
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    [o] "sitas-repo/master"
+    9 __ "origin/master"
+    14 __ "sitas-repo/master"
+    "13a" __ master .. HEAD
+
+Note that I've called the new commit "13a".  This is to reflect the fact that,
+while the *change* made is the same as in the original commit 13, the *SHA*
+will not be the same anymore (new parent commit, new "tree", new committer
+name/email, commit time, etc).
+
+<a name="_rebasing"></a>
+
+#### rebasing
+
+Instead of merging, let's say you wanted to rebase your commits on top of
+Sita's commits.
+
+First of all, what is rebasing?  It's basically transplanting a series of
+changes from one point in the graph to another point.
+
+So if you guessed that a rebase was (in principle) a series of cherry-picks,
+you'd be pretty close, at least from a concept point.
+
+So let's use a similar example as in the merge example before, but instead of
+sitas-repo, the new commits are in "origin" (which is the "main" server for
+this project).  You haad your own commits, and you did a `git fetch origin`
+which brought in the latest commits from "origin", so it looks like:
+
+    .gv
+    "[ . . . ]" .. 9 .. 10 .. 11
+    9 .. 12 .. 13
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    13 __ "origin/master"
+    11 __ master .. HEAD
+
+Now, instead of merging "origin/master" into your local master, you want to
+rebase your commits on top of "origin/master".  That is, you want to pretend
+your local changes were made *after* commit 13 on the origin.  So you run `git
+rebase origin/master`, and this is the result:
+
+    .gv
+    "[ . . . ]" .. 9 .. 10 .. 11
+    9 .. 12 .. 13 .. "10a" .. "11a"
+    [] [y] HEAD
+    [g] master
+    [o] "origin/master"
+    13 __ "origin/master"
+    "11a" __ master .. HEAD
+
+Note that again, we're ignoring command syntax and nuances here.  This is
+about concepts.  Also again, note that the SHAs of the 2 commits have changed,
+since they now have new parents, trees, etc., so we represent that by
+suffixing an "a".
+
+Note the *dangling commits* 10 and 11.  No branch is now pointing to them, so
+they're basically wasted disk space.  (They can be examined and reclaimed
+using the 'reflog', or if left alone they will eventually get garbage
+collected).
+
+Unlike cherry-pick, a rebase is quite often done in real life.  Rebase also
+has some other forms.  This form is one, but the most common is when a
+developer wants to re-arrange his own local commits in a more logical sequence
+before publishing/pushing them.  (I often do the eqvt of changing this:
+
+    .gv
+    22 .. 23 .. "22delta" .. 24
+
+where "22delta" is a minor fixup to "22", into
+
+    .gv
+    "22a" .. "23a" .. "24a"
+
+using "git rebase -i".
+
+Notice that since commit 22 changes its SHA, all its child commits -- now
+rebased -- will also have new SHAs.  This is why you should (almost) never
+rebase branches that have already been published.
+
+<a name="_the_pesky_checkout_versus_reset_debate"></a>
+
+### the pesky checkout versus reset debate
+
+While a complete description of checkout and reset, with all their options,
+will take a lot more space (and involve the working tree and the index, both
+of which we have ignored in this document), the basic idea can be explained
+very easily.
+
+Let's say this is your starting point:
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7
+    2 .. 5 .. 6
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    [g] feature_X
+    4 __ feature_X
+    6 __ devel
+    7 __ master .. HEAD
+
+As you can see, your current branch is "master" (indicated by where HEAD is
+pointing).
+
+Here's what `git checkout devel` does:
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7
+    2 .. 5 .. 6
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    [g] feature_X
+    4 __ feature_X
+    6 __ devel .. HEAD
+    7 __ master
+
+This means your current branch is now "devel"; any new commits you make now
+will go on devel, not master.
+
+On the other hand, at the same starting point as before, if you do `git reset
+devel` this is what you get:
+
+    .gv
+    1 .. 2 .. 3 .. 4
+    3 .. 7
+    2 .. 5 .. 6
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    [g] feature_X
+    4 __ feature_X
+    6 __ devel
+    6 __ master .. HEAD
+
+As you can see, you're basically moving the master branch itself to some other
+commit.  (Notice that, like rebase example, there is now a dangling commit --
+one that cannot be reached by any branch.  It is still accessible using the
+'reflog' and will eventually get garbage collected)
+
+I would like to **repeat** that I am completely ignoring the myriad options
+available to both these commands, especially the ones that pertain to the
+index and the working tree.  This is just to show you that:
+
+  * reset changes which commit the current branch is pointing to
+  * checkout changes what your current branch is (i.e., it changes where HEAD
+    is pointing to)
+
+In fact, the only reason these two sometimes get confused is that, with
+certain options, they do behave identically in terms of discarding uncommitted
+changes.  When you eventually learn `git checkout -f` and `git reset --hard`
+and wonder why they're doing the same thing, remember that both those are
+specific cases of their respective commands.
+
+<a name="_detached_HEAD_and_all_that"></a>
+
+### detached HEAD and all that
+
+All this time you have seen HEAD pointing to a branch name, and the branch
+itself pointing to a commit.  Then, when you make a commit, the branch moves
+to the new commit (although HEAD still continue to point to the branch name).
+If you want to recap, here's a look at just the part of the tree that concerns
+us, in a simple before/after display:
+
+    .gv
+    "BEFORE COMMIT"
+    "[ . . . ] " .. 3 .. 7
+    [] [y] HEAD
+    [g] master
+    7 __ master .. HEAD
+    [y] "v1.0"
+    3 __ "v1.0"
+    [o] "origin/master"
+    3 __ "origin/master"
+
+    .gv
+    "AFTER COMMIT"
+    "[ . . . ] " .. 3 .. 7 .. 8
+    [] [y] HEAD
+    [g] master
+    8 __ master .. HEAD
+    [y] "v1.0"
+    3 __ "v1.0"
+    [o] "origin/master"
+    3 __ "origin/master"
+
+Now see what happens when you `git checkout v1.0`:
+
+    .gv
+    "[ . . . ] " .. 3 .. 7
+    [] [y] HEAD
+    [g] master
+    7 __ master
+    [y] "v1.0"
+    3 __ "v1.0"
+    3 __ HEAD
+    [o] "origin/master"
+    3 __ "origin/master"
+
+Notice the subtle difference?  HEAD is no longer a **symbolic** ref (i.e.,
+pointing to a real branch).  Instead, it is pointing directly to a commit.
+
+In real terms, this is literally what happens.  When you had "master" checked
+out, the contents of HEAD (it's just a file in .git) are simply
+
+    ref: refs/heads/master
+
+If you `git checkout devel` (which is a local branch), it becomes
+
+    ref: refs/heads/devel
+
+However, remember what we said earlier?  Only branches can move, tags cannot.
+So when you `git checkout v1.0`, HEAD now contains
+
+    90fed7792746a9a33e24059fb171f6bbb6ffebe6
+
+or some such hash.  If it did what it did for local branches, it would imply
+the tag would move, right?  Which it shouldn't -- wouldn't be much of a tag if
+it moved!
+
+So from this point on, if you make a commit, only HEAD changes, nothing else,
+since it is no longer "attached" to any local branch name"
+
+    .gv
+    "[ . . . ] " .. 3 .. 7
+    3 .. 8
+    [] [y] HEAD
+    [g] master
+    7 .. master
+    8 .. HEAD
+    [y] "v1.0"
+    3 __ "v1.0"
+    [o] "origin/master"
+    3 __ "origin/master"
+
+The reason this is considered dangerous is that, if you now do `git checkout
+master`, you get this:
+
+    .gv
+    "[ . . . ] " .. 3 .. 7
+    3 .. 8
+    [] [y] HEAD
+    [g] master
+    7 .. master .. HEAD
+    [y] "v1.0"
+    3 __ "v1.0"
+    [o] "origin/master"
+    3 __ "origin/master"
+
+Notice what happened to your new commit 8?  It's dangling.  Unreachable.
+(Except by the reflog, of course, but beginners can get shaken up!)
+
+The same thing happens if you `git checkout origin/devel` or some remote
+branch.  Remote branches can move of course, but not by *your* commits -- only
+by `git fetch` or equivalent, so git treats them the same way if you try to
+make local commits on them.
+
+Modern git will warn you about detached HEAD if you're at the command line,
+and tell you how to recover (immediately).
