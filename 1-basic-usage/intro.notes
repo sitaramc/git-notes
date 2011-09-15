@@ -238,7 +238,7 @@ intro-images/remote.png
   * commit ancestry
   * commit ancestry as a DAG
     ** the essence of git is to build and traverse this DAG
-    ** http://eagain.net/articles/git-for-computer-scientists
+    ** http://sitaramc.github.com/gcs/index.html
   * universal public identifier (a SHA-1 hash)
     ** every file, directory, and commit has a unique hash
     ** check the integrity of an entire repo by comparing just one 160-bit

@@ -95,12 +95,11 @@ echo ...git notes done >&2
 
 # ---------------------- update tools
 mkdir $outdir/tools
-cp tools/install.gitosis    $outdir/tools
 cp tools/my.gitconfig       $outdir/tools
 cp tools/git-completion*    $outdir/tools
 cp tools/vss2git.pl         $outdir/tools
 # make some of them .txt for download...
-for i in $outdir/tools/{git-completion*bash,install.gitosis,my.gitconfig}
+for i in $outdir/tools/{git-completion*bash,my.gitconfig}
 do
     mv $i $i.txt
 done

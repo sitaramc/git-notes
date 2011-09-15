@@ -162,9 +162,7 @@ There are a few other points that don't fit the simple 'linked list' analogy,
 or present some additional information that may be useful:
 
   * a commit 'tree' is really more of a graph.  A 'directed acyclic graph', to
-    be precise; see [Git for computer
-    scientists](http://eagain.net/articles/git-for-computer-scientists/) for
-    more on this.
+    be precise; see [here](../gcs/index.html) for more on this.
 
   * a branch can point to any node in the graph, not just the top one.  For
     example, when you fork a branch called 'new' from 'master', and make 2

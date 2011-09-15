@@ -83,8 +83,7 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
         pointing **in**, because it's the parent for more than one commit
 
   * as a result, the entire repo can look like a **tree**.  Strictly speaking,
-    this is a DAG -- [directed acyclic
-    graph](http://eagain.net/articles/git-for-computer-scientists/)
+    this is a DAG -- or "directed acyclic graph".
 
 #### head, branch, tag
 
