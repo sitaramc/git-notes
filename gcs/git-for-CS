@@ -712,6 +712,47 @@ will take a lot more space (and involve the working tree and the index, both
 of which we have ignored in this document), the basic idea can be explained
 very easily.
 
+First, here're some abbreviated pictures that summarise it for you (commits
+below 6 and 7 are omitted for brevity).  The first picture is the common
+starting point:
+
+    .gv
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    6 __ devel
+    7 __ master
+    master __ HEAD
+    devel .. HEAD [style=invis]
+
+The next two show the effect of a checkout and a reset, respectively:
+
+    .gv
+    "git checkout devel"
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    6 __ devel
+    7 __ master
+    master .. HEAD [style=invis]
+    devel __ HEAD
+
+    .gv
+    " "
+
+    .gv
+    "git reset devel"
+    [] [y] HEAD
+    [g] master
+    [g] devel
+    6 __ devel
+    6 __ master
+    master __ HEAD
+    devel .. HEAD [style=invis]
+    7 .. master [style=invis]
+
+Here are the details, with somewhat larger pictures.
+
 Let's say this is your starting point:
 
     .gv
