@@ -29,12 +29,12 @@ In this document:
       * <a href="#_fetching_and_merging_from_another_repo">fetching and merging from another repo</a>
   * <a href="#_the_object_store">the object store</a>
       * <a href="#_what_is_a_repo_again_">what is a repo (again)</a>
-      * <a href="#_a_REALLY_important_fact">a REALLY important fact</a>
+      * <a href="#_objects_and_branches_tags">objects and branches/tags</a>
   * <a href="#_advanced_operations">advanced operations</a>
       * <a href="#_merging">merging</a>
       * <a href="#_cherry_pick">cherry-pick</a>
       * <a href="#_rebasing">rebasing</a>
-  * <a href="#_the_pesky_checkout_versus_reset_debate">the pesky checkout versus reset debate</a>
+  * <a href="#_the_confusion_about_checkout_versus_reset">the confusion about checkout versus reset</a>
   * <a href="#_detached_HEAD_and_all_that">detached HEAD and all that</a>
 
 ----
@@ -266,8 +266,9 @@ section):
     .eq 4 6 7
 
 At this point, you could leave `feature_X` as it is forever.  Or you could
-delete the branch, in which case that label would simply disappear (the commit
-it points to is safely reachable from `master` because of the merge).
+delete the branch (as we showed in that section), in which case that label
+would simply disappear.  (The commit it points to is safely reachable from
+`master` because of the merge.)
 
 You can also continue to develop on the `feature_X` branch, further refining
 it with a view to once again merging it at some later point in time.  <font
@@ -496,12 +497,26 @@ this
     drwxrwxr-x 4 sitaram sitaram 4096 Sep 14 18:54 objects/
     drwxrwxr-x 4 sitaram sitaram 4096 Sep 14 18:54 refs/
 
-<a name="_a_REALLY_important_fact"></a>
+<a name="_objects_and_branches_tags"></a>
 
-#### a REALLY important fact
+#### objects and branches/tags
+
+<font color="gray">
+
+Hg folks should read this section carefully.  Among various crazy notions Hg
+has is one that encodes the branch name within the commit object in some way.
+Unfortunately, Hg's vaunted "ease of use" (a.k.a "we support Windows better
+than git", which in an ideal world would be a negative, but in this world
+sadly it is not) has caused enormous takeup, and dozens of otherwise excellent
+developers have been brain-washed into thinking that is the only/right way.
+
+I hope this section gives at least a few of them a "light-bulb" moment.
+
+</font>
 
 The really, **really** important thing to understand is that the object store
-doesn't care where the commit came from or what "branch" it is part of.
+doesn't care where the commit came from or what "branch" it was part of when
+it entered the object store.  Once it's there, it's there!
 
 Think back to these three diagrams.  The first is before you did a fetch.
 
@@ -540,11 +555,13 @@ reference.
     11 -- "sitas-repo/master"
     11 -- master .. HEAD
 
-However, note that just because commits 10 and 11 are now in **your local
-"master" branch** does not mean *anything* as far as the object store is
-concerned.  All you did was move a pointer!
+However, note that commits 10 and 11 did not change in any way simply because
+they are now in **your local "master" branch**.  They continue to have the
+same SHA values and the object store does not change as a result of this
+command at all.
 
-This is why the linked list analogy works so well.
+All you did was move a pointer from one node to another.  Which is why the
+linked list analogy works so well in understanding git as a DAG.
 
 <a name="_advanced_operations"></a>
 
@@ -731,17 +748,31 @@ Notice that since commit 22 changes its SHA, all its child commits -- now
 rebased -- will also have new SHAs.  This is why you should (almost) never
 rebase branches that have already been published.
 
-<a name="_the_pesky_checkout_versus_reset_debate"></a>
+<a name="_the_confusion_about_checkout_versus_reset"></a>
 
-### the pesky checkout versus reset debate
+### the confusion about checkout versus reset
 
-While a complete description of checkout and reset, with all their options,
-will take a lot more space (and involve the working tree and the index, both
-of which we have ignored in this document), the basic idea can be explained
-very easily.
+**Please note** <font color="gray">that this section completely ignores the
+myriad options available to both these commands, especially the ones that
+pertain to the index and the working tree.  All we're trying to do is show
+what the commands do to the branch and `HEAD`, nothing else.  As such, this is
+not a complete discussion of those two commands, but only about one aspect of
+them.
 
-First, here're some pictures that quickly show you what's happening.  (Note
-that commits below 6 and 7 are omitted for brevity).
+In fact, the major reason these two sometimes get confused is that people
+eventually learn that `git checkout -f` and `git reset --hard` do the same
+thing, and then extrapolate that to other options.  Just remember that both
+those are specific cases of two quite different commands that just happen to
+"meet" there, in some sense.</font>
+
+The basic difference is very simple:
+
+  * checkout changes what your current branch is (i.e., it changes where HEAD
+    is pointing to)
+  * reset changes which commit the current branch is pointing to
+
+Here're some pictures that show you what's happening.  (Note that commits
+below 6 and 7 are omitted for brevity).
 
 The first picture is the common starting point.  The next two show the effect
 of a checkout and a reset, respectively.  Notice which line is moving in each
@@ -786,7 +817,7 @@ picture, compared to the starting point.
 As you can see, your current branch, when you start, is "master" (indicated by
 where HEAD is pointing).
 
-A "checkout" changes what is your cuurrent branch -- it is now "devel", and so
+A "checkout" changes what is your current branch -- it is now "devel", and so
 any new commits you make now will go on devel, not master.
 
 On the other hand, a reset changes what commit your current branch points to.
@@ -796,20 +827,6 @@ be a *completely* different history.
 (Notice that, like in the rebase example, there is now a dangling commit --
 one that cannot be reached by any branch.  It is still accessible using the
 'reflog' and will eventually get garbage collected)
-
-**I would like to repeat** that I am completely ignoring the myriad options
-available to both these commands, especially the ones that pertain to the
-index and the working tree.  This is just to show you that:
-
-  * reset changes which commit the current branch is pointing to
-  * checkout changes what your current branch is (i.e., it changes where HEAD
-    is pointing to)
-
-In fact, the only reason these two sometimes get confused is that, with
-certain options, they do behave identically in terms of discarding uncommitted
-changes.  When you eventually learn `git checkout -f` and `git reset --hard`
-and wonder why they're doing the same thing, remember that both those are
-specific cases of their respective commands.
 
 <a name="_detached_HEAD_and_all_that"></a>
 
