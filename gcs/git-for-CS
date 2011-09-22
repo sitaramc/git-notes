@@ -240,21 +240,44 @@ branch HEAD is pointing to will move.
 
 #### naming non-leaf nodes
 
-It's not just 'leaf' nodes, but inner nodes can also have names.
+It's not just 'leaf' nodes, but inner nodes can also have names.  Recall the
+result of merging `feature_X` earlier (see the "more than one parent commit"
+section):
 
     .gv
-    1 .. 2 .. 3 .. 4
+    1 .. 2 .. 3 .. 4 .. 8
     3 .. 7 .. 8
     2 .. 5 .. 6
-    [] [y] HEAD
     [g] master
     [g] devel
     [g] feature_X
     4 __ feature_X
     6 __ devel
-    8 __ master .. HEAD
-    [g] abandoned_branch
-    3 __ abandoned_branch
+    8 __ master
+
+At this point, you could leave `feature_X` as it is forever.  Or you could
+delete the branch, in which case that label would simply disappear (the commit
+it points to is safely reachable from `master` because of the merge).
+
+You can also continue to develop on the `feature_X` branch, further refining
+it with a view to once again merging it at some later point in time.  <font
+color="gray">Although not relevant to the topic of this document, I should
+mention that the usual practice is to first merge master back into `feature_X`
+to make sure it has all the other stuff that master may have acquired till
+now (this is shown by commit 9 below) before continuing further
+development:</font>
+
+    .gv6
+    1 .. 2 .. 3 .. 4 .. 8
+    3 .. 7 .. 8 .. 9 .. 10
+    2 .. 5 .. 6
+    4 .. 9
+    [g] master
+    [g] devel
+    [g] feature_X
+    10 __ feature_X
+    6 __ devel
+    8 __ master
 
 <a name="_tags"></a>
 
