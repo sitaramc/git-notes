@@ -20,9 +20,7 @@ system("mkdir -p images");
 my $sln="sl0000";
 my $figno="fig0000";
 
-my $slide;
-my $fig;
-my $size;
+my ($slide, $fig, $size, $filename);
 while (<>) {
     # flush_slide($slide) if /^<h3>/;
 
@@ -30,14 +28,27 @@ while (<>) {
         # inside graphviz block
 
         if (/^\.gv/ or m(</code></pre>)) {
-            flush_fig($figno, $fig, $size);
+            flush_fig($filename, $fig, $size);
             $fig = '';
+            $size = 8;
+            $filename = '';
         }
 
-        if (/^\.gv(\S*)/ or /<pre><code>\.gv(\S*)/) {
+        if (/^\.gv(.*)/ or /<pre><code>\.gv(.*)/) {
             $figno++;
-            $size = $1 || "8";
-            $slide .= "<img src=\"images/$figno\">\n";
+            my $title;
+            my $options=$1;
+            $size = $1 if $options =~ s/^ (\d\S*)(.*)/$2/;
+            $filename = $1 if $options =~ s/^ file=(\S+)(.*)/$2/;
+            $title = $1 if $options =~ / (\S.*)/;
+
+            $size ||= "8";
+            $title ||= "Figure $figno"; $title =~ s/ fig0*/ /;
+            $filename ||= $figno;
+
+            $slide .= "<img src=\"images/$filename\" title=\"$title\" />\n";
+
+            $^W = 1;
         }
 
         next if /^\.gv/ or /<pre><code>\.gv/ or m(</code></pre>);
@@ -56,6 +67,7 @@ open(OUT, ">index.html") and print OUT $slide and close OUT;
 sub flush_fig {
     my ($figno, $fig, $size) = @_;
     $fig = gv($fig, $size);
+    print STDERR $fig if exists $ENV{D};
     open(DOT, "|/usr/bin/dot -Tpng -o images/$figno") or die "$!";
         print DOT $fig and close DOT;
 }
@@ -66,7 +78,7 @@ sub gv {
 
     # this contains a full gv in my language
 
-    my $prefix = "digraph G {\nrankdir=BT\ngraph [ labelloc = t ]\nedge[dir=back]\nnode[fontsize=12 height=0.1]";
+    my $prefix = "digraph G {\nsize=$size\nrankdir=BT\ngraph [ labelloc = t ]\nedge[dir=back]\nnode[fontsize=12 height=0.1]";
     my $suffix = "}";
 
     # normalise whitespace
@@ -83,16 +95,35 @@ sub gv {
 
     # edges...
 
-        # .. becomes ->
+        # ".ie" at the start of a line gets you an invisible edge.  This is
+        # used to equalise weights with some other picture where that edge was
+        # visible.  Without this, dot often distracts the viewer with
+        # unnecessary differences between these two pictures due to edges
+        # being pulled differently.
+        s/^\.ie (.*)$/$1 [ style = invis ]/mg;
+
+        # ".le" at the start of a line indicates a "light edge" (i.e., an edge
+        # whose weight is zero).  Note that this is kinda the opposite of the
+        # previous one.  In the previous one, you wanted to add a weight
+        # without showing an edge.  Here you want to show an edge without
+        # using its weight.
+        s/^\.le (.*)$/$1 [ constraint = false ]/mg;
+
+        # ".he" at the start gets you a "heavy edge", which tends to be
+        # shorter, straighter, and more vertical
+        s/^\.he (.*)$/$1 [ weight = 50 ]/mg;
+
+        # ".eq" at the start is used to give the same rank to the nodes whose
+        # names follow.  This may be needed to fix up skews caused by ".le"
+        s/^\.eq (.*)$/{ rank=same $1 }/mg;
+
+        # .. becomes -> (this is *purely* for typing convenience)
         s/ \.\. / -> /g;
 
-        # __ as the first arrow
-        s/^(\S+) __ (.*)$/$1 -> $2 [style = dashed, dir = none]/gm;
+        # -- as the first arrow
+        s/^(\S+) -- (.*)$/$1 -> $2 [style = dashed, dir = none]/gm;
 
     # node attributes
-
-        # __ at the start of a line
-        s/^__ (.*)$/$1 [ shape = none ]/mg;
 
         # [] at the start of a line
         s/^\[\] (.*)$/$1 [ shape = box ]/mg;

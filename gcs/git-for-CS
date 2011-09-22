@@ -107,7 +107,7 @@ A repository ('repo') is a graph of commits.  In our figures, we represent
 SHAs with numbers for convenience.  We also represent time going
 upward (bottom to top).
 
-    .gv
+    .gv file=plain plain
     1 .. 2 .. 3 .. 4
 
 <a name="_why_are_the_arrows_backward_in_your_pictures_"></a>
@@ -123,9 +123,6 @@ Well... every commit knows what its parent commit is (as described in the
 Therefore a repo is like a single linked list.  It cannot be a double linked
 list -- this is because any change to the contents would change the SHA!
 
-    .gv
-    1 .. 2 .. 3 .. 4
-
 <a name="_branches_and_tags"></a>
 
 ### branches and tags
@@ -137,10 +134,10 @@ list -- this is because any change to the contents would change the SHA!
 Traditionally, the top of a linked list has a name.  That name is a BRANCH
 name.  We show branch names in green circles.
 
-    .gv
+    .gv master
     1 .. 2 .. 3 .. 4
     [g] master
-    4 __ master
+    4 -- master
 
 <a name="_more_than_one_branch"></a>
 
@@ -153,15 +150,16 @@ may be pointing at the same parent node.  In this case, each 'leaf node' is a
 branch, and will have a name.
 
     .gv
-    1 .. 2 .. 3 .. 4
-    3 .. 7
-    2 .. 5 .. 6
+    .he 1 .. 2 .. 3 .. 7
+    3 .. 4
+    2 .. 5
+    .he 5 .. 6
     [g] master
     [g] devel
     [g] feature_X
-    4 __ feature_X
-    6 __ devel
-    7 __ master
+    4 -- feature_X
+    6 -- devel
+    7 -- master
 
 <a name="_more_than_one_parent_commit"></a>
 
@@ -172,15 +170,18 @@ back.  So let's say "feature X" is now tested enough to be merged into the
 main branch, so you `git merge feature_X`.  Here's what you get:
 
     .gv
-    1 .. 2 .. 3 .. 4 .. 8
-    3 .. 7 .. 8
-    2 .. 5 .. 6
+    .he 1 .. 2 .. 3 .. 7 .. 8
+    3 .. 4
+    4 .. 8
+    2 .. 5
+    .he 5 .. 6
     [g] master
     [g] devel
     [g] feature_X
-    4 __ feature_X
-    6 __ devel
-    8 __ master
+    4 -- feature_X
+    6 -- devel
+    8 -- master
+    .eq 4 6 7
 
 Notice that commit 8 now has 2 parents, showing that it is a "merge commit".
 
@@ -189,13 +190,16 @@ you anticipate no more "large" changes.  So you can run `git branch -d
 feature_X`, which gives you this:
 
     .gv
-    1 .. 2 .. 3 .. 4 .. 8
-    3 .. 7 .. 8
-    2 .. 5 .. 6
+    .he 1 .. 2 .. 3 .. 7 .. 8
+    3 .. 4
+    4 .. 8
+    2 .. 5
+    .he 5 .. 6
     [g] master
     [g] devel
-    6 __ devel
-    8 __ master
+    6 -- devel
+    8 -- master
+    .eq 4 6 7
 
 <a name="_current_branch_checked_out_branch"></a>
 
@@ -205,17 +209,18 @@ There is a notion of a 'currently checked out' branch.  This is denoted by a
 special ref called HEAD.  HEAD is a **symbolic** ref, which points to the
 'current branch'.
 
-    .gv
-    1 .. 2 .. 3 .. 4
-    3 .. 7
-    2 .. 5 .. 6
+    .gv file=HEAD HEAD
+    .he 1 .. 2 .. 3 .. 7
+    3 .. 4
+    2 .. 5
+    .he 5 .. 6
     [] [y] HEAD
     [g] master
     [g] devel
     [g] feature_X
-    4 __ feature_X
-    6 __ devel
-    7 __ master .. HEAD
+    4 -- feature_X
+    6 -- devel
+    7 -- master .. HEAD
 
 <a name="_committing"></a>
 
@@ -225,16 +230,18 @@ When you make a new commit, the current branch moves.  Technically, whatever
 branch HEAD is pointing to will move.
 
     .gv
-    1 .. 2 .. 3 .. 4
-    3 .. 7 .. 8
-    2 .. 5 .. 6
+    .he 1 .. 2 .. 3 .. 7 .. 8
+    3 .. 4
+    2 .. 5
+    .he 5 .. 6
     [] [y] HEAD
     [g] master
     [g] devel
     [g] feature_X
-    4 __ feature_X
-    6 __ devel
-    8 __ master .. HEAD
+    4 -- feature_X
+    6 -- devel
+    8 -- master .. HEAD
+    .eq 4 6 7
 
 <a name="_naming_non_leaf_nodes"></a>
 
@@ -245,15 +252,18 @@ result of merging `feature_X` earlier (see the "more than one parent commit"
 section):
 
     .gv
-    1 .. 2 .. 3 .. 4 .. 8
-    3 .. 7 .. 8
-    2 .. 5 .. 6
+    .he 1 .. 2 .. 3 .. 7 .. 8
+    3 .. 4
+    4 .. 8
+    2 .. 5
+    .he 5 .. 6
     [g] master
     [g] devel
     [g] feature_X
-    4 __ feature_X
-    6 __ devel
-    8 __ master
+    4 -- feature_X
+    6 -- devel
+    8 -- master
+    .eq 4 6 7
 
 At this point, you could leave `feature_X` as it is forever.  Or you could
 delete the branch, in which case that label would simply disappear (the commit
@@ -267,17 +277,21 @@ to make sure it has all the other stuff that master may have acquired till
 now (this is shown by commit 9 below) before continuing further
 development:</font>
 
-    .gv6
-    1 .. 2 .. 3 .. 4 .. 8
-    3 .. 7 .. 8 .. 9 .. 10
-    2 .. 5 .. 6
-    4 .. 9
+    .gv
+    .he 1 .. 2 .. 3 .. 7 .. 8
+    3 .. 4
+    4 .. 8
+    2 .. 5
+    .he 4 .. 9 .. 10
+    .he 5 .. 6
     [g] master
     [g] devel
     [g] feature_X
-    10 __ feature_X
-    6 __ devel
-    8 __ master
+    10 -- feature_X
+    6 -- devel
+    8 -- master
+    .eq 4 6 7
+    8 .. 9
 
 <a name="_tags"></a>
 
@@ -286,18 +300,21 @@ development:</font>
 More commonly, inner nodes are TAGS.  We show tag names in yellow circles.
 
     .gv
-    1 .. 2 .. 3 .. 4
-    3 .. 7 .. 8
-    2 .. 5 .. 6
+    .he 1 .. 2 .. 3 .. 7 .. 8
+    3 .. 4
+    2 .. 5
+    .he 5 .. 6
     [] [y] HEAD
     [g] master
     [g] devel
     [g] feature_X
-    4 __ feature_X
-    6 __ devel
-    8 __ master .. HEAD
+    4 -- feature_X
+    6 -- devel
+    8 -- master .. HEAD
+    .eq 4 6 7
     [y] "v1.0"
-    3 __ "v1.0"
+    3 -- "v1.0"
+    .eq 3 "v1.0"
 
 <a name="_the_difference_between_branches_and_tags"></a>
 
@@ -308,18 +325,21 @@ When you make a commit with the "master" branch currently checked out, master
 will move to point to the new commit.
 
     .gv
-    1 .. 2 .. 3 .. 4
-    3 .. 7 .. 8 .. 9
-    2 .. 5 .. 6
+    .he 1 .. 2 .. 3 .. 7 .. 8 .. 9
+    3 .. 4
+    2 .. 5
+    .he 5 .. 6
     [] [y] HEAD
     [g] master
     [g] devel
     [g] feature_X
-    4 __ feature_X
-    6 __ devel
-    9 __ master .. HEAD
+    4 -- feature_X
+    6 -- devel
+    9 -- master .. HEAD
+    .eq 4 6 7
     [y] "v1.0"
-    3 __ "v1.0"
+    3 -- "v1.0"
+    .eq 3 "v1.0"
 
 <a name="_digressions"></a>
 
@@ -363,20 +383,22 @@ repo, you get all the branches in that one.  Remote branches are prefixed by
 the name of the remote, and we show them in orange.
 
     .gv
-    1 .. 2 .. 3 .. 4
-    3 .. 7 .. 8 .. 9
-    2 .. 5 .. 6
+    .he 1 .. 2 .. 3 .. 7 .. 8 .. 9
+    3 .. 4
+    2 .. 5
+    .he 5 .. 6
     [] [y] HEAD
     [g] master
     [o] "origin/master"
     [o] "origin/devel"
     [o] "origin/feature_X"
-    4 __ "origin/feature_X"
-    6 __ "origin/devel"
-    9 __ "origin/master"
-    9 __ master .. HEAD
+    4 -- "origin/feature_X"
+    6 -- "origin/devel"
+    9 -- "origin/master"
+    9 -- master .. HEAD
     [y] "v1.0"
-    3 __ "v1.0"
+    3 -- "v1.0"
+    .eq 3 "v1.0"
 
 <a name="_multiple_remotes"></a>
 
@@ -385,9 +407,10 @@ the name of the remote, and we show them in orange.
 You can have several remotes.
 
     .gv
-    1 .. 2 .. 3 .. 4
-    3 .. 7 .. 8 .. 9
-    2 .. 5 .. 6
+    .he 1 .. 2 .. 3 .. 7 .. 8 .. 9
+    3 .. 4
+    2 .. 5
+    .he 5 .. 6
     [] [y] HEAD
     [g] master
     [o] "origin/master"
@@ -395,14 +418,15 @@ You can have several remotes.
     [o] "origin/feature_X"
     [o] "sitas-repo/master"
     [o] "sitas-repo/devel"
-    4 __ "origin/feature_X"
-    6 __ "origin/devel"
-    9 __ "origin/master"
-    6 __ "sitas-repo/devel"
-    9 __ "sitas-repo/master"
-    9 __ master .. HEAD
+    4 -- "origin/feature_X"
+    6 -- "origin/devel"
+    9 -- "origin/master"
+    6 -- "sitas-repo/devel"
+    9 -- "sitas-repo/master"
+    9 -- master .. HEAD
     [y] "v1.0"
-    3 __ "v1.0"
+    3 -- "v1.0"
+    .eq 3 "v1.0"
 
 <a name="_fetching_and_merging_from_another_repo"></a>
 
@@ -419,9 +443,9 @@ assumed to be present as in the previous picture).
     [g] master
     [o] "origin/master"
     [o] "sitas-repo/master"
-    9 __ "origin/master"
-    11 __ "sitas-repo/master"
-    9 __ master .. HEAD
+    9 -- "origin/master"
+    11 -- "sitas-repo/master"
+    9 -- master .. HEAD
 
 Now you want to merge Sita's master branch into yours.  Since your master does
 not have any commits that Sita's master doesn't have (i.e., Sita's master is
@@ -429,14 +453,14 @@ like a superset of yours), running `git merge sitas-repo/master` will get you
 this:
 
     .gv
-    "[ . . . ]" .. 9 .. 10 .. 11
+    .he "[ . . . ]" .. 9 .. 10 .. 11
     [] [y] HEAD
     [g] master
     [o] "origin/master"
     [o] "sitas-repo/master"
-    9 __ "origin/master"
-    11 __ "sitas-repo/master"
-    11 __ master .. HEAD
+    9 -- "origin/master"
+    11 -- "sitas-repo/master"
+    11 -- master .. HEAD
 
 <a name="_the_object_store"></a>
 
@@ -487,9 +511,9 @@ Think back to these three diagrams.  The first is before you did a fetch.
     [g] master
     [o] "origin/master"
     [o] "sitas-repo/master"
-    9 __ "origin/master"
-    9 __ "sitas-repo/master"
-    9 __ master .. HEAD
+    9 -- "origin/master"
+    9 -- "sitas-repo/master"
+    9 -- master .. HEAD
 
 The next two figures are after `git fetch sitas-repo` and `git merge
 sitas-repo/master`, respectively.  The fetch command added two new commits (10
@@ -497,24 +521,24 @@ and 11) to your object store, along with any other objects those commits
 reference.
 
     .gv
-    "[ . . . ]" .. 9 .. 10 .. 11
+    .he "[ . . . ]" .. 9 .. 10 .. 11
     [] [y] HEAD
     [g] master
     [o] "origin/master"
     [o] "sitas-repo/master"
-    9 __ "origin/master"
-    11 __ "sitas-repo/master"
-    9 __ master .. HEAD
+    9 -- "origin/master"
+    11 -- "sitas-repo/master"
+    9 -- master .. HEAD
 
     .gv
-    "[ . . . ]" .. 9 .. 10 .. 11
+    .he "[ . . . ]" .. 9 .. 10 .. 11
     [] [y] HEAD
     [g] master
     [o] "origin/master"
     [o] "sitas-repo/master"
-    9 __ "origin/master"
-    11 __ "sitas-repo/master"
-    11 __ master .. HEAD
+    9 -- "origin/master"
+    11 -- "sitas-repo/master"
+    11 -- master .. HEAD
 
 However, note that just because commits 10 and 11 are now in **your local
 "master" branch** does not mean *anything* as far as the object store is
@@ -545,23 +569,24 @@ developers.  So let's see what that looks like.  The starting point was this:
     [g] master
     [o] "origin/master"
     [o] "sitas-repo/master"
-    9 __ "origin/master"
-    9 __ "sitas-repo/master"
-    9 __ master .. HEAD
+    9 -- "origin/master"
+    9 -- "sitas-repo/master"
+    9 -- master .. HEAD
 
 Now, you made some changes on your local master.  Meanwhile, sitas-repo has
 had some changes which you got by doing a fetch:
 
     .gv
-    "[ . . . ]" .. 9 .. 10 .. 11
-    9 .. 12 .. 13
+    .he "[ . . . ]" .. 9 .. 12 .. 13
+    9 .. 10
+    .he 10 .. 11
     [] [y] HEAD
     [g] master
     [o] "origin/master"
     [o] "sitas-repo/master"
-    9 __ "origin/master"
-    11 __ "sitas-repo/master"
-    13 __ master .. HEAD
+    9 -- "origin/master"
+    11 -- "sitas-repo/master"
+    13 -- master .. HEAD
 
 When you merge, the end result will usually look like this:
 
@@ -572,9 +597,9 @@ When you merge, the end result will usually look like this:
     [g] master
     [o] "origin/master"
     [o] "sitas-repo/master"
-    9 __ "origin/master"
-    11 __ "sitas-repo/master"
-    14 __ master .. HEAD
+    9 -- "origin/master"
+    11 -- "sitas-repo/master"
+    14 -- master .. HEAD
 
 <a name="_cherry_pick"></a>
 
@@ -597,15 +622,16 @@ repo.
 The starting point is this:
 
     .gv
-    "[ . . . ]" .. 9 .. 12 .. 13 .. 14
-    9 .. 10 .. 11
+    "[ . . . ]" .. 9 .. 12
+    .he 12 .. 13 .. 14
+    .he 9 .. 10 .. 11
     [] [y] HEAD
     [g] master
     [o] "origin/master"
     [o] "sitas-repo/master"
-    9 __ "origin/master"
-    14 __ "sitas-repo/master"
-    11 __ master .. HEAD
+    9 -- "origin/master"
+    14 -- "sitas-repo/master"
+    11 -- master .. HEAD
 
 In this, sitas-repo has 3 commits on his master (12, 13, and 14) and you are
 only interested in the change that commit 13 made.
@@ -618,15 +644,16 @@ able to guess!), but here's the command you might run:
 This results in the following commit graph.
 
     .gv
-    "[ . . . ]" .. 9 .. 12 .. 13 .. 14
-    9 .. 10 .. 11 .. "13a"
+    "[ . . . ]" .. 9 .. 12
+    .he 12 .. 13 .. 14
+    .he 9 .. 10 .. 11 .. "13a"
     [] [y] HEAD
     [g] master
     [o] "origin/master"
     [o] "sitas-repo/master"
-    9 __ "origin/master"
-    14 __ "sitas-repo/master"
-    "13a" __ master .. HEAD
+    9 -- "origin/master"
+    14 -- "sitas-repo/master"
+    "13a" -- master .. HEAD
 
 Note that I've called the new commit "13a".  This is to reflect the fact that,
 while the *change* made is the same as in the original commit 13, the *SHA*
@@ -652,13 +679,14 @@ this project).  You haad your own commits, and you did a `git fetch origin`
 which brought in the latest commits from "origin", so it looks like:
 
     .gv
-    "[ . . . ]" .. 9 .. 10 .. 11
-    9 .. 12 .. 13
+    .he "[ . . . ]" .. 9 .. 10 .. 11
+    9 .. 12
+    .he 12 .. 13
     [] [y] HEAD
     [g] master
     [o] "origin/master"
-    13 __ "origin/master"
-    11 __ master .. HEAD
+    13 -- "origin/master"
+    11 -- master .. HEAD
 
 Now, instead of merging "origin/master" into your local master, you want to
 rebase your commits on top of "origin/master".  That is, you want to pretend
@@ -671,8 +699,8 @@ rebase origin/master`, and this is the result:
     [] [y] HEAD
     [g] master
     [o] "origin/master"
-    13 __ "origin/master"
-    "11a" __ master .. HEAD
+    13 -- "origin/master"
+    "11a" -- master .. HEAD
 
 Note that again, we're ignoring command syntax and nuances here.  This is
 about concepts.  Also again, note that the SHAs of the 2 commits have changed,
@@ -712,30 +740,35 @@ will take a lot more space (and involve the working tree and the index, both
 of which we have ignored in this document), the basic idea can be explained
 very easily.
 
-First, here're some abbreviated pictures that summarise it for you (commits
-below 6 and 7 are omitted for brevity).  The first picture is the common
-starting point:
+First, here're some pictures that quickly show you what's happening.  (Note
+that commits below 6 and 7 are omitted for brevity).
 
-    .gv
+The first picture is the common starting point.  The next two show the effect
+of a checkout and a reset, respectively.  Notice which line is moving in each
+picture, compared to the starting point.
+
+    .gv starting point
+    "starting point for both
+    checkout and reset operations"
     [] [y] HEAD
     [g] master
     [g] devel
-    6 __ devel
-    7 __ master
-    master __ HEAD
-    devel .. HEAD [style=invis]
+    6 -- devel
+    7 -- master
+    master -- HEAD
 
-The next two show the effect of a checkout and a reset, respectively:
+    .gv
+    " "
 
     .gv
     "git checkout devel"
     [] [y] HEAD
     [g] master
     [g] devel
-    6 __ devel
-    7 __ master
-    master .. HEAD [style=invis]
-    devel __ HEAD
+    6 -- devel
+    7 -- master
+    .ie master .. HEAD
+    .le devel -- HEAD
 
     .gv
     " "
@@ -745,69 +778,26 @@ The next two show the effect of a checkout and a reset, respectively:
     [] [y] HEAD
     [g] master
     [g] devel
-    6 __ devel
-    6 __ master
-    master __ HEAD
-    devel .. HEAD [style=invis]
-    7 .. master [style=invis]
+    6 -- devel
+    .ie 7 .. master
+    .le 6 -- master
+    master -- HEAD
 
-Here are the details, with somewhat larger pictures.
+As you can see, your current branch, when you start, is "master" (indicated by
+where HEAD is pointing).
 
-Let's say this is your starting point:
+A "checkout" changes what is your cuurrent branch -- it is now "devel", and so
+any new commits you make now will go on devel, not master.
 
-    .gv
-    1 .. 2 .. 3 .. 4
-    3 .. 7
-    2 .. 5 .. 6
-    [] [y] HEAD
-    [g] master
-    [g] devel
-    [g] feature_X
-    4 __ feature_X
-    6 __ devel
-    7 __ master .. HEAD
+On the other hand, a reset changes what commit your current branch points to.
+Your branch is still master, but now it is pointing to what could potentially
+be a *completely* different history.
 
-As you can see, your current branch is "master" (indicated by where HEAD is
-pointing).
-
-Here's what `git checkout devel` does:
-
-    .gv
-    1 .. 2 .. 3 .. 4
-    3 .. 7
-    2 .. 5 .. 6
-    [] [y] HEAD
-    [g] master
-    [g] devel
-    [g] feature_X
-    4 __ feature_X
-    6 __ devel .. HEAD
-    7 __ master
-
-This means your current branch is now "devel"; any new commits you make now
-will go on devel, not master.
-
-On the other hand, at the same starting point as before, if you do `git reset
-devel` this is what you get:
-
-    .gv
-    1 .. 2 .. 3 .. 4
-    3 .. 7
-    2 .. 5 .. 6
-    [] [y] HEAD
-    [g] master
-    [g] devel
-    [g] feature_X
-    4 __ feature_X
-    6 __ devel
-    6 __ master .. HEAD
-
-As you can see, you're basically moving the master branch itself to some other
-commit.  (Notice that, like rebase example, there is now a dangling commit --
+(Notice that, like in the rebase example, there is now a dangling commit --
 one that cannot be reached by any branch.  It is still accessible using the
 'reflog' and will eventually get garbage collected)
 
-I would like to **repeat** that I am completely ignoring the myriad options
+**I would like to repeat** that I am completely ignoring the myriad options
 available to both these commands, especially the ones that pertain to the
 index and the working tree.  This is just to show you that:
 
@@ -833,38 +823,38 @@ us, in a simple before/after display:
 
     .gv
     "BEFORE COMMIT"
-    "[ . . . ] " .. 3 .. 7
+    .he "[ . . . ] " .. 3 .. 7
     [] [y] HEAD
     [g] master
-    7 __ master .. HEAD
+    7 -- master .. HEAD
     [y] "v1.0"
-    3 __ "v1.0"
+    3 -- "v1.0"
     [o] "origin/master"
-    3 __ "origin/master"
+    3 -- "origin/master"
 
     .gv
     "AFTER COMMIT"
-    "[ . . . ] " .. 3 .. 7 .. 8
+    .he "[ . . . ] " .. 3 .. 7 .. 8
     [] [y] HEAD
     [g] master
-    8 __ master .. HEAD
+    8 -- master .. HEAD
     [y] "v1.0"
-    3 __ "v1.0"
+    3 -- "v1.0"
     [o] "origin/master"
-    3 __ "origin/master"
+    3 -- "origin/master"
 
 Now see what happens when you `git checkout v1.0`:
 
     .gv
-    "[ . . . ] " .. 3 .. 7
+    .he "[ . . . ] " .. 3 .. 7
     [] [y] HEAD
     [g] master
-    7 __ master
+    7 -- master
     [y] "v1.0"
-    3 __ "v1.0"
-    3 __ HEAD
+    3 -- "v1.0"
+    3 -- HEAD
     [o] "origin/master"
-    3 __ "origin/master"
+    3 -- "origin/master"
 
 Notice the subtle difference?  HEAD is no longer a **symbolic** ref (i.e.,
 pointing to a real branch).  Instead, it is pointing directly to a commit.
@@ -891,30 +881,30 @@ So from this point on, if you make a commit, only HEAD changes, nothing else,
 since it is no longer "attached" to any local branch name"
 
     .gv
-    "[ . . . ] " .. 3 .. 7
+    .he "[ . . . ] " .. 3 .. 7
     3 .. 8
     [] [y] HEAD
     [g] master
     7 .. master
     8 .. HEAD
     [y] "v1.0"
-    3 __ "v1.0"
+    3 -- "v1.0"
     [o] "origin/master"
-    3 __ "origin/master"
+    3 -- "origin/master"
 
 The reason this is considered dangerous is that, if you now do `git checkout
 master`, you get this:
 
     .gv
-    "[ . . . ] " .. 3 .. 7
+    .he "[ . . . ] " .. 3 .. 7
     3 .. 8
     [] [y] HEAD
     [g] master
     7 .. master .. HEAD
     [y] "v1.0"
-    3 __ "v1.0"
+    3 -- "v1.0"
     [o] "origin/master"
-    3 __ "origin/master"
+    3 -- "origin/master"
 
 Notice what happened to your new commit 8?  It's dangling.  Unreachable.
 (Except by the reflog, of course, but beginners can get shaken up!)
