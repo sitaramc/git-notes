@@ -9,12 +9,28 @@ Git has something called a 'detached HEAD' that bears some explanation.  You
 are told 'do not commit on a detached HEAD', and it is not always clear what
 or why this is.
 
+----
+
+<font color="red">This document is here for historical reasons, and because it
+provides a nice analogy.  However, [Git for Computer Scientists (my
+version)](../gcs/index.html) should be a much nicer read for most people.
+Despite the name, it has very few mentions of linked lists, and no pseudo-code
+at *all*!  Instead, it has a lot of nice pictures, and it also touches upon
+many other issues, not just on detached HEADs.  </font>
+
 #### the analogy
 
 Forget git for a bit and think about linked lists from your data structures
-course.  You have a pointer to the node at the top of the list (we'll call
-this pointer `list_top`), and each node in the list has a pointer to the
-parent node, etc.
+course.  Specifically, consider a *singly linked* list, where each node is
+created as a "child" of some existing node, and contains a link to that
+"parent" node.  <font color="gray">The words "child" and "parent" are chosen
+to be similar to git's nomenclature for the relationship between a commit and
+its predecessor commit(s).</font>
+
+As with any list, you have a pointer to the node at the top of the list (we'll
+call this pointer `list_top`).  This would be the most recently created node,
+and so there's a chain of "parent" links that can take you all the way to the
+first node created.
 
 And you know how to add a new node to this linked list.  In pseudo-code:
 
@@ -25,16 +41,16 @@ And you know how to add a new node to this linked list.  In pseudo-code:
     list_top = temp;            // move list head to new node
 
 Let's also assume that all list operations are done with some temporary
-variable (that is, they never directly use 'list_top' etc.).
+variable (that is, they never directly use `list_top` etc.).
 
-Now suppose you *move* to the grandparent of the current list_top, to do
+Now suppose you *move* to the grandparent of the current `list_top`, to do
 something (like examine that node, print it out, whatever):
 
     temp = list_top;
     temp = temp.parent;         // parent of list_top
     temp = temp.parent;         // grandparent
 
-So far, no harm done; your 'list_top' variable still points to the top of the
+So far, no harm done; your `list_top` variable still points to the top of the
 list, and you can always do `temp = list_top` to go back to where you were for
 any further operations.
 
@@ -46,7 +62,7 @@ Now suppose you add a new node to the list on top of the *current node*:
     temp2.parent = temp;        // fill in the backlink
     temp = temp2;               // move list head to new node
 
-This is the same code as before, except temp has taken the place of list_top
+This is the same code as before, except temp has taken the place of `list_top`
 this time.
 
 But 'temp' is a temporary variable, and unless you somehow save its value

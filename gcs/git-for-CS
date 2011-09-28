@@ -36,6 +36,9 @@ In this document:
       * <a href="#_rebasing">rebasing</a>
   * <a href="#_the_confusion_about_checkout_versus_reset">the confusion about checkout versus reset</a>
   * <a href="#_detached_HEAD_and_all_that">detached HEAD and all that</a>
+      * <a href="#_other_ways_to_detach_your_HEAD">other ways to detach your HEAD</a>
+      * <a href="#_re_attaching_the_HEAD">re-attaching the HEAD</a>
+      * <a href="#_the_reflog">the reflog</a>
 
 ----
 
@@ -926,10 +929,83 @@ master`, you get this:
 Notice what happened to your new commit 8?  It's dangling.  Unreachable.
 (Except by the reflog, of course, but beginners can get shaken up!)
 
-The same thing happens if you `git checkout origin/devel` or some remote
-branch.  Remote branches can move of course, but not by *your* commits -- only
-by `git fetch` or equivalent, so git treats them the same way if you try to
-make local commits on them.
+<a name="_other_ways_to_detach_your_HEAD"></a>
 
-Modern git will warn you about detached HEAD if you're at the command line,
-and tell you how to recover (immediately).
+#### other ways to detach your HEAD
+
+The most common way to get into a detached HEAD state is to check out a remote
+branch (like `git checkout origin/branch`), without realising that you need to
+make a local copy before you make commits on it.
+
+<font color="gray">(Side note: the correct syntax to create and checkout a
+local branch starting from a remote branch used to be `git checkout -t -b
+branch origin/branch`, but modern gits will do the right thing if you simply
+say `git checkout branch`; yaay for progress!)</font>
+
+The reason `git checkout origin/branch` creates a detached HEAD is that, while
+remote branches can move, they can only do so as a result of a `git fetch` or
+equivalent.  After all, they are meant to track what the *remote* has, so it
+wouldn't make sense for them to acquire *local* commits!
+
+Here are various ways to detach HEAD:
+
+    git checkout origin/master  # (described above)
+    git checkout master^        # parent of master
+    git checkout HEAD~2         # grandparent of current HEAD
+    git checkout tagname        # since you cant commit to a tag!
+    git checkout <SHA>          # hex digits forming a full or partial SHA
+    git checkout master^0       # (see note below)
+
+These will all make the file called `HEAD` contain the actual (40-hex-digit)
+SHA of the corresponding commit instead of some string like `ref:
+refs/heads/branch`.
+
+That last one (`git checkout master^0`) is interesting.  The `master^0`
+notation means "the actual commit that master points to", so it's just like
+saying `git checkout <SHA>`.
+
+<a name="_re_attaching_the_HEAD"></a>
+
+#### re-attaching the HEAD
+
+Modern git will warn you about losing commits on a detached HEAD if you're at
+the command line, and tell you how to recover (immediately).
+
+Recovery is quite easy.  If you realised you're on a detached HEAD *before*
+you switched to some other branch:
+
+    git checkout -b newbranch
+
+If you switched, possibly made some commits, and *then* realised you lost some
+commits on a detached HEAD, you need to check the reflog to find the lost HEAD
+and switch to that using some command like:
+
+    git branch newbranch HEAD@{1}
+
+<a name="_the_reflog"></a>
+
+#### the reflog
+
+The reflog can show you all the values that HEAD has taken in the past.
+Here's a simulated example.  I cloned a repo that had a master and a 'foo'
+branch.  I then checked out `origin/foo`, ignored all the warnings, and made
+two commits on what I thought was the "foo" branch.  Then I switched back to
+master and made two normal commits on master before I realised that I had
+'lost' two commits.
+
+At this point, running `git reflog show` gives me the following (the most
+recent HEAD value is first):
+
+    86a8ee0 HEAD@{0}: commit: my second commit on master
+    e42c4d0 HEAD@{1}: commit: my first commit on master
+    58c1539 HEAD@{2}: checkout: moving from e2558a9d1527e5a76b39ffede1dc5ca9c650de01 to master
+    e2558a9 HEAD@{3}: commit: second commit on foo
+    1c9dfa0 HEAD@{4}: commit: first commit on foo
+    802f184 HEAD@{5}: checkout: moving from master to origin/foo
+    58c1539 HEAD@{6}: clone: from /tmp/tmp.lv5IqjK0ZI/b
+
+That `moving from <SHA>...` is usually a sign that some commits may have been
+lost.  In this case you can run `git branch newbranch HEAD@{3}` or `git branch
+newbranch e2558a9` to save those commits.  (Notice that the SHA value of
+`HEAD@{3}` is the same one mentioned in the `moving from <SHA>...` message on
+the line above it).
