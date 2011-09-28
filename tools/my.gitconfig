@@ -17,18 +17,18 @@
         bs  = !git-branch-status
         bsi = !git-branch-status -i
 
-        ci  = commit
+        ci  = commit -v -uno
         co  = checkout
 
         d   = diff  -C
         dw  = diff  -C -w
         ds  = diff  -C --stat
         dsp = diff  -C --stat -p
-        dcw = diff  -C --color-words
+        dcw = diff  -C --word-diff
 
         du  = diff  -C @{u}
         dwu = diff  -C -w @{u}
-        dcwu= diff  -C --color-words @{u}
+        dcwu= diff  -C --word-diff @{u}
 
         l   = log   -C --decorate
         ls  = log   -C --stat --decorate
@@ -44,14 +44,20 @@
         # log left-right; requires argument like A...B (3 dots)
         lglr= log   --graph '--format=%Cblue%h%Creset %Cgreen%ar%Creset %Cblue%d%Creset %s' --boundary --left-right --cherry-pick
 
+        # this is so frequent for me...
+        pom = push origin master
+
         rl  = reflog show --date=relative
 
         ru  = remote update
 
         sl  = stash list
         # "show-branch -g=N" can't be aliased for N easily, so we stop here:
-        sb  = show-branch             --current
-        sbs = show-branch --sha1-name --current
+        sb  = show-branch
+        # pg sbt master pu -- if the last line is 'master' and not 'master^'
+        # or 'master~N' then pu is a descendent of master
+        sbt = show-branch --topics
+        sbs = show-branch --sha1-name
 
         ls-del  = ls-files -d
         ls-mod  = ls-files -m   # this will include deleted files also

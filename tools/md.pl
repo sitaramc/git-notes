@@ -24,12 +24,12 @@ sub myvim
 our $css;       # use "-css" if you need css
 our $css_block="<head><style>
     body        { margin-left:  40px;   font-size:  0.9em;  font-family: sans-serif; max-width: 800px; }
-    h1          { margin-left: -30px;   border-bottom: 5px  solid #ccc; }
-    h2, h3      { margin-left: -30px;   border-top:    3px  solid #ddd; }
-    h4, h5      { margin-left: -20px; }
-    code        { font-size:    1.1em;  background:  #eee; }
-    pre         { margin-left:  2em;    background:  #eee; }
-    pre code    { font-size:    1.1em;  background:  #eee; }
+    h1          { background: #ffb; margin-left: -30px;   border-bottom: 5px  solid #ccc; }
+    h2, h3      { background: #ffb; margin-left: -30px;   border-top:    3px  solid #ddd; }
+    h4, h5      { background: #ffb; margin-left: -20px; }
+    code        { font-size:    1.1em;  background:  #ddf; }
+    pre         { margin-left:  2em;    background:  #ddf; }
+    pre code    { font-size:    1.1em;  background:  #ddf; }
 </style></head>
 ";
 my $markup;
