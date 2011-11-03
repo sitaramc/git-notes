@@ -2,53 +2,9 @@
 
 [Inside joke: Hey I rewrote gitosis so why not this?]
 
-----
+## basics
 
-In this document:
-
-  * <a href="#_basics">basics</a>
-      * <a href="#_the_4_git_object_types">the 4 git object types</a>
-      * <a href="#_what_is_a_SHA">what is a SHA</a>
-      * <a href="#_what_is_a_repo">what is a repo</a>
-  * <a href="#_why_are_the_arrows_backward_in_your_pictures_">**(why are the arrows backward in your pictures?)**</a>
-  * <a href="#_branches_and_tags">branches and tags</a>
-      * <a href="#_branch">branch</a>
-      * <a href="#_more_than_one_branch">more than one branch</a>
-      * <a href="#_more_than_one_parent_commit">more than one parent commit</a>
-      * <a href="#_current_branch_checked_out_branch">current branch/checked out branch</a>
-      * <a href="#_committing">committing</a>
-      * <a href="#_naming_non_leaf_nodes">naming non-leaf nodes</a>
-      * <a href="#_tags">tags</a>
-  * <a href="#_the_difference_between_branches_and_tags">the difference between branches and tags</a>
-  * <a href="#_digressions">digressions</a>
-      * <a href="#_what_is_a_git_URL_">what is a git URL?</a>
-      * <a href="#_what_is_a_remote_">what is a "remote"?</a>
-  * <a href="#_local_and_remote_repos">local and remote repos</a>
-      * <a href="#_remote_branches">remote branches</a>
-      * <a href="#_multiple_remotes">multiple remotes</a>
-      * <a href="#_fetching_and_merging_from_another_repo">fetching and merging from another repo</a>
-  * <a href="#_the_object_store">the object store</a>
-      * <a href="#_what_is_a_repo_again_">what is a repo (again)</a>
-      * <a href="#_objects_and_branches_tags">objects and branches/tags</a>
-  * <a href="#_advanced_operations">advanced operations</a>
-      * <a href="#_merging">merging</a>
-      * <a href="#_cherry_pick">cherry-pick</a>
-      * <a href="#_rebasing">rebasing</a>
-  * <a href="#_the_confusion_about_checkout_versus_reset">the confusion about checkout versus reset</a>
-  * <a href="#_detached_HEAD_and_all_that">detached HEAD and all that</a>
-      * <a href="#_other_ways_to_detach_your_HEAD">other ways to detach your HEAD</a>
-      * <a href="#_re_attaching_the_HEAD">re-attaching the HEAD</a>
-      * <a href="#_the_reflog">the reflog</a>
-
-----
-
-<a name="_basics"></a>
-
-### basics
-
-<a name="_the_4_git_object_types"></a>
-
-#### the 4 git object types
+### the 4 git object types
 
 Git keeps all its data inside a special directory called `.git` at the top
 level of your repository.  Somewhere in there is what we will simply call the
@@ -70,9 +26,7 @@ Git knows about 4 types of objects:
 
   * **tag** -- we will see this type a bit later.
 
-<a name="_what_is_a_SHA"></a>
-
-#### what is a SHA
+### what is a SHA
 
 A commit is uniquely identified by a 160-bit hex value (the 'SHA').  This is
 computed from the tree, plus the following pieces of information:
@@ -102,9 +56,7 @@ just take it on faith).
 
 An example SHA: `a30236028b7ddd65f01321af42f904479eaff549`
 
-<a name="_what_is_a_repo"></a>
-
-#### what is a repo
+### what is a repo
 
 A repository ('repo') is a graph of commits.  In our figures, we represent
 SHAs with numbers for convenience.  We also represent time going
@@ -113,9 +65,7 @@ upward (bottom to top).
     .gv file=plain plain
     1 .. 2 .. 3 .. 4
 
-<a name="_why_are_the_arrows_backward_in_your_pictures_"></a>
-
-### **(why are the arrows backward in your pictures?)**
+## **(why are the arrows backward in your pictures?)**
 
 So why are the arrows pointing backward?
 
@@ -126,13 +76,9 @@ Well... every commit knows what its parent commit is (as described in the
 Therefore a repo is like a single linked list.  It cannot be a double linked
 list -- this is because any change to the contents would change the SHA!
 
-<a name="_branches_and_tags"></a>
+## branches and tags
 
-### branches and tags
-
-<a name="_branch"></a>
-
-#### branch
+### branch
 
 Traditionally, the top of a linked list has a name.  That name is a BRANCH
 name.  We show branch names in green circles.
@@ -142,9 +88,7 @@ name.  We show branch names in green circles.
     [g] master
     4 -- master
 
-<a name="_more_than_one_branch"></a>
-
-#### more than one branch
+### more than one branch
 
 (a.k.a "more than one child commit")
 
@@ -164,9 +108,7 @@ branch, and will have a name.
     6 -- devel
     7 -- master
 
-<a name="_more_than_one_parent_commit"></a>
-
-#### more than one parent commit
+### more than one parent commit
 
 Well we can't keep creating more branches without eventually merging them
 back.  So let's say "feature X" is now tested enough to be merged into the
@@ -204,9 +146,7 @@ feature_X`, which gives you this:
     8 -- master
     .eq 4 6 7
 
-<a name="_current_branch_checked_out_branch"></a>
-
-#### current branch/checked out branch
+### current branch/checked out branch
 
 There is a notion of a 'currently checked out' branch.  This is denoted by a
 special ref called HEAD.  HEAD is a **symbolic** ref, which points to the
@@ -225,9 +165,7 @@ special ref called HEAD.  HEAD is a **symbolic** ref, which points to the
     6 -- devel
     7 -- master .. HEAD
 
-<a name="_committing"></a>
-
-#### committing
+### committing
 
 When you make a new commit, the current branch moves.  Technically, whatever
 branch HEAD is pointing to will move.
@@ -246,9 +184,7 @@ branch HEAD is pointing to will move.
     8 -- master .. HEAD
     .eq 4 6 7
 
-<a name="_naming_non_leaf_nodes"></a>
-
-#### naming non-leaf nodes
+### naming non-leaf nodes
 
 It's not just 'leaf' nodes, but inner nodes can also have names.  Recall the
 result of merging `feature_X` earlier (see the "more than one parent commit"
@@ -297,9 +233,7 @@ development:</font>
     .eq 4 6 7
     8 .. 9
 
-<a name="_tags"></a>
-
-#### tags
+### tags
 
 More commonly, inner nodes are TAGS.  We show tag names in yellow circles.
 
@@ -320,9 +254,7 @@ More commonly, inner nodes are TAGS.  We show tag names in yellow circles.
     3 -- "v1.0"
     .eq 3 "v1.0"
 
-<a name="_the_difference_between_branches_and_tags"></a>
-
-### the difference between branches and tags
+## the difference between branches and tags
 
 The main difference between a branch and a tag is branches move, tags don't.
 When you make a commit with the "master" branch currently checked out, master
@@ -345,13 +277,9 @@ will move to point to the new commit.
     3 -- "v1.0"
     .eq 3 "v1.0"
 
-<a name="_digressions"></a>
+## digressions
 
-### digressions
-
-<a name="_what_is_a_git_URL_"></a>
-
-#### what is a git URL?
+### what is a git URL?
 
 Git repos are accessed by providing a URL.  There are typically 4 kinds of Git
 URLs:
@@ -363,9 +291,7 @@ URLs:
     software
   * local file: like `file:///full/path/to/reponame`
 
-<a name="_what_is_a_remote_"></a>
-
-#### what is a "remote"?
+### what is a "remote"?
 
 A remote is a short name (like an alias) used to refer to a specific git
 repository.  Instead of always saying `git fetch git://sitaramc/gitolite`, you
@@ -374,13 +300,9 @@ can add that as a remote and use that short name instead of the long URL.
 For convenience, a 'remote' called 'origin' is automatically created
 when you clone a repo, pointing to the repo you cloned from.
 
-<a name="_local_and_remote_repos"></a>
+## local and remote repos
 
-### local and remote repos
-
-<a name="_remote_branches"></a>
-
-#### remote branches
+### remote branches
 
 Git is a distributed version control system.  So when you clone someone's
 repo, you get all the branches in that one.  Remote branches are prefixed by
@@ -404,9 +326,7 @@ the name of the remote, and we show them in orange.
     3 -- "v1.0"
     .eq 3 "v1.0"
 
-<a name="_multiple_remotes"></a>
-
-#### multiple remotes
+### multiple remotes
 
 You can have several remotes.
 
@@ -432,9 +352,7 @@ You can have several remotes.
     3 -- "v1.0"
     .eq 3 "v1.0"
 
-<a name="_fetching_and_merging_from_another_repo"></a>
-
-#### fetching and merging from another repo
+### fetching and merging from another repo
 
 Now let's say Sita's repo had a couple of new commits on its master, and you
 run `git fetch sitas-repo`.  (We have pruned the graph a litle for clarity,
@@ -466,9 +384,7 @@ this:
     11 -- "sitas-repo/master"
     11 -- master .. HEAD
 
-<a name="_the_object_store"></a>
-
-### the object store
+## the object store
 
 Git stores all your data in an "object store".  There are 4 types of objects
 in this store: files (called "blobs"), trees (which are directories+files),
@@ -479,9 +395,7 @@ blobs and trees make a tree.  A commit is a tree, plus the SHA of its parent
 commit(s), the commit message, author/committer names and emails, and
 timestamps.  Under normal usage, you don't need to deal with all this).
 
-<a name="_what_is_a_repo_again_"></a>
-
-#### what is a repo (again)
+### what is a repo (again)
 
 Earlier, we saw that a repo was a graph of commits.  At the file system level,
 however, it is basically a directory called `.git` which looks somewhat like
@@ -500,9 +414,7 @@ this
     drwxrwxr-x 4 sitaram sitaram 4096 Sep 14 18:54 objects/
     drwxrwxr-x 4 sitaram sitaram 4096 Sep 14 18:54 refs/
 
-<a name="_objects_and_branches_tags"></a>
-
-#### objects and branches/tags
+### objects and branches/tags
 
 <font color="gray">
 
@@ -566,15 +478,11 @@ command at all.
 All you did was move a pointer from one node to another.  Which is why the
 linked list analogy works so well in understanding git as a DAG.
 
-<a name="_advanced_operations"></a>
-
-### advanced operations
+## advanced operations
 
 We'll now show some advanced operations with the aid of this same tree.
 
-<a name="_merging"></a>
-
-#### merging
+### merging
 
 First, let's do merging.  The merge you saw earlier was what is called a
 "fast-forward" merge, because your local master did not have any commits that
@@ -621,9 +529,7 @@ When you merge, the end result will usually look like this:
     11 -- "sitas-repo/master"
     14 -- master .. HEAD
 
-<a name="_cherry_pick"></a>
-
-#### cherry-pick
+### cherry-pick
 
 A cherry-pick is not very commonly done -- in well designed workflows it
 should actually be rare.  However, it's a good way to illustrate an important
@@ -680,9 +586,7 @@ while the *change* made is the same as in the original commit 13, the *SHA*
 will not be the same anymore (new parent commit, new "tree", new committer
 name/email, commit time, etc).
 
-<a name="_rebasing"></a>
-
-#### rebasing
+### rebasing
 
 Instead of merging, let's say you wanted to rebase your commits on top of
 Sita's commits.
@@ -751,9 +655,7 @@ Notice that since commit 22 changes its SHA, all its child commits -- now
 rebased -- will also have new SHAs.  This is why you should (almost) never
 rebase branches that have already been published.
 
-<a name="_the_confusion_about_checkout_versus_reset"></a>
-
-### the confusion about checkout versus reset
+## the confusion about checkout versus reset
 
 **Please note** <font color="gray">that this section completely ignores the
 myriad options available to both these commands, especially the ones that
@@ -831,9 +733,7 @@ be a *completely* different history.
 one that cannot be reached by any branch.  It is still accessible using the
 'reflog' and will eventually get garbage collected)
 
-<a name="_detached_HEAD_and_all_that"></a>
-
-### detached HEAD and all that
+## detached HEAD and all that
 
 All this time you have seen HEAD pointing to a branch name, and the branch
 itself pointing to a commit.  Then, when you make a commit, the branch moves
@@ -929,9 +829,7 @@ master`, you get this:
 Notice what happened to your new commit 8?  It's dangling.  Unreachable.
 (Except by the reflog, of course, but beginners can get shaken up!)
 
-<a name="_other_ways_to_detach_your_HEAD"></a>
-
-#### other ways to detach your HEAD
+### other ways to detach your HEAD
 
 The most common way to get into a detached HEAD state is to check out a remote
 branch (like `git checkout origin/branch`), without realising that you need to
@@ -964,9 +862,7 @@ That last one (`git checkout master^0`) is interesting.  The `master^0`
 notation means "the actual commit that master points to", so it's just like
 saying `git checkout <SHA>`.
 
-<a name="_re_attaching_the_HEAD"></a>
-
-#### re-attaching the HEAD
+### re-attaching the HEAD
 
 Modern git will warn you about losing commits on a detached HEAD if you're at
 the command line, and tell you how to recover (immediately).
@@ -982,9 +878,7 @@ and switch to that using some command like:
 
     git branch newbranch HEAD@{1}
 
-<a name="_the_reflog"></a>
-
-#### the reflog
+### the reflog
 
 The reflog can show you all the values that HEAD has taken in the past.
 Here's a simulated example.  I cloned a repo that had a master and a 'foo'
