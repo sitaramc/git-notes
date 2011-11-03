@@ -55,7 +55,7 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
 
 #### commits, SHAs
 
-  * a **commit** records the content of the project files at a point in time
+  * a **commit** records the content of the working tree at a point in time
 
   * every commit in git is represented by a globally unique 160-bit value (40
     hex digits) which is a cryptographically secure hash of the commit data.
@@ -68,10 +68,10 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
 
 #### parent commits, commit tree
 
-  * every commit builds on top of one or more previous commits, called
+  * most commits build on top of one or more previous commits, called
     **parents**.  Normal commits have only one parent, while "merge" commits
-    have two.  The very first commit in the tree has no parents; this is called
-    a "root commit".
+    have two.  The very first commit in the tree has no parents; this is
+    called a "root commit".
 
     ^^A repo can have more than one "root commit", but this is rare^^
 
@@ -101,7 +101,7 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
     *moves as you make commits*.
 
     A repository can track many branches, but the working tree is associated
-    with only one branch at a time
+    with at most one branch at a time.
 
   * a **tag** is also a symbolic name given to a commit.  Tags don't "move" as
     you make new commits -- they stay where they are.
@@ -165,6 +165,7 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
 In a *distributed* VCS, every developer's workstation has a full copy of the
 entire repository.  It is therefore called a **clone** -- you **clone** the
 remote repository, you don't merely *checkout* the latest version from it.
+(Of course, you can have several clones on the same workstation if you wish).
 
 So where does *checkout* come in?  In git, you **checkout** a *branch* from
 your local repo, so this happens *after* the clone.  Remember this is a full
@@ -180,7 +181,7 @@ time, otherwise you're not really *using* git!)
 #### accessing remote repositories
 
 Every remote repository (often called just a **remote**) has a URL associated
-with it, depending on how your local repo is able to reach it.  The simplest
+with it, which tells your (local) git client how to reach it.  The simplest
 URL is for a repo that is on the same machine, which can then use the *file*
 protocol: `file:///home/sitaram/path/to/repo.git`.
 
@@ -192,12 +193,14 @@ efficient for continuous use.
 
 A remote repository to which you have write access will almost certainly use
 *ssh* as the underlying authentication protocol, so the remote URL might look
-like `ssh://sitaram@172.1.7.2/full/path/to/repo.git`.
+like `ssh://sitaram@172.1.7.2/full/path/to/repo.git`.  (We say 'might look
+like' because there are other syntactical variants of ssh urls for git; see
+'man git-clone').
 
 #### naming remote repositories
 
-You can refer to, (or fetch from, and push to) many remote repos in *your*
-clone, because they all have different URLs.  After a while it gets
+You can refer to, (or fetch from, and push to) more then one remote repos in
+*your* clone, giving them all different URLs.  After a while it gets
 inconvenient to use the full URLs in your `git fetch` and `git push` commands,
 so git allows you to give an easy to remember "nickname" for each "remote".  I
 could, for instance, do this:
