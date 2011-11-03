@@ -1,4 +1,4 @@
-## (READ THIS FIRST) README for the git-notes repo
+# (READ THIS FIRST) README for the git-notes repo
 
 This repo contains all my notes about git.  I started writing them for my own
 understanding, almost like cheat sheets, but they may be useful for others
@@ -11,7 +11,7 @@ you're still perfecting the code -- you cannot do this with a centralised VCS.
 
 ----
 
-#### Basics
+### Basics
 
 <font color="red">If you...
 
@@ -42,7 +42,7 @@ you like.
 
 ----
 
-##### Beyond the basics
+#### Beyond the basics
 
 If you know a little about git and/or have attended one of my talks, you can
 follow the links below.
