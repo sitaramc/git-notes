@@ -1,0 +1,40 @@
+# corruption in a git repository
+
+For now, this is just loosely formatted text, maybe like a series of case
+studies.
+
+IMPORTANT NOTE: `git fsck --full` is needed to reliably find repo corruption
+
+## case 1: Kolkata Korruption -- 2 missing tree objects
+
+what finally worked:
+
+    # on some good repo
+    TYPE=$(git cat-file -t $BADOBJSHA)
+    git cat-file $TYPE $BADOBJSHA > file
+
+    # copy file to bad repo
+    git hash-object -t $TYPE -w --stdin < file
+
+However, this may not always work; it is not certain that hash-object will
+*replace* a corrupted object (as opposed to creating a *missing* object).  So
+try that, *as well as* this (generic object):
+
+    # on some good repo
+    echo $object | git pack-objects --revs pack
+    # will create two files named pack-*.{idx,pack}
+
+confirm:
+
+    git verify-pack -v pack-*.idx | grep $object
+    # should also contain all sub objects
+
+copy:
+
+    pack* to $bad_repo/[.git?]/objects/pack
+
+repack:
+
+    repack -a -d
+
+(you could also do "unpack-objects" I guess)

@@ -1,0 +1,116 @@
+# ignoring an upstream commit permanently
+
+(untested)
+
+...as usual, doener on irc, circa 2009-07-15 10:00
+
+----
+
+## problem
+
+    A---B---C---D---E (master)
+     \
+      X---X---V---X (upstream)
+
+You try to merge upstream to master and get a shitload of conflicts.
+
+"gitk --merge" tells you that commit V is "guilty" and is just a variation of,
+let's say, B (doesn't matter), that differs enough to cause those conflicts.
+
+You decide that you don't want V's version of the changes, now or in future.
+That is, though you will keep merging from upstream, you don't want to see "V"
+ever again.
+
+## assumption
+
+You never have to push this upstream; it's your private copy (think "customer
+specific branch")
+
+## caveats
+
+Eventually, something upstream will patch something from V, and since you
+don't have that particular set of code, you'll get a patch that cannot be
+applied.  At that point you can repeat this method to discard *that* commit,
+or fix the conflicts somehow and move on.
+
+## the hard solution
+
+Fix all the conflicts and commit.  For people still living in other version
+control systems :-)
+
+## the easy solution
+
+Create a branch from upstream where you revert V and merge that to master
+
+    git checkout -b tmp upstream
+    git revert V        # produces commit "R"
+    git checkout master
+    git merge tmp       # please also use -m to document this properly!
+    git branch -d tmp
+
+    A---B---C---D---E---M (master)
+     \                 /
+      \               R
+       \             /
+        X---X---V---X (upstream)
+
+Next update from upstream will lead to:
+
+    git merge upstream
+
+    A---B---C---D---E---M---M2 (master)
+     \                 /   /
+      \               R   /
+       \             /   /
+        X---X---V---X---X (upstream)
+
+(and so on; you've essentially eliminated "V" forever in your branch).
+
+Note: doener calls this ugly, but I like this much better than the next one.
+First, this only uses porcelain, no plumbing.  Second, the extra commit "R"
+makes it clear that something happened, even if the merge commit at "M" was
+not properly commented.
+
+## the hackish, low-level solution
+
+Don't use this if, like me, you're not comfortable with plumbing.  This
+section is just for the record, and because the idea is very cool.
+Personally, I never use plumbing -- too many commands, too hard for me to
+understand, even more difficult (for me) to explain.
+
+Create a branch from upstream, and revert V
+
+    git checkout -b tmp upstream
+    git revert V
+
+Merge master to that:
+
+    git merge master
+
+Hopefully, the revert as well as the merge went pretty much conflict-free now.
+So you have the merge result that you want in tmp.
+
+Now, create the real merge:
+
+    git checkout master
+    git merge upstream
+
+This will cause conflicts again, but instead of fixing them, you just re-use
+the merge result that you already have:
+
+    git read-tree -u --reset tmp    # This reads the tree of the previous merge and
+                                    # puts it into the index and  working tree
+
+    git commit
+
+This leads to
+
+    A---B---C---D---E---M (master)
+     \                 /
+      X---X---V---X---- (upstream)
+
+And the next update then gives:
+
+    A---B---C---D---E---M---M (master)
+     \                 /   /
+      X---X---V---X-------X (upstream)

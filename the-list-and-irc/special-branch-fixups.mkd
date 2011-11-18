@@ -1,0 +1,194 @@
+# fixing-up common and customer branches
+
+The following document explains how to maintain a 'common' branch,
+with one or more 'customer specific' branches that hang off of the
+common branch.  The inspiration was a question about maintaining
+'work' and 'home' configurations which differ slightly from a
+'common' configuration, which leads to the same sort of problem.
+
+In an ideal  world, you'd keep 'common' development in the 'common' branch,
+and 'customer specific' development in the corresponding customer branches.
+In the real world, often the separation was not done properly in advance,
+(maybe it was not known, or maybe for initial testing reasons it had to be
+done in one branch, or whatever), and so you now have a mix of 'common' and
+'special' changes all together.
+
+**This article describes one way to 'fix up' such a mixed development into the
+proper form**.
+
+## The basic rules
+
+The basic rules are best described by Junio in
+<http://permalink.gmane.org/gmane.comp.version-control.git/110489>
+
+  * You make edits to common files only on the common branch.
+  * You merge from common to deployment, never the other way.
+
+This document shows how one might do that.  [Junio also helped
+with comments on a previous draft of this text.  However, any
+errors or other problems that remain are mine.]
+
+## Terminology
+
+We use the following terminology:
+
+'common' is the branch representing the base product.  All
+regular customers get this version.
+
+'special' is a branch for a specific customer.  This customer
+needs changes unique to his environment, which should not be
+merged back into the common branch.  However, this branch must
+regularly get the benefit of changes in the mainline 'common'
+branch.  (This is the genesis of the two rules above).
+
+If you have more than one special customer the same logic
+will apply for each of them separately, although if you have
+too many such customers you may also want to look at [Never
+merging back](http://gitster.livejournal.com/26540.html)
+for an additional tip on this.
+
+## The nitty gritty
+
+### Before you start
+
+The history looks like this in the beginning:
+
+    -----o          <- special branch (current)
+        /
+    ---o            <- common branch
+
+The 'special' branch has been tested for the feature you are
+working on, and this represents a stable point in the development
+to try and re-organise the code, separate out 'common' code from
+'special' code, etc.
+
+Before you start, make a temporary branch TEMP from
+'special'; leave special where it was.
+
+    git checkout -b TEMP special
+
+You now make some changes for the special customer, which
+also involve some 'common' changes that need to be ported
+back to the common branch.  The topology now looks like
+this, where A, B, C, are changes that logically belong on
+'common', and 1, 2, 3, are changes that are specific to this
+customer.
+
+Notice that the 2 sets of changes are intermixed because
+that is how the development happened, and that there is even
+one commit where common and special changes are mixed
+(perhaps you realised this only later).
+
+    -----o--A--B1--2--3--C          <- "TEMP" branch (current)
+        /
+    ---o                            <- common
+
+Meanwhile, just to make things interesting, the common
+branch has also had some other, unrelated changes which you
+eventually want on the special branch as well.
+
+    -----o--A--B1--2--3--C          <- "TEMP" branch (current)
+        /                                            
+    ---o--X--Y                      <- common
+
+### Separating 'common' and 'special'
+
+The first thing to do is to tease the tangled commits apart
+using rebase.
+
+Using `git rebase -i special`, get the topology into this
+shape.  Note that we have split the "B1" commit into B and 1
+separately.  `git help rebase` has a very simple and clear
+section on splitting commits, so I will not detail that
+here.
+
+    -----o--A--B--C--1--2--3        <- "TEMP" branch (current)
+        /                                              
+    ---o--X--Y                      <- common
+
+At this point, the tree that results should be identical to the one you
+started this exercise with, so ideally there should be no need to test.  You
+can, if you wish, check that the trees are indeed the same
+
+    git diff TEMP@{1} TEMP
+
+The `@{1}` notation specifies the shape of the TEMP branch before the rebase
+started.
+
+### #utcb Updating and testing the 'common' branch
+
+Now switch to the 'common' branch and cherry pick the
+changes that belong on 'common'.  The simplest way to cherry
+pick is gitk.
+
+    git checkout common
+    gitk
+    # and cherry pick first A, then B, then C, in order
+
+At this point, your TEMP branch has still not changed from when you started
+this re-organisation.  However, you have now introduced 3 new commits onto
+the 'common' branch, so that set of changes needs to be tested to make sure
+things are fine.
+
+    -----o--A--B--C--1--2--3        <- "TEMP" branch
+        /                                              
+    ---o--X--Y--A'--B'--C'          <- common (current)
+
+Be sure you test the new functionality before proceeding.  This test will
+likely be different from your tests on the TEMP branch, because only part of
+the new code in TEMP goes to 'common'.  If the test failed or required fixups,
+do them in the context of the 'common' case only, right here on the 'common'
+branch.  **Note that this affects the rebase coming up later!**
+
+### Merging 'common' into 'special'
+
+Once that test is done, merge from 'common' to 'special'
+
+    git checkout special
+    git merge common
+
+which results in the following topology:
+
+           A--B--C--1--2--3     <- TEMP
+          /
+     ----o-----------------o    <- special (current)
+        /                 /
+    ---o--X--Y--A'--B'--C'
+
+### Fixing up 'special'
+
+Now all we need is to get commits 1, 2, and 3 onto 'special'.  Although this
+is easiest done by using 'rebase', that will only work if your [updating and
+testing on 'common'](#utcb) did not cause any changes or fixups (that is, the
+changes A, B, and C are still identical to the changes A', B', and C'.
+
+In the general case, therefore, cherry-pick is better, as long as you make
+sure you don't miss any commits:
+
+    gitk
+    # and cherry pick first 1, then 2, then 3, in order
+
+This gives you the following topology (in which we have ignored the TEMP
+branch)
+
+                             1'--2'--3'     <- special (current)
+                            /
+     ----o-----------------o
+        /                 /
+    ---o--X--Y--A'--B'--C'
+
+### Final sanity check
+
+At this point you should *definitely* re-test all the changes you made, to
+make sure nothing got missed out.  If there were no 'X' and 'Y' commits on
+the 'commits' branch, you could try
+
+    git diff TEMP special
+
+to check that the tree is still the same as before.  But again, in the
+general case, you probably will have commits 'X' and 'Y' included so it is
+necessary to re-test.
+
+Once all this is done, you don't need TEMP anymore, and can delete it:
+
+    git branch -d TEMP

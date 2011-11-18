@@ -1,0 +1,132 @@
+# who pushed this particular commit?
+
+**WARNING: THIS DOCUMENT IS OBSOLETE**
+
+Just install gitolite -- it'll produce a much better log than anything you'll
+get from this document.  See the "better logging" section of
+<http://github.com/sitaramc/gitolite/blob/master/doc/3-faq-tips-etc.mkd>
+
+**I'm keeping this document around only to show you how difficult this is
+without gitolite ;-)**
+
+Gitolite is at <http://github.com/sitaramc/gitolite>
+
+... and now, on to the document
+
+----
+
+Someone on IRC postulated that git does not track who pushed a series of
+commits into a server, and could allow one dev to blame some other dev by
+pushing stuff with the victim's name/email as the author/committer.
+
+The first answer to this of course is that you can force everything to happen
+with gpg-signed tags -- the project pulls only gpg-signed tags, and if you
+signed a tag (which in turn stamps the entire commit DAG upto that point) then
+you'd better know what you're doing!
+
+However, we don't always sign like this; it makes it cumbersome and it
+requires all the devs to conform to this discipline, and is too big a price to
+pay for something that may never happen.  We need something that'll just sit
+in the background, saving enough info for us to track "after the fact", should
+it ever become necessary.
+
+## one-time setup
+
+So, the short answer, for a gitosis-administered central repo, is this:
+
+  * (as root) in `/etc/ssh/sshd_config`, add the following lines (or change
+    INFO to VERBOSE if that's already present)
+
+        # Logging
+        SyslogFacility AUTH
+        LogLevel VERBOSE
+
+  * (as the "git" user) in each repository of interest (or globally, by adding
+    `--global`; highly recommended for servers), do the following.  The second command is useful even in
+    general, but in this case the relevance is that deleting a branch wipes
+    out its reflog too, so you want to prevent that:
+
+        git config core.logAllRefUpdates true
+        git config receive.denyDeletes true
+
+That's it.  Of course, if your system logs get deleted after about 4 weeks or
+so, you may want to keep `auth.log` out of it or do something to preserve
+those logs for a longer period of time.
+
+## investigation
+
+So let's say you look at the reflog and find you want to know who pushed a
+particular commit[1]
+
+    git@git:~/repositories/testing.git$ git reflog
+    582b3ad... HEAD@{0}: push
+    f0a5fc1...
+
+You're interested in `582b3ad`, so you do the following (note that the output
+line below is wrapped for the purposes of this page):
+
+    git@git:~/repositories/testing.git$ grep -r ' 582b3' logs
+    logs/HEAD:f0a5fc1171c967a7af975fc454a25a599066565b
+        582b3ad0219d922a9aed6f5cbb3f4f9a5741df6b git master user
+        <git@my.domain.com> 1238837842 +0530      push
+
+There's a timestamp in there, that `1238837842` thing, which you have to
+decode:
+
+    $ perl -le 'print scalar(localtime $ARGV[0])' 1238837842
+    Sat Apr  4 15:07:22 2009
+
+Come Watson, the game is afoot...
+
+    root@git:/var/log# grep Apr..4.15:07 auth.log
+    Apr  4 15:07:19 git sshd[23765]: Connection from 172.25.149.2 port 56889
+    Apr  4 15:07:20 git sshd[23765]: Failed none for git from 172.25.149.2 port 56889 ssh2
+    Apr  4 15:07:20 git sshd[23765]: Found matching RSA key: fc:c1:48:1e:06:31:97:a4:8b:fc:37:b2:76:14:c7:53
+    Apr  4 15:07:21 git sshd[23765]: Found matching RSA key: fc:c1:48:1e:06:31:97:a4:8b:fc:37:b2:76:14:c7:53
+    Apr  4 15:07:21 git sshd[23765]: Accepted publickey for git from 172.25.149.2 port 56889 ssh2
+    Apr  4 15:07:21 git sshd[23768]: pam_unix(sshd:session): session opened for user git by (uid=0)
+    Apr  4 15:07:22 git sshd[23768]: Connection closed by 172.25.149.2
+    Apr  4 15:07:22 git sshd[23768]: pam_unix(sshd:session): session closed for user git
+    Apr  4 15:07:22 git sshd[23768]: Closing connection to 172.25.149.2
+
+Now go to a clone of the gitosis-admin directory, and do this (I've removed
+the `>` signs that normally form `$PS2` so you can copy-paste this):
+
+    $ cd keydir
+    $ for i in *.pub
+    do
+        cat $i | while read r
+        do
+            echo "$r" > /tmp/junk.pubkey
+            ssh-keygen -l -f /tmp/junk.pubkey |grep fc.c1.48 &&
+                echo ===== $i matched =====
+        done
+    done
+    2048 fc:c1:48:1e:06:31:97:a4:8b:fc:37:b2:76:14:c7:53 /tmp/junk.pubkey (RSA)
+    ===== sitaram.pub matched =====
+
+And we've nailed him :-)
+
+^^
+PS: a note on that shell snippet: you need to do it this way because a gitosis
+pubkey file can contain more than one pubkey (for the same user of course) in
+it.  Typically this is because of using different machines or whatever.  If
+you pass such a file to `ssh-keygen -l` it'll only compute the fingerprint of
+the first pubkey in the file.  I found this out quite luckily -- I'd
+completely forgotten about the multiple keys per file thing...!
+^^
+
+----
+
+^^
+[1] The reflog stores only the "tip" of a series of commits, so if the
+suspicious commit is in the middle of a series which was pushed all at once,
+you have some extra work.
+
+The basic idea is, you take the second SHA in each reflog line, check
+if it is a descendent of the commit you want, note the timestamp if so, and
+then choose the earliest among them to go check in `auth.log`.
+
+I'll write a script to do this if someone asks... right now I can't be
+bothered :-)
+^^

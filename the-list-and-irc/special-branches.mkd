@@ -1,0 +1,125 @@
+# customer branches
+
+<!-- http://colabti.org/irclogger/irclogger_log/git?date=2009-08-15#l585 -->
+
+Here's a question that someone asked (both question and response have been
+heavily edited):
+
+>   Hello. I have a Ruby on Rails application. This is currently managed using
+>   GIT. I have another business that wants a customised copy of this site. Is
+>   it possible to use GIT to do this?
+
+>   Currently I have one site in directory "custA". I want to make a copy in
+>   "custB" which is a branch. They are the same base system with customer
+>   specific modifications.  How does this work?
+
+>   For example, on custA, I make commits 1, 2, 3.  In custB, only commits 1
+>   and 3 are relevant.  Is it possible to pull only specific commits across?
+>   Would I be better served using a central repository and then using
+>   different branches, one for each site?
+
+>   What is the "best" way to do this using Git?
+
+There are several issues actually being raised here, so we'll look at them one
+at a time.
+
+----
+
+## SVN-itis
+
+The first thing to note is that the question reflects what I have started
+calling `SVN-itis` -- where "branch" and "(sub)directory" are conflated :-)
+
+Some [basic
+terminology](concepts/0-terminology.html) is
+probably useful, if you're really new to git, or perhaps some info on
+[branches in git](concepts/branches.html), but
+neither of these quite manage a cure for SVN-itis.  So let's lay it out:
+
+>   In git, there is **no connection** between a branch and a subdirectory.
+Subdirectories are whatever your project needs them to be, and branch names
+are whatever you want them to be.  You can have a branch whose name happens to
+be the same as that of one of your project directories, if you really need to.
+
+So "custA" is **not** a directory.  Neither is "custB"; nor indeed any other
+branch.  And if you have a directory called "include" or "src" or
+"Documentation", that does **not** become a branch in your repo!
+
+When you checkout a branch called "custA", your "working tree" is populated
+with the customer "A" specific version of your code.  It's very likely that
+the actual directory structure for this version is pretty much the same as,
+say, for customer "B", and both of them are similar to the directory structure
+of the main branch.
+
+## cherry-pick versus merge
+
+[also see `git help workflows`]
+
+"*Is it possible to pull only specific commits across?*"
+
+Well certainly yes; this is called **cherry-picking**, and git can do that
+from the command line, or from the GUI.  But it is **not** the right thing to
+do in this circumstance, or indeed many other similar ones.
+
+In terms of "history", a cherry-pick is the same as "take a diff of *that*
+commit versus it's parent, and apply that same change *here* in *this* branch,
+and commit".  Git does not remember that you pulled this change in any way
+whatsoever, and does not associate these two commits (the one you picked, and
+the new one made here as a result) in any long term way to ease maintenance.
+[Experts: *patch-id* is not relevant here for this discussion so leave it
+alone ok? :-)]
+
+Secondly, if the feature you implemented was spread across more than one
+commit (as any non-trivial feature *should*!), you have to remember to
+cherry-pick *all* of them.  In the *right order*!  Miss one, or pick them in
+the wrong order, and things go bad.
+
+When you **merge** a branch, on the other hand, git remembers that you merged
+it.  And since you only deal with the tip of the branch, not individual
+commits, it's git's job to make sure that they all come in, and in the right
+order.  In particular, (as `git help workflows` says), 
+
+    ...a merge can carry over the changes from 1, 10, or 1000 commits with
+    equal ease, which in turn means the workflow scales much better...
+
+So the long term way to do this is by merging.  Just remember that when you
+merge a branch, *all* the changes in that branch are brought in (merging is
+*not* a selective operation) so it is best to *create a different branch for
+each logically separate set of changes*.
+
+## customer specific branches
+
+The idea is you use one common branch, and two (or as many as you need)
+customer specific branches.  All common changes go into the master, and each
+customer branch gets changes that pertain only to that customer.  Periodically
+(when master is considered to be at a stable point), you'll merge changes from
+master into the customer branch (`git checkout custA; git merge master`).
+This brings in newer "common" code into the customer branch. You will
+**never** merge the other way -- that would pollute master with
+customer-specific code.
+
+When you make a delivery to customer A, you checkout the "custA" branch and
+send that.  And of course similarly for other customers.
+
+Now let's say you acquire a new customer, "C", and a bit later find a feature
+that customers A and C want, but B doesn't.  You create (aka "fork") a branch
+off of master (`git checkout -b AC_feature master`), code/test it, making
+commits as you go, and then merge it into A and C (`git checkout A; git merge
+AC_feature` and similarly for customer C).  You do **not** code it in A and
+then rely on merging A into C, because that would get all of A into C.
+
+If, sometime later, you find a minor bug in that feature, you make the change
+in the same branch (`git checkout AC_feature; edit/test/commit`), and then you
+merge it into `custA` and `custC` as above.
+
+## Summary
+
+The main thing we're avoiding in all this is cherry-picking specific commits
+because you only wanted a part of that code in this branch -- cherry-picking
+is certainly doable, but it is not scalable and in the long term it's a pain.
+
+Of course, you do have to be disciplined about which branch you make each
+commit in, in order to keep things properly separated.
+
+But [here](the-list-and-irc/special-branch-fixups.html) is one way to fix up things if you did
+not manage to do that for some reason.

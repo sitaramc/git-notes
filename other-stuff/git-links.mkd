@@ -1,0 +1,212 @@
+# git -- URLs galore
+
+## the chief penguin wrangler speaks :-)
+
+  * Linus on merging: <http://git.or.cz/gitwiki/LinusTalk200705Transcript>
+  * linus explaining merging (what should be automatic and what should not) in
+    a mailing list <http://marc.info/?t=119198137100002&r=1&w=2>
+  * some important comments on Linus's google-talk video, especially about
+    branching and merging:
+    <http://codicesoftware.blogspot.com/2007/05/linus-torvalds-on-git-and-scm.html>
+  * Linus on "clean" "history"
+    <http://www.mail-archive.com/dri-devel@lists.sourceforge.net/msg39091.html>
+  * <http://www.kernel.org/pub/software/scm/git/docs/howto/recover-corrupted-blob-object.txt>
+
+## basic stuff/concepts
+
+  * <http://sitaramc.github.com/gcs/index.html> -- my version of the classic
+    "Git for Computer Scientists"
+  * <http://cworth.org/hgbook-git/tour/> -- I cannot emphasise how useful this
+    URL has been in getting started!
+  * <http://git.or.cz/gitwiki/GitCheatSheet>
+  * who says git is harder than SVN?  Try <http://git.or.cz/course/svn.html>
+  * very nice, pictorial, explanation at
+    <http://www.kernel.org/~junio/200607-ols.pdf>
+
+### ...for SVN and other Centralised VCS users
+
+  * If you always wondered what exactly was meant by "**commit-then-merge
+    versus merge-then-commit**", take a couple of minutes to read
+    <http://www.ericsink.com/entries/dvcs_dag_1.html>.  You'll also understand
+    what a DAG (directed acyclic graph) is, in case you didn't know, with very
+    nice ilustrations at an easy reading pace.
+
+    This site belongs to someone who is making a commercial version control
+    system, and is documenting his findings and thoughts very laboriously.
+    While I don't always agree with him, he (a) certainly writes well, and I
+    absolutely love his sense of humour, and (b) is refreshingly honest about
+    his biases in [his followup blog
+    post](http://www.ericsink.com/entries/dvcs_dag_2.html).
+
+  * <http://codeclimber.blogspot.com/2009/05/git-solves-all-your-branching-and.html>
+    talks about the reluctance to try branching when coming from a
+    painful-to-branch model like SVN.  The fact is, in git, branching is one
+    of those rare beasts: easy *and* powerful.
+
+  * <http://www.lwn.net/Articles/381796/> Subversion is unable to separate the
+    steps "fix bug A" and "integrate with bugfixes B C D and E, having been
+    checked in while you've been working on A". Mr. Corporate Manager wants
+    this feature.
+
+    Subversion cannot do that unless you create a branch for everything.
+    *Poof* your workflow is now an order of magnitude more complicated than
+    git or hg (which is IMHO even less complicated than SVN, once you let go
+    of the centralized-repo, poisoned-by-CVS mindset.)
+
+## #tut detailed tutorials
+
+  * about the best darn doc on using the 3 GUIs that come with git:
+    <http://nathanj.github.com/gitguide/tour.html> has a Windows slant but
+    except for the "installation" pieces, the rest is just as applicable to
+    Linux
+
+  * another *very useful* resource is the [gitready](http://gitready.com/)
+    site, where you'll find lots of tips and techniques.  In particular, they
+    explain things very graphically (for example, if you always wondered what
+    rebase is, try [intro to
+    rebase](http://gitready.com/intermediate/2009/01/31/intro-to-rebase.html),
+    then maybe [pull with
+    rebase](http://gitready.com/advanced/2009/02/11/pull-with-rebase.html) or
+    [squashing commits with
+    rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)).
+
+## advanced stuff/best practices
+
+  * release engineering, branches never-merged-back, etc.,
+    <http://gitster.livejournal.com/2009/01/14/>
+
+  * Ingo Molnar (mingo) on reviewing merge commits versus rebased ones:
+    <http://lwn.net/Articles/409775/>
+
+  * Shawn on contrib/workdir/git-new-workdir:
+    <http://kerneltrap.org/mailarchive/git/2007/10/11/335637>
+
+## digging into git/troubleshooting
+
+  * <http://article.gmane.org/gmane.comp.version-control.git/46609> -- how
+    `git am -3` works
+  * <http://www.kernel.org/pub/software/scm/git/docs/howto/recover-corrupted-blob-object.txt>
+
+## opinions/discussion/DVCSs in general
+
+  * a somewhat longer, more philosophical article on git:
+    <http://www.betaversion.org/~stefano/linotype/news/106/>
+  * on tracking content instead of files: <http://marc.info/?l=git&m=116473016012824>
+  * a more detailed version of the same:
+    <http://article.gmane.org/gmane.comp.version-control.git/217>
+  * descriptive article on the advantages of a DVCS and speculative branching
+    and low overhead repos and so on:
+    <http://griddlenoise.blogspot.com/2007/12/distributed-vcss-are-great-enablers-or.html>
+  * very informative comment on the advantages of a distributed system:
+    <http://weblogs.mozillazine.org/preed/2006/11/version_control_system_shootou.html#comment-486521>
+  * <http://keithp.com/blogs/Repository_Formats_Matter/>  -- discusses git
+    from a small project point of view; you can retain your central model even
+    with git
+  * <http://blogs.gnome.org/newren/2007/11/24/local-caching-a-major-distinguishing-difference-between-vcses/>
+
+  * on git being very liberal: <http://tomayko.com/writings/the-thing-about-git>
+    * Version control systems have traditionally required a lot of up-front
+      planning followed by constant interaction to get changes to the right
+      place at the right time and in the right order. And woe unto thee if a
+      rule is broken somewhere along the way, or you change your mind about
+      something, or you just want to fix this one thing real quick before
+      having to commit all the other crap in your working copy.
+
+## advocacy
+
+  * features unique to git: <http://gitster.livejournal.com/16077.html>
+  * <http://lwn.net/Articles/317154/>: *git bisect "is well-nigh
+    single-handedly responsible for reducing our average bugreport-to-fix time
+    from 4 days to 6 hours".*
+  * on why git is so revolutionary.  This is actually the most "concept-ish"
+    of all the praising articles on git, and yet the most tangible because he
+    keeps on pumping us with examples of stuff he and others had done which
+    could ALL be replaced by git:
+    <http://www.advogato.org/person/apenwarr/diary/371.html>.  Has stuff like "I
+    wanted to build distributed filesystem, but git beat me to it; I wanted a
+    file backup system, but git beat me to it", etc., essentially saying that
+    git is a platform for building whatever you want, not just a VCS.  Or how
+    about a "hash indexed backup system" to store backups from different
+    systems efficiently?
+
+## other VCSs -- comparision, criticism, etc
+
+look, don't expect too much praise for any of the other systems, except
+possibly Hg -- and even that might be back-handed ;-)
+
+### CVS
+
+  * <http://stackoverflow.com/questions/802573/difference-between-git-and-cvs/824241#824241>
+    -- no summary possible; it's very well written and covers a lot of ground.
+    It starts off with "even if you use version control for single developer,
+    on single machine (single account), there are a few differences between
+    Git and CVS", listing 10 points there :-)  A "must read".
+
+### SVN
+
+...but also see the [main article on subversion](other-stuff/svn.html) for
+a lot more; SVN is the most used VCS in terms of what potential git users are
+*currently* using, so it has its own page.
+
+  * <http://blog.mwolson.org/tech/why_i_dislike_subversion.html>
+
+### Visual Source <font size=-5>un</font>Safe and TFS
+
+  * data integrity issues in VSS:
+    <http://www.developsense.com/testing/VSSDefects.html>
+  * from <http://martinfowler.com/bliki/VersionControlTools.html>: *Before I
+    finish with those behind the threshold, I just want to say a few things
+    about a particularly awful tool: Visual Source Safe, or as I call it:
+    Visual Source Shredder. We see this less often now, thank goodness, but if
+    you are using it we'd strongly suggest you get off it. Now. Not just is it
+    a pain to use, I've heard too many tales of repository corruption to trust
+    it with anything more valuable than foo.txt.*
+
+  * TFS rant <http://developers.slashdot.org/comments.pl?sid=1872398&cid=34258672>
+
+### Clearcase
+  * <http://creativekarma.com/ee.php/weblog/comments/why_clearcase_sucks/>
+  * <http://evilparty.org/~orc/2004/08/03/001/index.html>
+  * <http://selenic.com/pipermail/mercurial/2007-April/012864.html>
+  * <http://www.digitaltorque.ca/2006/12/18/clearcase-making-easy-things-hard/>
+  * <http://www.germane-software.com:8080/ser/aikido/clearcase-sucks>
+  * <http://www.littleredbat.net/mk/blog/story/63/> -- git to the rescue :-)
+  * <http://www.trolocsis.com/wp/2007/04/18/the-joys-of-clearcase/>
+  * <http://codicesoftware.blogspot.com/2008/04/break-up-clearcase-bad-love-affair.html>
+  * <http://permalink.gmane.org/gmane.comp.version-control.git/132311> -- on
+    CC's speed
+
+### Hg
+
+  * <http://weblog.masukomi.org/2008/2/4/some-thoughts-about-git> (cf Hg)
+  * <http://weblogs.mozillazine.org/preed/2007/04/version_control_system_shootou_1.html>
+    :-)
+
+### darcs
+
+All this is moot -- the GHC (Glasgow Haskell Compiler) people themselves moved
+from Darcs to git :-)
+
+Think about it.  Darcs was the poster child of "mainstream" use of Haskell
+(i.e., outside the ivory towers).  And the people who maintain the standard
+Haskell compiler decided it was too slow or something.
+
+  * <http://blog.moertel.com/articles/2007/12/10/how-i-stopped-missing-darcs-and-started-loving-git#comment-856>
+    a very cogent comparision with Darcs from someone who used Darcs for 3
+    years and git for 1 year
+
+### perforce
+
+  * <http://kb.perforce.com/UserTasks/WorkingDisconnected>
+  * <http://luqui.org/blog/archives/2007/02/19/perforce-sucks/>
+  * very interesting stuff.  SVN guys will like this :-)
+    <http://www.harukizaemon.com/2006/09/no-really-perforce-does-suck.html>
+
+## funny stuff
+
+  * <http://changelog.complete.org/posts/698-If-Version-Control-Systems-were-Airlines.html>
+    -- esp the last 2 "airlines".  No wonder I like git so much :-)
+
+## git and I :)
+
+  http://colabti.org/irclogger/irclogger_log/git?date=2009-08-08#l839

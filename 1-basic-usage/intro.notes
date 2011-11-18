@@ -2,7 +2,7 @@
 
 # why
 
-../images/projects-sans-vcs.png
+images/intro/projects-sans-vcs.png
 
 # what is a VCS
 
@@ -19,59 +19,59 @@
 
 # an empty directory
 
-intro-images/empty.png
+images/intro/empty.png
 
 # add some files
 
-intro-images/sampleproj.png
+images/intro/sampleproj.png
 
 # 'git init' -- done!
 
-intro-images/init-done.png
+images/intro/init-done.png
 
 # how about on windows?
 
-intro-images/empty-windows.png
+images/intro/empty-windows.png
 
 # making a repository
 
-intro-images/init-win1.png
+images/intro/init-win1.png
 
 # making a repository
 
-intro-images/init-win2.png
+images/intro/init-win2.png
 
 # making a repository
 
-intro-images/init-win3.png
+images/intro/init-win3.png
 
 # done!
 
-intro-images/init-win4.png
+images/intro/init-win4.png
 
 # just checking...
 
-intro-images/init-done-win1.png
+images/intro/init-done-win1.png
 
 # yup -- works fine!
 
-intro-images/init-done-win2.png
+images/intro/init-done-win2.png
 
 # CLI on windows?
 
-intro-images/init-winb1.png
+images/intro/init-winb1.png
 
 # a bash shell
 
-intro-images/init-winb2.png
+images/intro/init-winb2.png
 
 # 'git init' -- done!
 
-intro-images/init-done-winb.png
+images/intro/init-done-winb.png
 
 # what is a 'work tree'
 
-intro-images/worktree.png
+images/intro/worktree.png
 
 # what is a 'repo'
   * A repository is just
@@ -82,15 +82,15 @@ intro-images/worktree.png
 
 # repository
 
-intro-images/repo.png
+images/intro/repo.png
 
 # (what's inside '.git'?)
 
-intro-images/inside-dotgit.png
+images/intro/inside-dotgit.png
 
 # you said 'non-linear'
 
-l:intro-images/worktree-symbol.png
+l:intro-images/intro/worktree-symbol.png
 
   * sure...
   * a repository keeps snapshots of the work tree...
@@ -98,27 +98,27 @@ l:intro-images/worktree-symbol.png
 
 # snap
 
-intro-images/repo-1.png
+images/intro/repo-1.png
 
 # snapshots
 
-intro-images/repo-2.png
+images/intro/repo-2.png
 
 # snapshots of the work tree
 
-intro-images/repo-3.png
+images/intro/repo-3.png
 
 # at different
 
-intro-images/repo-4.png
+images/intro/repo-4.png
 
 # at different points
 
-intro-images/repo-5.png
+images/intro/repo-5.png
 
 # at different points in time
 
-intro-images/repo-6.png
+images/intro/repo-6.png
 
 # what is a commit
 
@@ -126,7 +126,7 @@ remember those snapshots?  Yup -- they're all commits!
 
 Here, to refresh your memory:
 
-h50%:intro-images/repo-6.png
+h50%:intro-images/intro/repo-6.png
 
 # what is a repo again?
   * a work tree + .git?  @@sure, but also...
@@ -135,7 +135,7 @@ h50%:intro-images/repo-6.png
 
 # DAG
 
-intro-images/dag.png
+images/intro/dag.png
 
 # what is a branch
   * since a graph is sort of the same as a tree (for our purposes)
@@ -144,7 +144,7 @@ intro-images/dag.png
 
 # branches
 
-intro-images/dag-br.png
+images/intro/dag-br.png
 
 # what is a tag
   * when you checkout a branch and then commit, the branch is now pointing at
@@ -156,7 +156,7 @@ intro-images/dag-br.png
 
 # tags
 
-intro-images/dag-br-tag.png
+images/intro/dag-br-tag.png
 
 # general VCS concepts
   * "project": minimum set of source code (and related files) needed
@@ -196,7 +196,7 @@ intro-images/dag-br-tag.png
 
 (ok that's not a bad picture; it's HORRIBLE picture!)
 
-intro-images/remote.png
+images/intro/remote.png
 
 # git concepts
   * repo
@@ -298,35 +298,35 @@ intro-images/remote.png
 
 # clean tree - CLI
 
-intro-images/clean-cli.png
+images/intro/clean-cli.png
 
 # clean tree - GUI
 
-intro-images/clean-gui.png
+images/intro/clean-gui.png
 
 # dirty tree - CLI
 
-intro-images/dirty-cli.png
+images/intro/dirty-cli.png
 
 # dirty tree - GUI
 
-intro-images/dirty-gui.png
+images/intro/dirty-gui.png
 
 # staging from the GUI
 
-intro-images/staging-gui.png
+images/intro/staging-gui.png
 
 # staged files - CLI
 
-intro-images/staged-cli.png
+images/intro/staged-cli.png
 
 # committing from the GUI
 
-intro-images/commit-gui.png
+images/intro/commit-gui.png
 
 # clean again!
 
-intro-images/clean-again.png
+images/intro/clean-again.png
 
 # conflicts
   * what is a conflict
