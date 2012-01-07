@@ -15,7 +15,8 @@ When you give the flag **twice**, it looks for new code among **all** the
 files in the parent commit, and so it detects code that was **copied**.
 
 `git gui blame` behaves like `-C -C` by default, but can behave like `-C` if
-`gui.fastcopyblame` is true.
+`gui.fastcopyblame` is true.  (In addition, it also appears to set `-w`, to
+ignore whitespace changes while blaming).
 
 ## threshold, and how to specify it
 
