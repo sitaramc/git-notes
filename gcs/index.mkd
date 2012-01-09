@@ -475,8 +475,7 @@ they are now in **your local "master" branch**.  They continue to have the
 same SHA values and the object store does not change as a result of this
 command at all.
 
-All you did was move a pointer from one node to another.  Which is why the
-linked list analogy works so well in understanding git as a DAG.
+All you did was move a pointer from one node to another.
 
 ## advanced operations
 
