@@ -2,7 +2,7 @@
 
 # why
 
-images/intro/projects-sans-vcs.png
+images/projects-sans-vcs.png
 
 # what is a VCS
 
@@ -90,7 +90,7 @@ images/intro/inside-dotgit.png
 
 # you said 'non-linear'
 
-l:intro-images/intro/worktree-symbol.png
+l:images/intro/worktree-symbol.png
 
   * sure...
   * a repository keeps snapshots of the work tree...
@@ -126,7 +126,7 @@ remember those snapshots?  Yup -- they're all commits!
 
 Here, to refresh your memory:
 
-h50%:intro-images/intro/repo-6.png
+h50%:images/intro/repo-6.png
 
 # what is a repo again?
   * a work tree + .git?  @@sure, but also...

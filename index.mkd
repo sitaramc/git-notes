@@ -31,8 +31,7 @@ you're still perfecting the code -- you cannot do this with a centralised VCS.
 
   * if you're itching to get started, but have become overwhelmed by having to
     understand git itself and how it fits with ssh or http etc., read
-    [this](1-basic-usage/simple-git-session.html) -- I've been told it is
-    quite helpful :)
+    [this](1-basic-usage/tias.html).
 
 </font>
 
