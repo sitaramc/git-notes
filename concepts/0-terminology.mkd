@@ -179,25 +179,21 @@ time, otherwise you're not really *using* git!)
 ### accessing remote repositories
 
 Every remote repository (often called just a **remote**) has a URL associated
-with it, which tells your (local) git client how to reach it.  The simplest
-URL is for a repo that is on the same machine, which can then use the *file*
-protocol: `file:///home/sitaram/path/to/repo.git`.
+with it, which tells your (local) git client how to reach it.  There are
+typically 4 kinds of Git URLs:
 
-Anonymous access (read-only) repositories can be grabbed using the *git*
-protocol; for example, Linus Torvalds' version of the current Linux kernel is
-at `git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git`.
-Read-only repos can also use the HTTP protocol, although this is not as
-efficient for continuous use.
+  * ssh: like `ssh://[user@]host.xz[:port]/path/to/repo.git/`
+  * http: like `http[s]://host.xz[:port]/path/to/repo.git/`
+  * git: like `git://host.xz[:port]/path/to/repo.git/` -- note that this is an
+    unauthenticated protocol suitable only for allowing downloads of open
+    source or similar software
+  * local file: like `file:///full/path/to/reponame`
 
-A remote repository to which you have write access will almost certainly use
-*ssh* as the underlying authentication protocol, so the remote URL might look
-like `ssh://sitaram@172.1.7.2/full/path/to/repo.git`.  (We say 'might look
-like' because there are other syntactical variants of ssh urls for git; see
-'man git-clone').
+See 'man git-clone' for all the allowed syntaxes for git URLs.
 
 ### naming remote repositories
 
-You can refer to, (or fetch from, and push to) more then one remote repos in
+You can refer to, (or fetch from, and push to) more than one remote repo in
 *your* clone, giving them all different URLs.  After a while it gets
 inconvenient to use the full URLs in your `git fetch` and `git push` commands,
 so git allows you to give an easy to remember "nickname" for each "remote".  I
@@ -205,8 +201,11 @@ could, for instance, do this:
 
     git remote add sejal ssh://sitaram@sejal.herlab.ourcompany.com/path/to/repo.git
 
-After this I could refer to the longer URL by the shortname "sejal" and it
-would be the same thing.
+After this I could refer to the longer URL by the shortname "sejal" in most
+git commands and it would be the same thing.
+
+(Note: for convenience, a 'remote' called 'origin' is automatically created
+when you clone a repo, pointing to the repo you cloned from.)
 
 #### origin
 

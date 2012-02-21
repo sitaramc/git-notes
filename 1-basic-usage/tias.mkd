@@ -40,3 +40,11 @@ example, I might do this:
 
 and that would give me a "b.git" that is a bare repo that starts out with all
 the code and branches that my real server repo has.
+
+----
+
+Note: the [terminology][term] page may also be useful, especially the section
+on "accessing remote repositories".
+
+[term]: http://sitaramc.github.com/concepts/0-terminology.html
+

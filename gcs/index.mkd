@@ -284,12 +284,14 @@ will move to point to the new commit.
 Git repos are accessed by providing a URL.  There are typically 4 kinds of Git
 URLs:
 
-  * ssh: like `ssh://git@server:reponame`
-  * http: like `http://server:reponame`
-  * git: like `git://server:reponame` -- note that this is an unauthenticated
-    protocol suitable only for allowing downloads of open source or similar
-    software
+  * ssh: like `ssh://[user@]host.xz[:port]/path/to/repo.git/`
+  * http: like `http[s]://host.xz[:port]/path/to/repo.git/`
+  * git: like `git://host.xz[:port]/path/to/repo.git/` -- note that this is an
+    unauthenticated protocol suitable only for allowing downloads of open
+    source or similar software
   * local file: like `file:///full/path/to/reponame`
+
+(see 'man git-clone' for all the allowed syntaxes for git URLs).
 
 ### what is a "remote"?
 
