@@ -48,5 +48,8 @@ follow the links below.
 
 ----
 
-(c) Copyright Sitaram Chamarty, sitaramc@gmail.com, licensed under the
-Creative Commons Attribution Sharealike license.
+## License
+
+(c) Copyright Sitaram Chamarty, sitaramc@gmail.com.  This documentation is
+provided under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0
+Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/).
