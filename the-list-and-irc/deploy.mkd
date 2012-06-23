@@ -10,10 +10,6 @@ So let's talk deployment...
 
 ----
 
-[[TOC]]
-
-----
-
 ## introduction
 
 Deploying on a push to a bare repo should be easy.  Just add a post-receive
