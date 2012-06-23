@@ -35,10 +35,12 @@ be referring to some of them simply by number later.
 3.  Any changes *to tracked files* in the deployment directory after the last
     deployment should be ignored when following rules 1 and 2.
 
-    (The scope of this article does not include dealing with such changes in
-    any other way).
+    However, sometimes you might want to detect such changes and abort if you
+    found any.
 
 4.  *Untracked* files in the deploy directory should be left alone.
+
+    Again, some people might want to detect this and abort the deployment.
 
 ## why git is not a deployment tool
 
@@ -52,9 +54,9 @@ Also, git does not track empty directories, which could also be a problem
 There could be other reasons; I'll update this section as I hear of any but
 I'm sure those are the main ones.
 
-## 5 different ways to deploy
+## 6 different ways to deploy
 
-We'll discuss these 5 ways of deploying your project using git.  Note that
+We'll discuss these 6 ways of deploying your project using git.  Note that
 none of these methods can overcome git's inherent limitations for deployment
 (permissions, etc., as described above), though any of them can be followed up
 with extra code to do that, using some site-local script.
@@ -63,7 +65,8 @@ with extra code to do that, using some site-local script.
 
 **Summary**
 
-    GIT_WORK_TREE=/deploy/dir git checkout -f master
+    export GIT_WORK_TREE=/deploy/dir
+    git checkout -f master
 
 **Pros**: satisfies all 4 of our rules.
 
@@ -88,36 +91,13 @@ run into trouble because I know you must have violated one or more of those
 rules and all you're doing is asking *me* to play 20 questions to dig out of
 *you* which ones they were ;-)
 
-### archive -- like old times
+Aborting on changes to tracked files is easy.  Before the checkout, run:
 
-**Summary**
+    git diff --quiet || exit 1
 
-    git archive master | tar -C /deploy/dir -xf -
+Aborting on finding untracked files is also easy enough:
 
-**Pros**: clean and simple
-
-**Cons**: doesn't satisfy rule 2 (deleted files don't get deleted).
-
-**Discussion**
-
-This is equivalent to what you would do in the old days:
-
-  * create a tar file for the next release
-  * copy it to the deploy directory
-  * extract the tar
-
-And of course it has the exact same problem.  If untracked files are not
-important to you, or there are a limited number of them you can save and
-restore, you can do this:
-
-    tar -C /deploy/dir savefile1 savefile2 savedir3 > deploy.tmp.$$
-    rm -rf /deploy/dir
-    mkdir  /deploy/dir
-    tar -C /deploy/dir -xf deploy.tmp.$$
-    git archive master | tar -C /deploy/dir -xf -
-
-But every time you use "rm -rf" in a script, a little kitten dies somewhere,
-so you may not be comfortable with this alternative.
+    git ls-files -o | grep >/dev/null . && exit 1
 
 ### fetch -- reverse the flow
 
@@ -130,7 +110,7 @@ so you may not be comfortable with this alternative.
 
 **Pros**: satisfies all 4 rules
 
-**Cons**: your deploy directory needs to be a clone of the bare repo
+**Cons**: your deploy directory needs to be a clone of the bare repo.
 
 **Discussion**
 
@@ -142,13 +122,19 @@ A lot of people try this; they fail because they don't realise git sets up an
 extra environment variable (because it expects to be running in a bare repo)
 that you need to unset when you cross over into a non-bare repo.
 
+Aborting on finding local changes is the same as in the previous section.  Run
+those commands just before the fetch.
+
+**Security**: a readable ".git" may be a security issue in some cases.
+
 ### reset -- another reversing trick
 
 **Summary**
 
     GIT_DIR=$PWD
     cd /deploy/dir
-    GIT_WORK_TREE=. git reset --hard
+    export GIT_WORK_TREE=.
+    git reset --hard
 
 **Pros**: satisfies all 4 rules
 
@@ -161,7 +147,7 @@ branch.
 
 A newbie may be tempted to fix that:
 
-    GIT_WORK_TREE=. git reset --hard master     # DONT DO THIS!
+    git reset --hard master     # DONT DO THIS!
 
 In a word, **DON'T**!  If you did not change HEAD you do not need it.  And if
 you *did* change HEAD to something other than master you'd lose that branch!
@@ -172,23 +158,35 @@ you can use this.  But do you really want to take that chance?
 
 Finally, it has *no* advantage over the first method in any way.
 
-### rsync -- the staging approach
+### direct archive dump
 
 **Summary**
 
-    mkdir /tmp/deploy.tmp.$$
-    git archive HEAD | tar -C /tmp/deploy.tmp.$$ -xf -
-    cd /tmp/deploy.tmp.$$
-    rsync -a --delete . /deploy/dir
-    cd /tmp
-    rm -rf /tmp/deploy.tmp.$$
+    git archive master | tar -C /deploy/dir -xf -
 
-**Pros**: satisfies all 4 rules.  Allows you to do extra stuff in the staging
-directory before the rsync.  If you can afford to violate rule 4, the staging
-directory helps to make an almost-atomic switchover if needed.
+**Pros**: clean and simple
 
-**Cons**: inefficient if the repo is large and most files have not changed
-*and* you don't need to adjust anything before deploying.
+**Cons**: doesn't satisfy rule 2 (deleted files don't get deleted).
+
+**Discussion**
+
+Pretty useless, since it violates rule 2.  If you prefer to sacrifice rule 4
+instead of rule 2, see the next section!
+
+It's also inefficient for large repos if only a few files have changed.
+
+### archive dump with staging
+
+**Summary**
+
+    git archive master | tar -C /deploy/dir.new -xf -
+    mv /deploy/dir      /deploy/dir.old
+    mv /deploy/dir.new  /deploy/dir
+    rm -rf              /deploy/dir.old
+
+**Pros**: clean and simple, using only a tar file and shell commands.
+
+**Cons**: sacrifices rule 4.
 
 **Discussion**
 
@@ -196,42 +194,69 @@ This method uses a staging directory between the repo and the deploy
 directory.  It is best used if you need to make any adjustments before the
 actual files are copied over.
 
-It is also useful if your repo is large, and you want an "almost atomic"
-switchover to the new files.  Just choose a staging directory on the same file
-system as the deploy directory, then instead of rsync you do two renames.
-(This only works if you can afford to violate rule 4 -- i.e., you don't have
-any untracked files you need to preserve or you can explicitly copy them over
-in advance).
+While still inefficient (in terms of disk writes compared to number of changed
+files), this method compensates for the inefficiency by allowing almost-atomic
+switchover if you put the staging directory on the same filesystem.
 
-Note that you also need to worry about security for the temp dir if untrusted
-people have local shell access to the server.  Consider using mktemp and
-umask.
+However, every time you use "rm -rf" in a script, a little kitten dies
+somewhere, so you may not be comfortable with this script :-)
+
+**Security**: You also need to worry about security for the temp dir if
+untrusted people have local shell access to the server.  Consider using mktemp
+and umask.
+
+Aborting on finding local changes is not easy.  You need to checkout the *old*
+commit somewhere and compare files manually.  If this is important, use one of
+the earlier methods.
+
+### archive dump with staging, using rsync
+
+This is a variation of the previous one, except that your deploy directory is
+on a different host, so you use rsync for network-efficiency.  (Presumably
+there are security or such reasons not to have the git repo on the destination
+server).
+
+You no longer get atomic switchover, but rsync's network efficiency is
+probably good enough.  Maybe not as instantaneous as two rename commands (or a
+symlink switch) but not too bad.
 
 EugeneKay has written a very comprehensive script that uses this technique,
 but adds many more bells and whistles; find it [here][ek].  I'm sure after he
-reads this he will add an "--atomic" flag as well ;-)
+reads this he will add an "--atomic" flag, *and* make it work across hosts ;-)
+
+However, please note that if you use that script, you have to **explicitly
+enable** rule 2 support by adding `--delete` to the rsync options.  It's not
+on by default, and I think it should be because I consider rule 2 to be
+**much** more important than rule 4.
 
 [ek]: https://github.com/EugeneKay/scripts/blob/master/bash/git-deploy-hook.sh
 
 ## summary/recap
 
-We've seen 5 methods.  Here's my summary.  The ones in gray are considered not
+We've seen 6 methods.  Here's my summary.  The ones in gray are considered not
 useful enough to be in the running.
 
   * checkout -- this is the one I prefer, in fact I use it in gitolite.  It's
-    efficient and newbie friendly enough.  The rules imposed are simple to
-    understand and easy to stick to.
+    very efficient (only changed files are written, as normal in git) and
+    newbie friendly enough.  The rules imposed are simple to understand and
+    easy to stick to.
 
-  * <font color="gray">archive -- this is the only one that doesn't satisfy
-    all 4 of our deployment rules, so it's kinda useless :(</font>
+    In addition, it's easy to detect local changes and abort.  (This is
+    equally true for the next 2 methods also).
 
-  * fetch -- this is the most intuitive for newbies (while remaining
-    efficient), but your deploy directory needs to be a proper clone.
+  * fetch -- this is pretty intuitive even for git-newbies (while also
+    remaining efficient), but your deploy directory needs to be a clone, which
+    could be a problem.
 
   * <font color="gray">reset -- highly newbie-unsafe.  No particular advantage
     over the "checkout" method anyway.</font>
 
-  * rsync -- in most cases this is wasteful of disk and time.  But if you have
-    any special adjustments to make before deploying or need atomic
-    switchover, this is the only method that can even come close.  I predict
-    EugeneKay's script will soon become a full-blown product :-)
+  * <font color="gray">direct archive dump -- this is the only one that
+    doesn't satisfy rule 2, so it's kinda useless :(</font>
+
+  * archive dump with staging -- the absolute simplest in terms of git
+    concepts.  It's inefficient but compensates by allowing atomic
+    switchovers.
+
+  * archive dump with staging using rsync -- very useful if your deploy dir is
+    on a different server.
