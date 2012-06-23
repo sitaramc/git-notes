@@ -1,0 +1,241 @@
+# git as a deployment tool
+
+One of the first things people want to do with a server side repo is to
+automatically deploy something when someone pushes to it.
+
+And one of the first things they hear when they ask about it on #git is "git
+is not a deployment tool, so don't do that" ;-)
+
+So let's talk deployment...
+
+----
+
+[[TOC]]
+
+----
+
+## introduction
+
+Deploying on a push to a bare repo should be easy.  Just add a post-receive
+hook that contains this code:
+
+    #!/bin/sh
+    some-magic-deploy-command /deploy/directory
+
+Opinions differ on what that magic deploy command should actually be, and
+indeed whether there should even *be* one at all :-)
+
+## deployment rules
+
+Here's what we expect from a deployment tool.  Note the rule numbers -- we'll
+be referring to some of them simply by number later.
+
+1.  All files in the branch being deployed should be copied to the deployment
+    directory.
+
+2.  Files that were deleted in the git repo since the last deployment should
+    get deleted from the deployment directory.
+
+3.  Any changes *to tracked files* in the deployment directory after the last
+    deployment should be ignored when following rules 1 and 2.
+
+    (The scope of this article does not include dealing with such changes in
+    any other way).
+
+4.  *Untracked* files in the deploy directory should be left alone.
+
+## why git is not a deployment tool
+
+The most important reason is this: git does not track permissions (other than
+the first "x" in "rwxrwxrwx").  Many real-world deployments need a bit more
+granularity than that, I suspect.
+
+Also, git does not track empty directories, which could also be a problem
+(albeit less common than permissions).
+
+There could be other reasons; I'll update this section as I hear of any but
+I'm sure those are the main ones.
+
+## 5 different ways to deploy
+
+We'll discuss these 5 ways of deploying your project using git.  Note that
+none of these methods can overcome git's inherent limitations for deployment
+(permissions, etc., as described above), though any of them can be followed up
+with extra code to do that, using some site-local script.
+
+### checkout -- the "fight club" of git deployment
+
+**Summary**
+
+    GIT_WORK_TREE=/deploy/dir git checkout -f master
+
+**Pros**: satisfies all 4 of our rules.
+
+**Cons**: requires you to satisfy its own rules in turn:
+
+  * you don't talk about it or ask questions about it ;-)
+  * you always checkout to the same deploy directory
+  * you always checkout the same branch
+  * you always use "-f"
+
+**Discussion**
+
+The reason the collected wisdom of #git says "dont use git as a deploy tool"
+is because it's *hard to explain* those 3 rules.
+
+Worse, you might discover that it *appears* safe to violate one of the rules,
+but unless you're an expert you've just walked past without noticing the
+"Danger: quicksand ahead" sign!
+
+It works fine if you stick to those rules.  But I will not support it if you
+run into trouble because I know you must have violated one or more of those
+rules and all you're doing is asking *me* to play 20 questions to dig out of
+*you* which ones they were ;-)
+
+### archive -- like old times
+
+**Summary**
+
+    git archive master | tar -C /deploy/dir -xf -
+
+**Pros**: clean and simple
+
+**Cons**: doesn't satisfy rule 2 (deleted files don't get deleted).
+
+**Discussion**
+
+This is equivalent to what you would do in the old days:
+
+  * create a tar file for the next release
+  * copy it to the deploy directory
+  * extract the tar
+
+And of course it has the exact same problem.  If untracked files are not
+important to you, or there are a limited number of them you can save and
+restore, you can do this:
+
+    tar -C /deploy/dir savefile1 savefile2 savedir3 > deploy.tmp.$$
+    rm -rf /deploy/dir
+    mkdir  /deploy/dir
+    tar -C /deploy/dir -xf deploy.tmp.$$
+    git archive master | tar -C /deploy/dir -xf -
+
+But every time you use "rm -rf" in a script, a little kitten dies somewhere,
+so you may not be comfortable with this alternative.
+
+### fetch -- reverse the flow
+
+**Summary**
+
+    cd /deploy/dir
+    unset GIT_DIR
+    git fetch origin
+    git reset --hard origin/master
+
+**Pros**: satisfies all 4 rules
+
+**Cons**: your deploy directory needs to be a clone of the bare repo
+
+**Discussion**
+
+If your deploy directory is OK with having a ".git" sitting in it (i.e.,
+whatever application you have won't barf because of it), this is a simple way
+of reversing the flow.
+
+A lot of people try this; they fail because they don't realise git sets up an
+extra environment variable (because it expects to be running in a bare repo)
+that you need to unset when you cross over into a non-bare repo.
+
+### reset -- another reversing trick
+
+**Summary**
+
+    GIT_DIR=$PWD
+    cd /deploy/dir
+    GIT_WORK_TREE=. git reset --hard
+
+**Pros**: satisfies all 4 rules
+
+**Cons**: newbie-unsafe; see below.
+
+**Discussion**
+
+This code deploys whatever HEAD points to, as it doesn't explicitly name a
+branch.
+
+A newbie may be tempted to fix that:
+
+    GIT_WORK_TREE=. git reset --hard master     # DONT DO THIS!
+
+In a word, **DON'T**!  If you did not change HEAD you do not need it.  And if
+you *did* change HEAD to something other than master you'd lose that branch!
+(Didn't see *that* coming did ya?)
+
+If you never change HEAD and no one in their right mind in your site would,
+you can use this.  But do you really want to take that chance?
+
+Finally, it has *no* advantage over the first method in any way.
+
+### rsync -- the staging approach
+
+**Summary**
+
+    mkdir /tmp/deploy.tmp.$$
+    git archive HEAD | tar -C /tmp/deploy.tmp.$$ -xf -
+    cd /tmp/deploy.tmp.$$
+    rsync -a --delete . /deploy/dir
+    cd /tmp
+    rm -rf /tmp/deploy.tmp.$$
+
+**Pros**: satisfies all 4 rules.  Allows you to do extra stuff in the staging
+directory before the rsync.  If you can afford to violate rule 4, the staging
+directory helps to make an almost-atomic switchover if needed.
+
+**Cons**: inefficient if the repo is large and most files have not changed
+*and* you don't need to adjust anything before deploying.
+
+**Discussion**
+
+This method uses a staging directory between the repo and the deploy
+directory.  It is best used if you need to make any adjustments before the
+actual files are copied over.
+
+It is also useful if your repo is large, and you want an "almost atomic"
+switchover to the new files.  Just choose a staging directory on the same file
+system as the deploy directory, then instead of rsync you do two renames.
+(This only works if you can afford to violate rule 4 -- i.e., you don't have
+any untracked files you need to preserve or you can explicitly copy them over
+in advance).
+
+Note that you also need to worry about security for the temp dir if untrusted
+people have local shell access to the server.  Consider using mktemp and
+umask.
+
+EugeneKay has written a very comprehensive script that uses this technique,
+but adds many more bells and whistles; find it [here][ek].  I'm sure after he
+reads this he will add an "--atomic" flag as well ;-)
+
+[ek]: https://github.com/EugeneKay/scripts/blob/master/bash/git-deploy-hook.sh
+
+## summary/recap
+
+We've seen 5 methods.  Here's my summary.  The ones in gray are considered not
+useful enough to be in the running.
+
+  * checkout -- this is the one I prefer, in fact I use it in gitolite.  It's
+    efficient and newbie friendly enough.  The rules imposed are simple to
+    understand and easy to stick to.
+
+  * <font color="gray">archive -- this is the only one that doesn't satisfy
+    all 4 of our deployment rules, so it's kinda useless :(</font>
+
+  * fetch -- this is the most intuitive for newbies (while remaining
+    efficient), but your deploy directory needs to be a proper clone.
+
+  * <font color="gray">reset -- highly newbie-unsafe.  No particular advantage
+    over the "checkout" method anyway.</font>
+
+  * rsync -- in most cases this is wasteful of disk and time.  But if you have
+    any special adjustments to make before deploying or need atomic
+    switchover, this is the only method that can even come close.  I predict
+    EugeneKay's script will soon become a full-blown product :-)
