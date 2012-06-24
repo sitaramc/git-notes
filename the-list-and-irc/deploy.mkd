@@ -70,26 +70,24 @@ with extra code to do that, using some site-local script.
 
 **Pros**: satisfies all 4 of our rules.
 
-**Cons**: requires you to satisfy its own rules in turn:
+**Cons**: you don't talk about it or ask questions about it ;-)  Jokes apart,
+see discussion below.
 
-  * you don't talk about it or ask questions about it ;-)
+**Discussion**
+
+If you want to use this method, you have to make sure:
+
   * you always checkout to the same deploy directory
   * you always checkout the same branch
   * you always use "-f"
 
-**Discussion**
+But it's hard to explain *why*.  (It has to do with HEAD, the index, and the
+actual work tree getting out of sync in ways that won't ever happen on a
+normal repo using normal git commands).
 
-The reason the collected wisdom of #git says "dont use git as a deploy tool"
-is because it's *hard to explain* the last 3 rules there.
-
-Worse, you might discover that it *appears* safe to violate one of the rules,
-but unless you're an expert you've just walked past without noticing the
-"Danger: quicksand ahead" sign!
-
-It *does* work fine if you stick to those rules.  But I will not support it if
-you run into trouble because I know you must have violated one or more of them
-and all you're doing is asking *me* to play 20 questions to dig out of *you*
-which ones they were ;-)
+So if you run into trouble, it becomes a game of trying to dig out of you what
+exactly you did in what sequence.  And if you think that's easy you've never
+done tech support :)
 
 Aborting on changes to tracked files is easy.  Before the checkout, run:
 
@@ -198,8 +196,13 @@ While still inefficient (in terms of disk writes compared to number of changed
 files), this method compensates for the inefficiency by allowing almost-atomic
 switchover if you put the staging directory on the same filesystem.
 
-However, every time you use "rm -rf" in a script, a little kitten dies
-somewhere, so you may not be comfortable with this script :-)
+Now, while I would consider a two-mv command sequence as atomic enough,
+there'll always be nitpickers who insist that "almost" isn't good enough.
+Patches welcome :-)
+
+<font color="gray">(IMO, if you're worrying about that level of atomicity in
+these days of "eventually consistent" databases you should be *writing* this
+document not reading it!)</font>
 
 **Security**: You also need to worry about security for the temp dir if
 untrusted people have local shell access to the server.  Consider using mktemp
@@ -238,8 +241,8 @@ useful enough to be in the running.
 
   * checkout -- this is the one I prefer, in fact I use it in gitolite.  It's
     very efficient (only changed files are written, as normal in git) and
-    newbie friendly enough.  The rules imposed are simple to understand and
-    easy to stick to.
+    newbie friendly enough.  The constraints imposed are simple to understand
+    and easy to stick to.
 
     In addition, it's easy to detect local changes and abort.  (This is
     equally true for the next 2 methods also).
