@@ -80,16 +80,16 @@ with extra code to do that, using some site-local script.
 **Discussion**
 
 The reason the collected wisdom of #git says "dont use git as a deploy tool"
-is because it's *hard to explain* those 3 rules.
+is because it's *hard to explain* the last 3 rules there.
 
 Worse, you might discover that it *appears* safe to violate one of the rules,
 but unless you're an expert you've just walked past without noticing the
 "Danger: quicksand ahead" sign!
 
-It works fine if you stick to those rules.  But I will not support it if you
-run into trouble because I know you must have violated one or more of those
-rules and all you're doing is asking *me* to play 20 questions to dig out of
-*you* which ones they were ;-)
+It *does* work fine if you stick to those rules.  But I will not support it if
+you run into trouble because I know you must have violated one or more of them
+and all you're doing is asking *me* to play 20 questions to dig out of *you*
+which ones they were ;-)
 
 Aborting on changes to tracked files is easy.  Before the checkout, run:
 
