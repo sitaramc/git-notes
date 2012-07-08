@@ -42,6 +42,14 @@ be referring to some of them simply by number later.
 
     Again, some people might want to detect this and abort the deployment.
 
+**NOTE**: if you need more than this, you should seriously consider a proper
+deployment tool.  The best one I have heard of (but not used, since I don't
+need that level of control) is [git-deploy][gdgd].  It's educational to at
+least be aware of what is possible with a real tool, even if your current
+situation does not require it.
+
+[gdgd]: https://github.com/git-deploy/git-deploy
+
 ## why git is not a deployment tool
 
 The most important reason is this: git does not track permissions (other than
