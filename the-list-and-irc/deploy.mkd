@@ -223,9 +223,8 @@ the earlier methods.
 ### archive dump with staging, using rsync
 
 This is a variation of the previous one, except that your deploy directory is
-on a different host, so you use rsync for network-efficiency.  (Presumably
-there are security or such reasons not to have the git repo on the destination
-server).
+on a different host, or on a different user on the same server.  The git user
+needs ssh access to the deploy user, and you use rsync to copy the files.
 
 You no longer get atomic switchover, but rsync's network efficiency is
 probably good enough.  Maybe not as instantaneous as two rename commands (or a
@@ -239,6 +238,10 @@ However, please note that if you use that script, you have to **explicitly
 enable** rule 2 support by adding `--delete` to the rsync options.  It's not
 on by default, and I think it should be because I consider rule 2 to be
 **much** more important than rule 4.
+
+**Security**: If you don't want your git user to have full access to your
+deploy user, you need to restrict what it can do using 'rrsync', a script that
+comes with rsync.  This is left as an exercise for the reader :-)
 
 [ek]: https://github.com/EugeneKay/scripts/blob/master/bash/git-deploy-hook.sh
 
@@ -270,4 +273,4 @@ useful enough to be in the running.
     switchovers.
 
   * archive dump with staging using rsync -- very useful if your deploy dir is
-    on a different server.
+    on a different server, or on a different user on the same server.
