@@ -231,13 +231,7 @@ probably good enough.  Maybe not as instantaneous as two rename commands (or a
 symlink switch) but not too bad.
 
 EugeneKay has written a very comprehensive script that uses this technique,
-but adds many more bells and whistles; find it [here][ek].  I'm sure after he
-reads this he will add an "--atomic" flag, *and* make it work across hosts ;-)
-
-However, please note that if you use that script, you have to **explicitly
-enable** rule 2 support by adding `--delete` to the rsync options.  It's not
-on by default, and I think it should be because I consider rule 2 to be
-**much** more important than rule 4.
+but adds many more bells and whistles; find it [here][ek].
 
 **Security**: If you don't want your git user to have full access to your
 deploy user, you need to restrict what it can do using 'rrsync', a script that
