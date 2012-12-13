@@ -165,6 +165,8 @@ feature_X`, which gives you this:
     .he 5 .. 6
     [g] master
     [g] devel
+    feature_X [ color = "gray" fontcolor = "gray" ]
+    4 -- feature_X [ color = "gray" ]
     6 -- devel
     8 -- master
     .eq 4 6 7
@@ -206,6 +208,12 @@ branch HEAD is pointing to will move.
     6 -- devel
     8 -- master .. HEAD
     .eq 4 6 7
+
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    m_old [ label = "master" ]
+    h_old [ label = "HEAD" ]
+    7 -- m_old .. h_old
 
 ### naming non-leaf nodes
 
@@ -256,6 +264,11 @@ development:</font>
     .eq 4 6 7
     8 .. 9
 
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    feature_X_old [ label = "feature_X" ]
+    4 -- feature_X_old
+
 ### tags
 
 More commonly, inner nodes are TAGS.  We show tag names in yellow circles.
@@ -299,6 +312,12 @@ will move to point to the new commit.
     [y] "v1.0"
     3 -- "v1.0"
     .eq 3 "v1.0"
+
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    m_old [ label = "master" ]
+    h_old [ label = "HEAD" ]
+    8 -- m_old .. h_old
 
 ## digressions
 
@@ -394,6 +413,11 @@ assumed to be present as in the previous picture).
     11 -- "sitas-repo/master"
     9 -- master .. HEAD
 
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    srm_old [ label = "sitas-repo/master" ]
+    9 -- srm_old
+
 Now you want to merge Sita's master branch into yours.  Since your master does
 not have any commits that Sita's master doesn't have (i.e., Sita's master is
 like a superset of yours), running `git merge sitas-repo/master` will get you
@@ -408,6 +432,12 @@ this:
     9 -- "origin/master"
     11 -- "sitas-repo/master"
     11 -- master .. HEAD
+
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    m_old [ label = "master" ]
+    h_old [ label = "HEAD" ]
+    9 -- m_old .. h_old
 
 ## the object store
 
@@ -484,6 +514,10 @@ reference.
     9 -- "origin/master"
     11 -- "sitas-repo/master"
     9 -- master .. HEAD
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    srm_old [ label = "sitas-repo/master" ]
+    9 -- srm_old
 
     .gv
     .he "[ . . . ]" .. 9 .. 10 .. 11
@@ -494,6 +528,11 @@ reference.
     9 -- "origin/master"
     11 -- "sitas-repo/master"
     11 -- master .. HEAD
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    m_old [ label = "master" ]
+    h_old [ label = "HEAD" ]
+    9 -- m_old .. h_old
 
 However, note that commits 10 and 11 did not change in any way simply because
 they are now in **your local "master" branch**.  They continue to have the
@@ -540,6 +579,14 @@ had some changes which you got by doing a fetch:
     11 -- "sitas-repo/master"
     13 -- master .. HEAD
 
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    m_old [ label = "master" ]
+    h_old [ label = "HEAD" ]
+    9 -- m_old .. h_old
+    srm_old [ label = "sitas-repo/master" ]
+    9 -- srm_old
+
 When you merge, the end result will usually look like this:
 
     .gv
@@ -552,6 +599,12 @@ When you merge, the end result will usually look like this:
     9 -- "origin/master"
     11 -- "sitas-repo/master"
     14 -- master .. HEAD
+
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    m_old [ label = "master" ]
+    h_old [ label = "HEAD" ]
+    13 -- m_old .. h_old
 
 ### cherry-pick
 
@@ -605,6 +658,13 @@ This results in the following commit graph.
     14 -- "sitas-repo/master"
     "13a" -- master .. HEAD
 
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    m_old [ label = "master" ]
+    h_old [ label = "HEAD" ]
+    11 -- m_old .. h_old
+    13 .. "13a" [dir=none fontcolor="gray"]
+
 Note that I've called the new commit "13a".  This is to reflect the fact that,
 while the *change* made is the same as in the original commit 13, the *SHA*
 will not be the same anymore (new parent commit, new "tree", new committer
@@ -623,7 +683,7 @@ you'd be pretty close, at least from a concept point.
 
 So let's use a similar example as in the merge example before, but instead of
 sitas-repo, the new commits are in "origin" (which is the "main" server for
-this project).  You haad your own commits, and you did a `git fetch origin`
+this project).  You had your own commits, and you did a `git fetch origin`
 which brought in the latest commits from "origin", so it looks like:
 
     .gv
@@ -643,12 +703,19 @@ rebase origin/master`, and this is the result:
 
     .gv
     "[ . . . ]" .. 9 .. 10 .. 11
-    9 .. 12 .. 13 .. "10a" .. "11a"
+    .he 9 .. 12 .. 13 .. "10a" .. "11a"
     [] [y] HEAD
     [g] master
     [o] "origin/master"
     13 -- "origin/master"
     "11a" -- master .. HEAD
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    m_old [ label = "master" ]
+    h_old [ label = "HEAD" ]
+    11 -- m_old .. h_old
+    10 .. "10a" [dir=none fontcolor="gray"]
+    11 .. "11a" [dir=none fontcolor="gray"]
 
 Note that again, we're ignoring command syntax and nuances here.  This is
 about concepts.  Also again, note that the SHAs of the 2 commits have changed,
@@ -786,6 +853,11 @@ us, in a simple before/after display:
     3 -- "v1.0"
     [o] "origin/master"
     3 -- "origin/master"
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    m_old [ label = "master" ]
+    h_old [ label = "HEAD" ]
+    7 -- m_old .. h_old
 
 Now see what happens when you `git checkout v1.0`:
 
@@ -799,6 +871,10 @@ Now see what happens when you `git checkout v1.0`:
     3 -- HEAD
     [o] "origin/master"
     3 -- "origin/master"
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    [] h_old [ label = "HEAD" ]
+    master -- h_old
 
 Notice the subtle difference?  HEAD is no longer a **symbolic** ref (i.e.,
 pointing to a real branch).  Instead, it is pointing directly to a commit.
@@ -835,6 +911,10 @@ since it is no longer "attached" to any local branch name"
     3 -- "v1.0"
     [o] "origin/master"
     3 -- "origin/master"
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    [] h_old [ label = "HEAD" ]
+    3 -- h_old
 
 The reason this is considered dangerous is that, if you now do `git checkout
 master`, you get this:
@@ -849,6 +929,10 @@ master`, you get this:
     3 -- "v1.0"
     [o] "origin/master"
     3 -- "origin/master"
+    edge [ color = "gray" ]
+    node [ color = "gray" fontcolor = "gray" ]
+    [] h_old [ label = "HEAD" ]
+    8 -- h_old
 
 Notice what happened to your new commit 8?  It's dangling.  Unreachable.
 (Except by the reflog, of course, but beginners can get shaken up!)
