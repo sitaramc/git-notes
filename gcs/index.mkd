@@ -2,26 +2,11 @@
 
 <font color="gray">
 
-The title of this page used to be "git for computer scientists -- my version",
-said title being inspired by a much older page at
-http://eagain.net/articles/git-for-computer-scientists.
-
-Following a discussion on IRC where someone said I copied the idea but did not
-acknowledge the original, I first added the previous para, than sat down to
-re-read both looking for any similarities.  I did not find anything
-significant except the title itself.  (Here's a quick check you can do in a
-few seconds: click on the "chapter toc" above to see the structure of this
-one, then try and do a mental "diff" with the old version.)
-
-Anyway, as a result of this re-look I remembered why I actually wrote it:
-because I felt the older one was too abstract and terse for a real newbie.  I
-also realised that my version is not really targeted at computer scientists
-specifically, and arguably [never was][nodag].
+Vaguely inspired by http://eagain.net/articles/git-for-computer-scientists,
+except this page is not *just* for CS folks.  And it's a lot more detailed.
+Oh, and it's actively maintained, meaning I will respond to feedback ;-)
 
 [nodag]: https://github.com/sitaramc/git-notes/commit/13a2ffaca484a1136c256dc72e93a88eff8fd4ff
-
-So I changed the title, carefully picking one that would not affect the URL
-because I know people have bookmarked it.
 
 </font>
 
