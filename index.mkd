@@ -1,4 +1,14 @@
-# (READ THIS FIRST) README for the git-notes repo
+# everything I know about git
+
+<font color="red" size=+2>
+
+>   ----
+
+>   **Looking for gitolite documentation?  Click [here](/gitolite)**.
+
+>   ----
+
+</font>
 
 This repo contains all my notes about git.  I started writing them for my own
 understanding, almost like cheat sheets, but they may be useful for others
