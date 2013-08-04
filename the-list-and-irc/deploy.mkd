@@ -69,6 +69,12 @@ none of these methods can overcome git's inherent limitations for deployment
 (permissions, etc., as described above), though any of them can be followed up
 with extra code to do that, using some site-local script.
 
+Also note that none of them involve `git pull`, which a naive user might think
+is worth trying, but in fact has **absolutely no place** in an automated setup
+or script of any kind.  (If you don't know why, the short answer is "pull =
+fetch + merge" and merges cannot be guaranteed to complete without manual
+fixups).
+
 ### checkout -- the "fight club" of git deployment
 
 **Summary**
