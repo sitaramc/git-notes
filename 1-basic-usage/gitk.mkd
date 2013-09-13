@@ -18,6 +18,9 @@ any that are not listed here, please [email me](mailto:sitaramc@gmail.com).
     checkout remote branches**](concepts/detached-head.html)!)
   * the currently checked out branch name is in bold.
   * tags are on a yellow background.
+  * a yellow dot marks the current HEAD
+  * a yellow square marks commits which have "notes" ('man git-notes' for what
+    that means)
 
 ## repository operations
 
