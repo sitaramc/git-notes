@@ -34,10 +34,11 @@ Git knows about 4 types of objects:
 
   * **tag** -- we will see this type a bit later.
 
-### what is a SHA
+### what is a SHA-1
 
-A commit is uniquely identified by a 160-bit hex value (the 'SHA').  This is
-computed from the tree, plus the following pieces of information:
+A commit is uniquely identified by a 160-bit value (the 'SHA-1' or 'SHA'),
+most commonly represented by 40 hexadecimal digits. This value is computed
+from the tree, plus the following pieces of information:
 
   * the SHA of the parent commit(s) -- every commit except the very first one
     in the repo has at least one parent commit that the change is based upon.
@@ -56,11 +57,6 @@ out as 40 hex digits.
 Humans are not expected to remember this number.  For the purposes of this
 discussion, think of it as something similar to a memory address returned by
 malloc().
-
-It is also GLOBALLY unique!  No commit in any repo anywhere in the world will
-have the same SHA.  (It's not a mathematical impossibility, but just so
-extremely improbable that we take it as fact.  If you didn't understand that,
-just take it on faith).
 
 An example SHA: `a30236028b7ddd65f01321af42f904479eaff549`
 
@@ -82,7 +78,11 @@ Well... every commit knows what its parent commit is (as described in the
 -- they haven't been made yet!
 
 Therefore a repo is like a single linked list.  It cannot be a double linked
-list -- this is because any change to the contents would change the SHA!
+list -- this is because any change to the contents would change the SHA! In
+reality these are not simple lists, they're graphs. This special kind of graph
+where all the edges go in one direction is called a Directed Acyclic Graph
+('DAG'). If that seems to complicated then just think of it as a linked list for
+now.
 
 ## branches and tags
 
