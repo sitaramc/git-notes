@@ -1,0 +1,33 @@
+# git on windows {-}
+
+## using git's GUI tools {-}
+
+Here's how to launch the GUI tools:
+
+  * from the "git bash" command line (type `gitk` or `git gui`)
+  * right click on a directory containing a repository and choose "git GUI
+    here"; this launches `git gui`
+  * if you already have one GUI open, launch the other one from the menus
+    ("Repository -> Visualise History", or "File -> Start Git GUI")
+
+
+## using git at the command line {-}
+
+Git has a command line interface and two different GUI interfaces.
+
+The command line interface allows you to do pretty much anything, and is
+really the most convenient once you get used to it.  You can get to the
+command line in one of the following ways:
+
+  * (on Windows) click the "git" or "git bash" icon on your desktop/taskbar or
+    wherever the install put it.  This will start with the "git bash shell"
+    set to whatever your "HOME" directory is.  From there you can navigate
+    (using the `cd` command) to wherever your repository is.
+
+      * the "git bash shell" is almost a complete unix shell.  So directories
+        like `E:\some\path` are accessed as `/e/some/path`.
+
+  * if your repository is in `E:\Myname\projects\projectname`, open
+    `E:\Myname\projects` in the file manager, right click on
+    `projectname`, and choose "git bash here".  This will open the "git
+    bash" command line positioned at that directory.  

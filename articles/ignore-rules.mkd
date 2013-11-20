@@ -1,0 +1,42 @@
+# rules for .gitignore and the like {-}
+
+Those of you who have read the manual for gitignore will have noticed that,
+while the rules for precedence of the various files (pattern sources) are very
+clear, the rules for the actual exclusion patterns are somewhat less so.
+They're certainly accurate, but newcomers have to read very carefully if they
+want to do anything moderately complex with their exclude rules.
+
+One day (2009-02-18, ~16:00 IST, to be precise), 'doener' (Björn Steinbrink)
+came up with some much simpler rules that said the same thing, and -- building
+on the insight that his rules gave me -- I came up with these:
+
+----
+
+Note that rule 1 merely *modifies* rules 2 and 3, it does not supercede or
+preclude them.
+
+1.  If your pattern ends with a slash, it matches only directories (and their
+    contents)
+2.  If there is no slash otherwise, it matches that name, at any depth in the
+    tree
+3.  If there is a slash anywhere else, it matches that name, relative to the
+    .gitignore (or `$GIT_WORK_TREE` if the pattern is from one of the other
+    pattern sources like `.git/info/exclude` etc)
+
+The wildcards (`*` and `?`) do not match slashes, but otherwise the patterns
+are normal shell globs as defined by fnmatch(3) with the `FNM_PATHNAME` flag
+set.
+
+----
+
+<font size=-1>Just for completeness, the pattern source priorities are, highest to lowest:
+
+  * command line
+  * the deepest .gitignore that applies to this path
+  * shallower .gitignore files until you get to `$GIT_WORK_TREE`
+    * patterns in .gitignore files are relative to the location of the
+      gitignore file, not to the `$GIT_WORK_TREE`
+  * `$GIT_DIR/info/exclude`
+  * core.excludesfile
+
+</font>

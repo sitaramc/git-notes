@@ -1,0 +1,35 @@
+# git performance {-}
+
+One of the things git did was to try and optimise disk storage by adopting an
+aggressive delta compression technique.  Most version control systems give you
+this, but they only do deltas for **consecutive versions of the same file**.
+Git not only tries to optimise across non-adjacent versions of a file (like if
+you removed a huge bunch of lines, and then added them back again), it also
+leverages similarities with **other** files.
+
+The reason it does this is that it really tracks content, not just filenames.
+
+Anyway, all this means that a packed git repo is much, much, smaller than a
+repo in any other VCS.  (The Mozilla tree sizes, at one time, were:
+
+    One full checkout   :       350 MB
+    CVS repo            :       2.7 GB
+    SVN repo            :       8.2 GB
+    git repo            :       450 MB
+
+Read that again: the entire history of Mozilla in barely a third more space
+than a normal checkout!
+
+So what does all this have to do with performance?  Well, although all this
+was done purely for disk space reasons, it turned out to have a surprising
+effect on performance.
+
+It turned out (and in hindsight this was obvious) that, since the disk was the
+slowest component, keeping a small amount on the disk and making the CPU grunt
+a little was far, far, faster than not doing all this compression.
+
+In fact, people found that a git checkout is faster than a "cp -a", simply
+because of this tradeoff.  Until you get used to it, this is a little
+mind-blowing.
+
+Anyway the bottom line is, performance is not an issue.

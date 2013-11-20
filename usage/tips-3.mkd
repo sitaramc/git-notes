@@ -1,0 +1,120 @@
+# advanced tips {-}
+
+<!-- pandoc: toc -->
+
+## backing up work in progress {-}
+
+This is how you can backup everything on your local repo that is not already
+on one of your remotes, including all untracked files not covered by the
+ignore mechanism.  I use a script based on this to save my work to a remote
+server at regular intervals, in case of a disaster (hardware failure, etc) on
+the regular desktop.
+
+    # sort of like stash; untracked files also saved
+    git commit --allow-empty -m wip-index-state
+    git add -A && git commit --allow-empty -m wip-worktree-state
+
+    # make a temp branch (FIXME: should we do this first?)
+    git branch wip-backup ||
+        die 'could not create wip-backup branch; aborting';
+
+    # unstash
+    git reset --mixed HEAD^
+    git reset --soft HEAD^
+
+    # create the bundle and remove the temp branch
+    git bundle create /tmp/sos.bdl --all --not --remotes
+    git branch -D wip-backup
+
+    # copy that file wherever you want, however you want...
+    rsync /tmp/sos.bdl bkphost:   # or scp, or whatever
+
+## conflicts on pull/merge {-}
+
+  * try `gitk --merge conflicted_path`
+  * `git diff MERGE_HEAD...HEAD` (note the *three* dots) shows you
+    differences between the common ancestor and your HEAD.
+  * similarly `git diff HEAD...MERGE_HEAD` shows you differences between
+    the common ancestor and the branch you're trying to merge
+  * `git checkout --conflict=diff3 conflicted_path` is a novel way of
+    getting all 3 versions into the file so you can hack at it in vim
+  * you can tell git blame to only show important changes, like so (pity it
+    does not work with the GUI blame)
+
+        git blame -C $(git merge-base HEAD MERGE_HEAD).. conflicted_path
+
+## log pickaxe and blame {-}
+
+  * finding out when a particular change happened or who made it
+
+        git log -S"some code line" file.c   # why is this called pickaxe search?
+        git blame -b file.c
+
+## what are all these "HEAD"s? {-}
+
+  * `ORIG_HEAD`: pull or merge (or anything that moves HEAD drastically)
+    leave a copy of the old head with this name.  Reset can use it if needed.
+    (see `man git-reset`).  `reset` itself copies the old `HEAD`
+    to `ORIG_HEAD`, though that seems less useful
+  * `FETCH_HEAD`: records the branch you fetched from a remote repository
+    with your last 'git-fetch' invocation
+  * `MERGE_HEAD` records the commit(s) you are merging into your branch
+    when you run 'git-merge'
+
+## garbage collection {-}
+
+NOTE: this section is old; I have not looked at it with respect to recent git
+versions.
+
+  * Warning: `git gc --prune` is dangerous if others may be pushing to the
+    repo at the same time!
+  * Warning: `git gc` may **increase** the space used, since it even
+    unpacks objects that were in packs if they became unreachable.  This is
+    the same thing as `git repack -Adf` (note the uppercase "A")
+
+  * To bring the repo size down the bare minimum, you need *both* the
+    following commands (neither command by itself does the whole job).  Also
+    Note the lowercase "a" on the "repack", which says you want to blindly
+    discard unreachable objects instead of keeping them as loose objects.
+
+        git repack -adf     # kills in-pack garbage
+        git prune           # kills loose garbage
+
+  * (from the do-you-really-want-to-do-this? department)
+
+        git reflog expire --expire=10days --all
+        # use expire-unreachable to limit it a bit
+        # use branchname(s) instead of --all
+        # units can be seconds, minutes, etc
+
+## recovering a dropped stash: {-}
+
+### the GUI way {-}
+
+You dropped a stash that was created recently, and now you want to recover it.
+As long as you did not do a garbage collection in between, this should work:
+
+    gitk $(git fsck | grep commit | cut -f3 -d' ') --since='1 week ago'
+
+The part within the parenthesis finds all unreachable commit objects and
+returns their hashes.  If you never did a garbage collect there might be too
+many false positives so the `--since` clause (which you can adjust to whatever
+you want of course; mine is just an example) limits the display to commits
+created recently.
+
+A "stash" has a very recognisable, triangular, shape in the commit DAG, and
+with gitk you can visually find stashes really fast.  For me, this is the kind
+of task that *calls out* for a GUI -- infrequently required, no conceivable
+need to automate, and containing data that stands out visually.
+
+### the command line way {-}
+
+Writing something longer than that for a problem that occurs once in a blue
+moon is not my style (very low ROI!), but doener gave me this:
+
+    git fsck --unreachable | grep commit | cut -d\  -f3 |
+    xargs git log --no-walk --merges --grep='^\(WIP on \|On \)\((no branch)\|[^ ]\+\):'
+
+I knew about `--merges` but not `--no-walk`, and I anticipate using it a lot
+more in future :-)
+

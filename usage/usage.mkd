@@ -1,0 +1,20 @@
+# using git {-}
+
+I've somewhat arbitrarily divided the miscellaneus tips into
+[beginner](tips-1.html), [intermediate](tips-2.html), and
+[advanced](tips-3.html).  They all have a table of contents at the top so you
+can quickly check if anything could be of use to you.
+
+If you're ok with using the command line, these might interest you, there are
+some useful [git commands](commands.html), with some explanation or
+description -- grep, log, show, show-branch, cherry, and a few more.  There's
+also a list of of some ["gotchas"](gotchas-cli.html) for the command line
+user.
+
+There's something for people wanting to run a [git server](server.html),
+although really, you should just install [gitolite](gitolite/index.html) and
+be done :-)
+
+Finally, there's also something for the [GUI user](gui.html), something for
+the [Windows user](windows.html), and something for people coming to git from
+[older legacy systems](legacy.html).

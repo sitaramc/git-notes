@@ -1,0 +1,616 @@
+# presentation on git, a DVCS
+
+## why
+
+<!-- pandoc: slidy -->
+
+![](images/git/projects-sans-vcs.png)
+
+## why use a VCS
+  * reversibility or rollback, aka C-Y-A!
+      * linear (on the time axis), simple to implement
+  * concurrency
+      * non-linear, all the complexity is here
+      * make or break productivity
+          * individual productivity also, if it can make context switching
+            trivial
+  * annotation
+
+## VCSs in common use
+  * open source
+      * CVS
+      * SVN (Subversion)
+      * Darcs/TLA/Bazaar/Monotone, Mercurial, Git
+  * proprietary
+      * VSS, Clearcase, Perforce
+      * Bitkeeper
+      * others??
+
+# DVCSs and git
+
+## "distributed"?
+  * every dev has his/her own repository
+      * on their own workstation
+      * no single point of failure/contention
+  * all repos are (usually) "clones" of the central repository
+  * easy to work offline
+      * e.g., long weekend+laptop :-)
+      * commits made while offline retain their identity
+      * they don't get collapsed into one big commit
+  * commit-then-merge, not merge-then-commit
+
+## disconnected operation
+  * local caching: how much is cached locally when you check out?
+      * CVS: working copy of specific version, plus info about what version
+        was checked out
+      * SVN: CVS, plus extra copy of the specified version
+      * BZR/HG: SVN, plus complete history of current branch
+      * GIT: BZR/HG, plus complete history of ALL branches!
+
+## notes on above
+  * CVS: Anything other than edit needs network access, even a diff between
+    your working copy and the currently checked out version
+  * SVN: Diffs between working copy and any other version need network
+  * BZR/HG: Comparing to a different branch or switching to it needs network
+  * VSS
+      * no network access except via "shares", so local teams only
+      * no atomic commits!
+      * no merge tracking
+      * repository corruption
+
+## what's different about git?
+  * cryptographically secure integrity checks builtin
+  * fast
+      * most operations are local
+      * network operations are highly optimised
+      * **ideal** for distributed teams
+  * easy to setup/deploy
+      * server requires minimal hardware
+      * no license costs
+
+## what's different about git? (cont'd)
+  * very small repo size
+      * Mozilla repo in CVS: 2.7 GB
+      * imported to SVN 8.2 GB
+      * imported to GIT: 450 MB!
+      * (a full checkout is 350 MB)
+  * very, very, cheap branching
+  * excellent merging
+
+## caveats about git
+  * no partial checkouts -- it's the whole project or nothing
+      * but you can use the "submodule" mechanism if you know in advance what
+        pieces will be separately needed
+  * will not track
+      * permissions and ownership, except the "x" (executable) bit
+          * in unix terms, only cares about the first "x" in rwxrwxrwx
+      * empty directories
+  * not optimised for tracking **very large** binary files (movies, etc.)
+
+## history
+  * initially designed as a file system!
+  * originally only a backend, now all in one
+  * reputation for being hard to use, now no longer valid
+  * focus on large projects with many developers
+      * but that doesn't mean small projects can't use it
+      * remember: multi-tasking
+
+# understanding git
+
+## working with git
+  * CLI is the most powerful
+  * don't like the CLI?
+      * 3 excellent GUI tools come with git
+      * very powerful; for an excellent intro to these tools, see
+        http://nathanj.github.com/gitguide
+      * plugins: Eclipse and VS plugins available
+      * but you miss many features **unique** to git if you only use these
+        plugins
+
+## some mindset changes needed...
+  * learn to make many fine-grained commits rather than a few large ones
+  * commit locally before performing any remote operations
+      * example, in the typical "svn update" scenario, if your changes are not
+        yet ready to be sent to the server, you can either
+          * avoid doing the update
+          * do it and pray :-)
+      * in git, you just commit locally before doing the "git pull"
+
+## normal workflow - CVCSs
+![](images/git/flow-CVCS.svg)
+
+## normal workflow - most DVCSs
+![](images/git/flow-DVCS.svg)
+
+## normal workflow - Git
+![](images/git/flow-Git.svg)
+
+## something unique to git
+  * index
+      * a staging area for the next commit
+      * stuff gets sent here when you "add"
+      * when you "commit", the current index is turned into a real commit
+        object
+  * helps in reviewing changes
+  * helps when fixing conflicts during a complex merge
+
+# legacy systems versus git
+
+## problems in SVN
+  * slow on large repositories
+  * .SVN directories all over the place
+      * often as large as the entire git repo!
+  * refactor/rename support missing
+  * branching is fine...
+      * but merging...?
+
+## problems in SVN (cont'd)
+  * merge tracking not very well done
+      * does not record who did the branch (attributes all changes to the dev
+        who did the merge)
+      * does not record "merge-only" changes separately from the two branches
+      * can make repeated merges very difficult
+          * SVN mergeinfo has many limitations
+  * merges can be slow
+  * large merges can be painful
+
+## branching in most older VCSs
+  * branching is considered advanced and people avoid it
+      * either the tool has no branching,
+      * or has really bad merging
+  * and branching is useless without good merging
+  * so lots of parallelism goes unused
+      * or you need "SCM admins" to do the merge!
+
+## problems in SVN (cont'd)
+  * lack of local commits
+      * you don't want to "break the build"
+      * so you keep lots of uncommitted changes outside the VCS
+      * and do one big checkin when you're ready
+
+## productivity advantages of git
+  * history tracking handled much better; makes repeated merges a breeze
+      * all "commits" identified by a SHA-1 checksum
+          * this is what gives it the cryptographically secure integrity
+            check)
+      * a branch is just a pointer to some commit
+      * every commit records its parent commit's sha
+      * a merge is just a commit with more than one parent commit
+  * so, every commit knows all of its ancestors
+      * regardless of repository, branch, etc
+
+## Linus on merging
+  * merging is the most important activity
+      * "I merge 22,000 files several times a day, and I get unhappy if a
+        merge takes more than 5 seconds" -- Linus
+      * the linux kernel has 22000 files and has averaged 4.5 merges/day over
+        the last 2 years
+
+## Linus on merging (cont'd)
+  * make it fast and painless
+      * ...and people will start using it every day
+  * merge often, merge early
+  * otherwise you have huge conflicts to resolve later!
+
+## Linus on merging (cont'd)
+    http://git.or.cz/gitwiki/LinusTalk200705Transcript
+
+    If you can do something really fast, really well, people will start using
+    it differently. One of the things I wanted to make sure is that merges go
+    really really quickly because I want people to merge often and merge
+    early, because as it turns out it becomes easier to merge. If you merge
+    every day, suddenly you never get to the point where you have huge
+    conflicts that are hard to resolve. So if you actually make branching and
+    merging easy, you actually avoid a whole class of problems that you
+    otherwise have a really really hard time avoiding.
+
+## productivity advantages of git (cont'd)
+  * complex merges handled much better; frees devs from worrying about it most
+    of the time
+      * merges involving renames
+      * criss-cross merges
+  * encourages many small commits instead of few large commits
+      * easier code reviews
+      * easier debugging
+      * easier cherry picking
+      * easier merging/rebasing (conflict resolution happens in much smaller
+        units)
+
+## productivity advantages of git (cont'd)
+  * encourages creating local branches
+      * no need to pollute the central server
+      * experimental code can be developed "on the side"
+          * if it works, promote it to the central server, with the full
+            history of commits intact
+          * otherwise, delete it; no need to immortalise failed experiments on
+            the central server :-)
+      * branch **names** are also local
+          * we can all have a branch called "my-test" or "test" or whatever,
+            without worrying about "is someone else using the same branch
+            name?"
+
+## productivity advantages of git (cont'd)
+  * encourages using the tools available
+      * important vcs operations (like "diff") do not need network access
+      * blazingly fast
+          * even against a very old revision
+          * or a version in some other branch
+      * centralised VCSs take too long
+          * painful to use
+          * so programmers avoid them (?)
+
+## above stuff mostly from
+  * http://www.bitkeeper.com/Comparisons.html has subsections like
+    http://www.bitkeeper.com/Comparisons.CVS.html and so on
+  * excellent resource, but knowing Mr McVoy, a little NaCl may be useful :)
+
+# examples and canned demos
+
+## maintainability -- refactor/rename support {-}
+  * in most VCSs, renaming a file
+      * is treated as a copy+delete
+      * loses history (?)
+  * how about...
+      * rename + move + edit a file in one branch
+      * while making some bugfixes to it in another?
+  * git handles this without any fuss -- demo 09
+
+----
+
+#### developer 1 {-}
+
+(notice current branch is master)
+
+![](images/git/demo-09-01.png)
+
+----
+
+#### developer 2 {-}
+
+![](images/git/demo-09-02.png)
+
+----
+
+#### start a merge in 'git gui' {-}
+
+![](images/git/demo-09-03.png)
+
+----
+
+#### merge dev1 into master {-}
+
+![](images/git/demo-09-04.png)
+
+----
+
+#### merge done {-}
+
+![](images/git/demo-09-05.png)
+
+----
+
+#### view in gitk {-}
+
+![](images/git/demo-09-06.png)
+
+----
+
+#### merge dev2 now {-}
+
+![](images/git/demo-09-07.png)
+
+----
+
+#### done {-}
+
+(Note the details of the merge!)
+
+![](images/git/demo-09-08.png)
+
+----
+
+#### view in gitk {-}
+
+![](images/git/demo-09-09.png)
+
+----
+
+#### start a diff in gitk {-}
+
+![](images/git/demo-09-10.png)
+
+----
+
+#### view diff (old and new master) {-}
+
+![](images/git/demo-09-11.png)
+
+## maintainability: code movement detection {-}
+  * example
+      * move an important function with lots of history to some other file
+  * what would other VCSs do to the **history**?
+  * next 5 slides show code movement
+      * displayed using "git gui blame", one of the 3 GUI tools that come with
+        git
+
+----
+
+#### open 'git gui blame bundle.c' {-}
+
+![](images/git/gui-blame-1.png)
+
+----
+
+#### hover mouse on line 389 {-}
+
+...and see what you get (no other VCS can do this!)
+
+![](images/git/gui-blame-2.png)
+
+----
+
+#### now line 396 {-}
+
+![](images/git/gui-blame-3.png)
+
+----
+
+#### hover on the SHA {-}
+
+![](images/git/gui-blame-4.png)
+
+----
+
+#### clicking on the SHA takes you to there {-}
+
+(notice it's a different file!)
+
+![](images/git/gui-blame-5.png)
+
+## maintainability: code movement detection (cont'd) {-}
+  * this is **way** beyond what any other VCS can even dream of
+  * great help for new people trying to understand existing code base
+  * here's a secret...
+      * the information you see is not **stored** in the repository
+      * it is **computed** on demand, dynamically!
+      * which means you can get the same tracability for all your existing
+        code
+          * simply by converting to git!
+
+## maintainability: revision history viewer {-}
+  * git has another GUI to show you the version history graph
+      * very intuitive, shows merges etc very nicely
+      * lots of "right click" options in various places, to help track things
+        down...
+      * (one small example follows; there are many, many, more features --
+        there is not enough time to talk about more!)
+
+----
+
+#### open gitk {-}
+
+![](images/git/gitk-1.png)
+
+----
+
+#### right click a changed line {-}
+
+(or deleted line) and choose "Show origin..."
+
+![](images/git/gitk-2.png)
+
+----
+
+#### and it'll take you there! {-}
+
+![](images/git/gitk-3.png)
+
+# concepts again
+
+## git concepts
+  * repo
+      * self-contained; remove ".git" and it's all gone
+  * branch
+      * active line of development
+      * a repo can track any number of branches
+  * master
+      * default branch in a new git project
+
+## concept detail: branches
+  * easy and inexpensive
+  * can have separate branches for separate features
+  * many being worked on "simultaneously"!
+  * you can switch rapidly between branches
+  * boosts individual productivity as well as team productivity
+  * almost all existing VCSs suck at this
+
+## git concepts (cont'd)
+  * working tree
+      * is associated with only one branch
+  * head
+      * the tip of a branch
+  * HEAD
+      * the tip of the branch associated with your working tree; this is where
+        commits go
+
+## git concepts (cont'd)
+  * index: holding area for changes approved for commit
+      * git tracks content, not files
+      * lets you select some files to commit while postponing others
+      * lets you keep uncommited changes hanging around
+  * remote
+  * origin
+
+## some more git concepts
+  * commit ancestry
+  * commit ancestry as a DAG
+      * the essence of git is to build and traverse this DAG
+
+## CVS/SVN equivalence
+        CVS                  GIT
+        ---                  ---
+        checkout             clone
+        update               pull
+        checkin              commit + push
+        add                  add
+        remove               rm
+        ???                  mv
+
+# (back to) demos
+
+## cool stuff {-}
+  * the reflog, reachability, and garbage collection
+  * demo 10 -- cherry picking
+  * rebase
+  * bisect
+  * stash
+
+----
+
+#### right click and choose "cherry-pick..." {-}
+
+![](images/git/demo-10-01.png)
+
+----
+
+#### cherry-pick one more {-}
+
+![](images/git/demo-10-02.png)
+
+----
+
+#### end result {-}
+
+![](images/git/demo-10-03.png)
+
+## rebase -- what and why {-}
+  * what
+  * why
+      * parallel and serial branching
+      * getting the best out of bisect
+
+## rebase -- when and how {-}
+  * killing off an old commit
+  * re-arranging your commits interactively -- demo 11
+  * **when not to use it!**
+  * origin has moved
+      * demo 12 -- parallel branch using merge
+      * demo 13 -- serial branch using rebase
+  * same, but after some of your changes have gone upstream
+      * and they have DIFFERENT SHA1s now!!
+
+----
+
+#### starting point for interactive rebase {-}
+
+![](images/git/demo-11-01.png)
+
+  * and now we do:
+      * `git rebase -i HEAD~8`
+
+----
+
+#### list of commits {-}
+
+(oldest first, waiting to be edited)
+
+![](images/git/demo-11-02.png)
+
+----
+
+#### made some changes {-}
+
+then save, exit editor (note sequence and command words)
+
+![](images/git/demo-11-03.png)
+
+----
+
+#### combined commit message for 'squash' {-}
+
+![](images/git/demo-11-04.png)
+
+----
+
+#### edit as needed and save {-}
+
+![](images/git/demo-11-05.png)
+
+----
+
+#### end result {-}
+
+![](images/git/demo-11-06.png)
+
+----
+
+#### starting point for a merge {-}
+
+![](images/git/demo-12-01.png)
+
+----
+
+#### start a merge in 'git gui' {-}
+
+![](images/git/demo-12-02.png)
+
+----
+
+#### merge master into my-exp-fixes {-}
+
+![](images/git/demo-12-03.png)
+
+----
+
+#### merge done {-}
+
+![](images/git/demo-12-04.png)
+
+----
+
+#### view in gitk {-}
+
+![](images/git/demo-12-05.png)
+
+----
+
+#### starting point for a rebase {-}
+
+![](images/git/demo-13-01.png)
+
+----
+
+#### rebase my-exp-fixes onto master (CLI) {-}
+
+![](images/git/demo-13-02.png)
+
+----
+
+#### view in gitk {-}
+
+![](images/git/demo-13-03.png)
+
+# closing up
+
+####  {-}
+
+## odds and ends
+  * only one ".git" dir at the top
+  * patches and repo updates can be ftp-d or mailed
+  * multi-protocol transport
+      * http, ssh, git
+  * all copies of a repo have the same history
+      * universal public identifier (a SHA-1 hash)
+      * entire 2 year history of linux kernel is half the current full size
+
+## summary: what is git optimised for
+  * distributed development
+  * large file sets
+  * complex merges
+  * speculative, trial branches
+  * EXTREME SPEED -- very fast and very robust
+
+## Thank you {-}
+
+### Questions? {-}
+

@@ -1,0 +1,48 @@
+# try it and see... {-}
+
+It's easy to forget that a lot of git's features, including features concerned
+with remote repos like fetch/pull/push, can be safely and easily tried out
+**locally**:
+
+  * start with an empty directory
+  * create a new bare repo in it (e.g., `git init --bare b.git`).  This is
+    your **server** repo!
+  * clone this one or more times (e.g., `git clone b.git c1; git clone b.git
+    c2`).  These are your **developer** repos; you can treat each one as
+    belonging to a different developer.  The "server" repo you cloned from
+    will be defined as the remote called "origin" in each of these clones.
+
+Now you're ready to test out whatever features you want using any or all of
+the clones you created.
+
+Notice that we are simply using the local file system as the transport
+protocol.  People familiar with URLs on a browser might recognise this as eqvt
+to `file:///full/path/to/something`, and indeed that is exactly what git
+treats it as.
+
+Using ssh or http merely changes
+
+  * the URL used
+  * the authentication required and permissions granted by the server
+
+What **does NOT change** is the behaviour of most git commands!
+
+This means you can play with git to your heart's content in some temporary
+directory.  There's no danger of messing up a real repo, or of getting
+side-tracked by connectivity or permissions or even speed issues, which might
+happen if you tried this with a real server.
+
+If playing on a test repo is not sufficient for your needs, you can replace
+the "create a new bare repo" step with a clone of one of your real repos.  For
+example, I might do this:
+
+    git clone --bare git://github.com/sitaramc/gitolite.git b.git
+
+and that would give me a "b.git" that is a bare repo that starts out with all
+the code and branches that my real server repo has.
+
+----
+
+Note: the [terminology](terminology.html) page may also be useful, especially the section
+on "accessing remote repositories".
+

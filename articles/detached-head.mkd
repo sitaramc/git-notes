@@ -1,0 +1,203 @@
+# detached HEAD explained {-}
+
+Git has something called a 'detached HEAD' that bears some explanation.  You
+are told 'do not commit on a detached HEAD', and it is not always clear what
+or why this is.
+
+----
+
+<font color="red">This document is here for historical reasons, and because it
+provides a nice analogy.  However, [git concepts simplified](gcs.html) should
+be a much nicer read for most people. It has a lot of nice pictures, and it
+also touches upon many other issues, not just on detached HEADs.</font>
+
+## the analogy {-}
+
+Forget git for a bit and think about linked lists from your data structures
+course.  Specifically, consider a *singly linked* list, where each node is
+created as a "child" of some existing node, and contains a link to that
+"parent" node.  <font color="gray">The words "child" and "parent" are chosen
+to be similar to git's nomenclature for the relationship between a commit and
+its predecessor commit(s).</font>
+
+As with any list, you have a pointer to the node at the top of the list (we'll
+call this pointer `list_top`).  This would be the most recently created node,
+and so there's a chain of "parent" links that can take you all the way to the
+first node created.
+
+And you know how to add a new node to this linked list.  In pseudo-code:
+
+    // insert a new node at 'list_top'
+    temp = malloc(...);         // ask for some memory for the struct
+    temp.body = ...;            // fill in the node info
+    temp.parent = list_top;     // fill in the backlink
+    list_top = temp;            // move list head to new node
+
+Let's also assume that all list operations are done with some temporary
+variable (that is, they never directly use `list_top` etc.).
+
+Now suppose you *move* to the grandparent of the current `list_top`, to do
+something (like examine that node, print it out, whatever):
+
+    temp = list_top;
+    temp = temp.parent;         // parent of list_top
+    temp = temp.parent;         // grandparent
+
+So far, no harm done; your `list_top` variable still points to the top of the
+list, and you can always do `temp = list_top` to go back to where you were for
+any further operations.
+
+Now suppose you add a new node to the list on top of the *current node*:
+
+    // insert a new node at 'temp'
+    temp2 = malloc(...);        // ask for some memory for the struct
+    temp2.body = ...;           // fill in the node info
+    temp2.parent = temp;        // fill in the backlink
+    temp = temp2;               // move list head to new node
+
+This is the same code as before, except temp has taken the place of `list_top`
+this time.
+
+But 'temp' is a temporary variable, and unless you somehow save its value
+into some 'global' (or 'static') variable, you risk losing that commit you
+just made, oops, I mean the new node you added to the linked list :-)
+
+## reality check {-}
+
+A previous version of this article took the analogy too far into git
+territory, and I did not realise how many facts about git I had passed
+over/simplified until an extended review on irc by *doener* and *jsquared*.
+
+So we'll *git real*, if you'll pardon the weak pun, and get on with
+understanding a 'detached HEAD'.
+
+In git, commits always go on top of HEAD.  In terms of our linked list
+analogy, they 'insert a new commit at HEAD'.
+
+**HEAD** is, normally, a symbolic reference to [the tip of] a branch.  For
+instance, if you do `cat .git/HEAD` on a brand new repository, you'll get back
+`ref: refs/heads/master`.  When you add a commit, git actually updates
+'master', because that's where HEAD points.  You can see this by doing `cat
+.git/refs/heads/master` before and after making a commit.  HEAD does not
+change (it's only a symbolic reference) but 'master' does.
+
+When you do a `git checkout branchname`, HEAD will now become a symbolic
+reference to 'branchname'.  This means `cat .git/HEAD` will return `ref:
+refs/heads/branchname` now.  New commits will now go on 'branchname' instead
+of master, and correspondingly, the contents of `.git/refs/heads/branchname`
+will change.
+
+However, when you checkout anything that is not a proper, local, branch name,
+then HEAD is no longer a symbolic reference to anything.  Instead, it actually
+contains the SHA-1 hash (the commit id) of the commit you are switching to.
+
+This is called a **detached HEAD**.  Example commands that will cause your
+HEAD to become detached (ouch!) are<sup>[[1]](#fn)</sup>:
+
+    git checkout master^        # parent of master
+    git checkout HEAD~2         # grandparent of current HEAD
+    git checkout origin/master  # a non-local branch
+    git checkout tagname        # since you cant commit to a tag!
+
+These will all make `.git/HEAD` contain the actual (40-hex-digit) hash of the
+corresponding commit instead of some string like `ref: refs/heads/branch`.
+
+### re-attaching the HEAD {-}
+
+If you made the classic error of checking out a remote branch (like `git
+checkout origin/master`) and making a few commits on it before realising
+something was wrong, you can recover quite easily:
+
+    git checkout -b newbranch
+    # or, in 2 steps: git branch newbranch; git checkout newbranch
+
+To go back to the linked list analogy way up there, you just created a new
+'global' variable to save off the value of 'temp' before some other operation
+overwrote it.
+
+### Auld Lang Syne {-}
+
+What if you didn't realise this, and -- after making those commits -- blithely
+switched to another branch:
+
+    git checkout someoldbranch
+
+HEAD is now a symbolic reference to 'someoldbranch', and its previous value
+(the SHA-1 representing the top commit you made on the detached HEAD) has now
+been overwritten.
+
+So is it gone for good now, never to be seen again?  Fortunately, no!  The
+commit object itself is still safe out there somewhere, but you don't know
+where!  You have to find it...
+
+Think back to these 2 lines in the analogy above, where the 'current node' was
+updated:
+
+    list_top = temp;            // in the first example
+    temp = temp2;               // in the second example
+
+What if you had some sort of wrapper around that line, such that, every time
+this happened, the new value being assigned is also saved away somewhere,
+including information on what command called it and when.  And let's say this
+information is kept for 30 days.  So, even if you lost all your pointers, you
+could check this saved list and the caller/time information to jog your memory
+of which one it was, and actually use that pointer value to recover the node
+you 'lost'.
+
+That's the 'reflog' in git:
+
+    git reflog show HEAD@{now} -10
+
+    dcd215b... HEAD@{5 minutes ago}: commit (amend): 0-terminology: the malloc analogy added, plus
+    5ce8bfe... HEAD@{11 minutes ago}: commit: 0-terminology: the malloc analogy added, plus
+    3d93420... HEAD@{11 minutes ago}: rebase -i (pick): updating HEAD
+    7fdae94... HEAD@{11 minutes ago}: checkout: moving from master to 7fdae94815d6c676742c9984132b7b9e71a57f98
+    3d93420... HEAD@{13 minutes ago}: rebase -i (squash): updating HEAD
+    c55900c... HEAD@{13 minutes ago}: rebase -i (pick): updating HEAD
+    7fdae94... HEAD@{13 minutes ago}: checkout: moving from master to 7fdae94815d6c676742c9984132b7b9e71a57f98
+    e9955c8... HEAD@{14 minutes ago}: commit: s
+    97ab644... HEAD@{20 minutes ago}: commit: autogen
+    c55900c... HEAD@{23 minutes ago}: commit (amend): 0-terminology: the malloc analogy added, plus
+
+Now you look at this, decide which one you want, and grab it:
+
+    git branch thank_God_its_safe 7fdae94
+    # like 'thank_God_its_safe = 0x7fdae94815d6c676742c9984132b7b9e71a57f98'
+    git checkout thank_God_its_safe
+
+### reality check -- conclusion {-}
+
+There are a few other points that don't fit the simple 'linked list' analogy,
+or present some additional information that may be useful:
+
+  * a commit 'tree' is really more of a graph.  A 'directed acyclic graph', to
+    be precise.
+
+  * a branch can point to any node in the graph, not just the top one.  For
+    example, when you fork a branch called 'new' from 'master', and make 2
+    commits on 'new', then 'new' is pointing to the top node in that portion
+    of the graph, but 'master' is still pointing two commits down from the top
+    node.  This is because the 'master' branch represents the same set of
+    commits it did before; we have done nothing to change that.
+
+  * while most commits have only one parent, a 'merge' commit has more than
+    one parent.  Most merges have 2 parents, but an octopus merge can have any
+    number of parents.
+
+  * apart from the reflog for HEAD, git also stores a reflog for each local
+    branch (recording commits, rebases, merges, and so on) and each remote
+    branch (recording pulls/fetches mainly).  The HEAD reflog is effectively a
+    superset of the reflogs of all the local branches, with some extra detail
+    (like individual steps within a rebase, for instance).
+
+----
+
+### footnotes {-}
+
+<a name="fn"><sup>[1] Curiously, `git checkout master^0` also gets you a detached HEAD.  The
+command actually says "switch to the commit that master currently points to".
+Now you'd think, since 'master' and 'HEAD' are currently pointing at the same
+commit, it shouldn't be a detached HEAD, but the point is not that they happen
+to be pointing to the same commit.  The point is that HEAD is no longer a
+symbolic ref (containing something like `ref: refs/heads/master`) and instead
+contains an explicit SHA-1 in it.</sup>

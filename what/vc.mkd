@@ -1,0 +1,378 @@
+# a very basic intro to version control and git
+
+## why {-}
+
+<!-- pandoc: slidy -->
+
+![](images/git/projects-sans-vcs.png)
+
+## what is a VCS {-}
+
+## why use a VCS {-}
+  * reversibility or rollback@@, aka C-Y-A!
+      * linear (on the time axis)@@, simple to implement
+  * concurrency
+      * non-linear@@, all the complexity is here
+  * annotation
+
+# some simple operations
+
+## creating a repository {-}
+
+  * how hard is it?
+
+## an empty directory {-}
+
+![](images/vc/empty.png)
+
+## add some files {-}
+
+![](images/vc/sampleproj.png)
+
+## 'git init' -- done! {-}
+
+![](images/vc/init-done.png)
+
+## how about on windows? {-}
+
+![](images/vc/empty-windows.png)
+
+----
+
+![](images/vc/init-win1.png)
+
+----
+
+![](images/vc/init-win2.png)
+
+----
+
+![](images/vc/init-win3.png)
+
+## done! {-}
+
+![](images/vc/init-win4.png)
+
+## double check... {-}
+
+![](images/vc/init-done-win1.png)
+
+## yup -- works fine! {-}
+
+![](images/vc/init-done-win2.png)
+
+## CLI on windows? {-}
+
+![](images/vc/init-winb1.png)
+
+## a bash shell {-}
+
+![](images/vc/init-winb2.png)
+
+## 'git init' -- done! {-}
+
+![](images/vc/init-done-winb.png)
+
+# basic definitions
+
+## what is a 'work tree' {-}
+
+![](images/vc/worktree.png)
+
+## what is a 'repo' {-}
+  * A repository is just
+      * a work tree, @@plus
+      * a special '.git' directory at the top level of the work tree.
+  * NEVER FIDDLE WITH THIS DIRECTORY UNLESS YOU KNOW WHAT YOU ARE DOING!
+  * YOU HAVE BEEN WARNED!
+
+## repository {-}
+
+![](images/vc/repo.png)
+
+## (what's inside '.git'?) {-}
+
+![](images/vc/inside-dotgit.png)
+
+# non-linear snapshots...
+
+## 'non-linear' {-}
+
+.#d
+
+![](images/vc/worktree-symbol.png)
+
+.#d
+
+  * a repository keeps snapshots of the work tree...
+  * ...at different points in time
+
+.#t
+
+## snap {-}
+
+![](images/vc/repo-1.png)
+
+## snapshots {-}
+
+![](images/vc/repo-2.png)
+
+## snapshots of the work tree {-}
+
+![](images/vc/repo-3.png)
+
+## at different {-}
+
+![](images/vc/repo-4.png)
+
+## at different points {-}
+
+![](images/vc/repo-5.png)
+
+## at different points in time {-}
+
+![](images/vc/repo-6.png)
+
+# definitions revisited
+
+## what is a commit {-}
+
+remember those snapshots?  Yup -- they're all commits!
+
+Here, to refresh your memory:
+
+![](images/vc/repo-6.png)
+
+## what is a repo again? {-}
+  * a work tree + .git?  @@sure, but also...
+  * a bunch of commits laid out as a 'graph'
+      * a "directed acyclic graph", if you're interested
+
+## DAG {-}
+
+![](images/vc/dag.png)
+
+# branches and tags
+
+## what is a branch {-}
+  * since a graph is sort of the same as a tree (for our purposes)
+      * it has branches
+      * and those branches have names
+
+----
+
+![](images/vc/dag-br.png)
+
+## what is a tag {-}
+  * when you checkout a branch and then commit, the branch is now pointing at
+    the new 'snapshot'.  @@This means...
+  * ...the branch 'tip' keeps moving with every commit
+  * But sometimes you want to mark a point in your development
+      * with some sort of a permanent label
+      * that stays right there, even if you add commits on top
+
+----
+
+![](images/vc/dag-br-tag.png)
+
+# DVCS and git concepts
+
+## general VCS concepts {-}
+  * "project": minimum set of source code (and related files) needed
+    to **build** the software
+  * in a CVCS (Centralised VCS)
+      * each project will have exactly one "repository"
+      * on some central server
+      * and each developer will checkout the project
+          * from the server to his workstation
+
+## a DVCS is different {-}
+  * each project will have one "central" repository
+      * (maybe; see next slide)
+  * but each repository can have many "clones"
+  * so each developer has a clone on his workstation
+      * a complete copy of the repository
+      * plus his own work/changes
+
+## central repo in a DVCS? {-}
+  * the developers can push and pull from each other directly
+      * because they're also repositories just like the "central" one
+  * so do we still need a "central" repo?
+      * not really@@; that's only an administrative decision now
+      * not a technical requirement
+      * but it makes managing projects easier
+      * so yes, we still have central repos for most projects
+
+## what is a 'remote' {-}
+  * when you clone, the repo you cloned from is a 'remote' for you
+  * every remote has a name (a user-friendly name you choose)
+  * (special case for clone: the 'remote' has a special name: 'origin')
+      * much nicer than using the full URL, like
+      * `ssh://sitaram@git.server/repos/myproj.git`
+  * bad picture coming up...
+
+## git concepts {-}
+  * repo
+      * self-contained; remove ".git" at the top and it's all gone
+  * branch
+      * an active line of development
+      * a repo can track any number of branches
+  * master
+      * name of default branch in a new git project
+
+## branches {-}
+  * easy and inexpensive
+  * can have separate branches for separate features
+  * many being worked on "simultaneously"!
+  * you can switch rapidly between branches
+  * boosts individual productivity as well as team productivity
+  * almost all existing VCSs suck at this
+
+----
+
+#### branch also boost individual productivity {-}
+  * concurrency
+  * makes context switching trivial
+
+## git concepts (cont'd) {-}
+  * working tree
+      * is associated with only one branch at any time
+  * head
+      * the tip of a branch
+  * HEAD
+      * the tip of the branch associated with your working tree; this is where
+    commits go
+
+## git concepts (cont'd) {-}
+  * index: holding area for changes approved for commit
+      * git tracks content, not files
+      * lets you select some files to commit while postponing others
+      * lets you keep uncommited changes hanging around
+
+## some more git concepts {-}
+  * commit ancestry
+  * commit ancestry as a DAG
+      * the essence of git is to build and traverse this DAG
+      * http://sitaramc.github.com/gcs.html
+  * universal public identifier (a SHA-1 hash)
+      * every file, directory, and commit has a unique hash
+      * check the integrity of an entire repo by comparing just one 160-bit
+    value (40 hex digits)
+
+# workflow
+
+## git developer workflow {-}
+  * far better than anything I can try:
+      * http://nathanj.github.com/gitguide
+  * so I'll just describe things at a high level
+
+## one-time setup {-}
+  * per developer
+      * set up your name and email address
+  * per developer per project
+      * 'git init' (the first guy)
+      * 'git clone ...' (the others)
+
+## err... clone?  from where? {-}
+  * git servers and protocols (note: git does NO access control!)
+      * ssh (RW, access control by ssh)
+      * file protocol (RW, access control by OS)
+      * git protocol (RO, access control by OS/firewall etc)
+          * needs git daemon to be started first
+      * old style http (RO, access control by Apache)
+          * RW possible but painful; requires WebDAV
+      * new style http (RW, access control by apache)
+          * requires git 1.6.6 or better on both server and client
+
+## many users/repos? {-}
+  * just install 'gitolite' and be done!
+  * gitolite can provide fine-grained access control
+  * works over sshd or apache
+      * sshd (or httpd) authenticates the user
+      * passes the username to gitolite
+      * gitolite uses the authenticated username, looks at the config file, and
+       makes the authorisation decision
+
+## normal workflow activities {-}
+  * checkout a branch
+  * edit files
+  * review your changes ('git diff', or 'git gui')
+  * review other people's changes or your older commits ('gitk' -- a very
+    powerful GUI tool)
+  * stage and commit them
+
+## normal workflow activities {-}
+  * push your commits to the server
+  * push failed?  maybe your teammates committed something recently?
+      * pull from the server first
+      * their changes get merged into your local repo
+      * then you push...
+
+## clean and dirty work tree {-}
+  * clean: all changes committed to local repo
+  * dirty: some files changed, and changes not yet committed
+  * PULL IS BEST DONE ON A CLEAN TREE!
+
+----
+
+### clean tree - CLI {-}
+
+![](images/vc/clean-cli.png)
+
+----
+
+### clean tree - GUI {-}
+
+![](images/vc/clean-gui.png)
+
+----
+
+### dirty tree - CLI {-}
+
+![](images/vc/dirty-cli.png)
+
+----
+
+### dirty tree - GUI {-}
+
+![](images/vc/dirty-gui.png)
+
+----
+
+### staging from the GUI {-}
+
+![](images/vc/staging-gui.png)
+
+----
+
+### staged files - CLI {-}
+
+![](images/vc/staged-cli.png)
+
+----
+
+### committing from the GUI {-}
+
+![](images/vc/commit-gui.png)
+
+----
+
+### clean again! {-}
+
+![](images/vc/clean-again.png)
+
+# (other topics)
+
+## conflicts {-}
+  * what is a conflict
+  * how do you resolve it?
+
+## advanced workflow activities {-}
+  * cherry-pick -- pick up specific changes from another branch or repo and
+    make those changes happen in your repo
+  * rebase -- move commits around@@; sort of like
+      * cut off a branch where it connects to the trunk of a tree...
+      * ...and graft it somewhere else
+  * bisect
+
+# ...and we're done! {-}

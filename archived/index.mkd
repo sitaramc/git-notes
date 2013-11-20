@@ -1,0 +1,53 @@
+# archived articles {-}
+
+.@red<**DISCLAIMER**>@
+
+This directory has a bunch of stuff that I wrote a long time ago.  When I
+cleaned up the whole site (Dec 2013) I did not have time to check each one
+out, verify if what they say still holds, and generally fix things up.
+
+Use your discretion in making use of this information.  Stuff that is
+conceptual in nature is probably still true, while stuff that includes actual
+code or commands may need double checking.  Git *has* changed a lot in the
+last few years!
+
+.#d
+
+**General**
+
+*   A bunch of [links](links.html) of all kinds -- basic stuff/concepts,
+    tutorials, stuff that refugees from legacy VCSs might need, digging into
+    git/troubleshooting, and a whole bunch of advocacy links.
+
+**Branching and workflow**
+
+*   [branches](branches.html) -- local, remote, and topic branches;
+    maintenance branches, throwaway branches...
+*   An article on [customer branches](special-branches.html), with a section
+    on **SVN-itis** (conflating branch and subdirectory!)
+*   one possible[workflow](workflow-integ-devs.html) for integrating N
+    developers and 1 integrator, using [gitolite](../gitolite/index.html)
+
+.#d
+
+**Random technical notes**
+
+*   [repo corruption](corruption.html) -- notes from something I did once for
+    a work colleague and written down so I don't forget
+*   notes on [grafting](grafting.html) in git
+*   [ignoring an upstream commit permanently](ignore-upstream-commit.html)
+*   Fixing [whitespace](whitespace-index-filter.html) errors
+
+**Other VCSs**
+
+*   for people who thing [hg](hg.html) is just as good ;-)
+*   For people who think [SVN](svn.html) is good enough.  While the same title
+    applied to Hg may sound a little harsh, I have no sympathy for people who
+    still advocate SVN.  The only thing that has changed in my stance is that
+    in the early days I used to take issue with them, now I just ignore them.
+    It's not even worth arguing about now.
+*   [cvs to git](cvs2git.html)
+*   converting [visual source shredder](vss2git.html) to git
+
+.#t
+

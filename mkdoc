@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use 5.10.0;
+
+# run from git-notes as "./mkdoc"
+
+# my $OUTDIR = "/tmp/doc2";
+my $OUTDIR = "$ENV{HOME}/imli/tech/repos/sitaramc.github.com";
+system("rm     $OUTDIR/*.html");
+system("rm -rf $OUTDIR/images");
+system("mkdir  $OUTDIR/images");
+system("rm -rf $OUTDIR/archived");
+system("mkdir  $OUTDIR/archived");
+
+my @mkd = `find . -name "*.mkd" | sort`;
+chomp(@mkd);
+
+for (@mkd) {
+    m(([^/]+)\.mkd) or die "bad mkd file: '$_'";
+    my $base = $1;
+    $base = "archived/$base" if m(archived/);
+
+    system("md-pandoc html < $_ > $OUTDIR/$base.html") and die 1;
+}
+
+system("mkdir -p   $OUTDIR/tools");
+system("cp tools/* $OUTDIR/tools");
+# -- XXX do we need this? -- system("cp images/* $OUTDIR/images");
+
+# cleanup
+system("rm fig*.png");

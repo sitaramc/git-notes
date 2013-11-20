@@ -1,0 +1,59 @@
+# blame detection {-}
+
+Git tracks content, not files.  As a result, the `git blame` and the
+`git gui blame` commands can detect code moved or copied from elsewhere in
+the project.  It's a very powerful feature, accessed by specifying the
+`-C` flag one or more times, but there are some nuances.
+
+## move detection versus copy detection {-}
+
+When the `-C` flag is given only once, it looks for code blocks that were
+**moved**.  That is, it searches for new code among other files that were also
+modified in the same commit.  This runs very fast.
+
+When you give the flag **twice**, it looks for new code among **all** the
+files in the parent commit, and so it detects code that was **copied**.
+
+`git gui blame` behaves like `-C -C` by default, but can behave like `-C` if
+`gui.fastcopyblame` is true.  (In addition, it also appears to set `-w`, to
+ignore whitespace changes while blaming).
+
+## threshold, and how to specify it {-}
+
+There is a concept of a "threshold", which is the minimum number of
+alphanumeric characters required to count something as a code move/copy -- be
+sure to read under `-C` in `man git-blame`.
+
+This threshold defaults to 40 characters for copy detection, and 20 for move
+detection.  You can override it by appending a number to the `-C` option.
+
+`git gui blame` defaults to 40 for this -- it actually sets `-C40` and calls
+(I assume) the command line blame tool.  If you want to override it, use the
+GUI (Edit->Options), or directly set the `gui.copyblamethreshold` config
+variable.
+
+## documentation lacunae {-}
+
+The documentation does not seem to be very clear about the effect of _three_
+`-C` options on `git blame`.  (In the GUI this is done by choosing full copy
+detection from the right click menu).
+
+The best hint is in `builtin-blame.c`, which says, within a function called
+`blame_copy_callback`:
+
+    /*
+     * -C enables copy from removed files;
+     * -C -C enables copy from existing files, but only
+     *       when blaming a new file;
+     * -C -C -C enables copy from existing files for
+     *          everybody
+     */
+
+Sidenote: correlating the single and double cases in the code with the
+documentation, I imagine "removed files" actually means "code from some other
+modified file in the same commit", and similarly "existing files" means "code
+from any files in the parent commit".
+
+## my observations {-}
+
+  * a very high threshold makes it behave like no `-C` flags were supplied

@@ -1,0 +1,73 @@
+# slightly more advanced tips {-}
+
+<!-- pandoc: toc -->
+
+## how to remember what "..." does {-}
+
+Git's "..." operator is confusing, because it does different things in git
+diff and git log.  Here's something that may help you reason it out.
+
+To start with, these points are fundamental:
+
+  * the older revision is (normally) specified on the left side (LHS)
+  * "diff" only works on two *endpoint* commits, regardless of how many
+    commits exist in between those endpoints
+  * however, "log" works on all the in between commits also
+  * normal, everyday, usage is `git diff A..B`, meaning "changes from A to
+    B", and `git log A..B`, meaning "commits in B but not in A".
+
+To those simple rules, add just one more (easy enough to remember): the
+"`...`" operator always involves the common ancestor somehow.
+
+With those rules in mind, you can keep track of what the double-dot and
+triple-dot mean very easily.
+
+Consider `git diff A...B`:
+
+  * since the "`...`" is used, the common ancestor is involved
+  * since diff can only deal with 2 end points, one of A or B has to make way
+    for the common ancestor
+  * since the common ancestor is older than A and B, clearly it has to appear
+    on the left side, so A loses :-)
+
+And this becomes `git diff CA(A,B)..B`, where CA(A,B) is the common
+ancestor of A and B.  Easy enough?
+
+Now look at `git log A...B`
+
+  * again, the "`...`" is used, so the common ancestor is involved
+  * since log is not constrained to only 2 endpoints like diff is, you don't
+    have to discard A or B
+  * so you show the commits between the common ancestor and A, *as well as*
+    between the common ancestor and B
+
+So: `git log CA(A,B)..A` PLUS `git log CA(A,B)..B`
+
+## Easy way to remember what git reset's soft/hard/mixed do {-}
+
+^^loosely based on <http://gitster.livejournal.com/25150.html>^^
+
+Assume you start from a "everything is committed and golden" state.  Let's
+pretend you came to this starting point via a `git checkout`: and then you
+edit a bunch of stuff, compile/test, and then `git add` and `git
+commit`:
+
+    $ git checkout mywork
+    ...edit edit edit...
+    $ git add ...
+    $ git commit
+
+If at this point you do a `git reset`, here's how the type of reset
+("soft", "hard", or the default, which is "mixed") affects things:
+
+    $ git checkout mywork
+                # --hard resets to this point
+    ...edit edit edit...
+                # --mixed (default) resets to this point
+    $ git add ...
+                # --soft resets to this point
+    $ git commit
+
+Also note, as gitster says, that `git commit --amend` makes the `git
+reset --soft` mostly redundant.
+

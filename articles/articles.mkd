@@ -1,0 +1,28 @@
+# articles and write-ups {-}
+
+These are some longer write-ups on git that I think are still useful.  (If
+they weren't, they'd be dumped into the [archived](archived/index.html)
+directory!)
+
+*   git as a [deployment](deploy.html) tool
+*   [try it and see!](tias.html) -- a very popular article that shows you how
+    easy it is to try pretty much *any* git feature safely and easily on your
+    own userid
+
+*   I've never seen *any* documentation for [gitk](gitk.html) anywhere so here
+    it is!
+
+*   [sizing a server](server-sizing.html) for git
+*   [git performance](git-performance.html)
+
+*   some nuances of [git blame](blame-detection-and-C-levels.html)
+*   an older explanation of the [detached HEAD](detached-head.html).  Still
+    useful, but largely supplanted by the much more comprehensive -- and
+    pictorial -- [git concepts simplified](gcs.html)
+*   using git [over an HTTP proxy](git-over-proxy.html)
+*   what does [git pull --rebase](git-pull--rebase.html) do?
+*   rules for [git ignore](ignore-rules.html) explained a little better
+*   what is a [reflog](reflog.html) and why is it useful?
+*   why the [index/staging area](uses-of-index.html) is useful
+
+*   good [version control habits](vc-habits.html)

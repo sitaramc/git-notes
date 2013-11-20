@@ -1,0 +1,97 @@
+# git's native GUI tools {-}
+
+<!-- pandoc: toc -->
+
+Git comes with 3 GUI tools, but two of them are a bit more important than the
+third so we'll focus on those for now.
+
+These two tools are very powerful; if you don't like the command line, you can
+quite easily stick to them and get by for most purposes.  Briefly, they are:
+
+  * `git gui` to stage and unstage files (equivalent to `git add`), commit,
+    and push
+  * `gitk` to get a bird's eye view your current branch, or `gitk --all` to
+    view all branches, local and remote
+
+Git's GUI interfaces let you do almost anything that you **normally** need to
+do -- all the simple straightforward things as well as some sophisticated
+things.
+
+## git gui {-}
+
+`git gui` shows you the current state of your work area with respect to the
+currently checked-out branch.  In the top left pane, it shows you what files
+are changed with respect to the last commit.  In the bottom left pane it shows
+you what files have been marked "ready for commit" -- only these changes will
+go into the next commit if you commit now.
+
+(Git allows you to keep some changes "pending", without committing them.  The
+"ready to commit" part is called the "index", "staging area", or "cache" in
+the documentation, so the bottom left pane is showing you what is in the
+"index".  Check out [why the index is useful](uses-of-index.html) for more).
+
+In either case, the changes made to the currently selected file are shown on
+the right pane.
+
+There are a lot of things you can do in this GUI, but here are the basic
+things:
+
+  * you can click on the icon to the left of each file name to move it back
+    and forth between the two areas ("staged, ready for commit" <-> "unstaged,
+    not to be committed right now")
+  * you can also type in a suitable commit message and click the "commit"
+    button.  This commits the change to your local repository
+  * you can also "push" the changes to some central repository so that others
+    can pull them
+
+## gitk {-}
+
+`gitk` (or `gitk --all`, which is what I use more often) shows you a visual
+tree of all the commits that have happened on this repository.  It is a very
+powerful tool, allowing you to do all sorts of things like
+
+  * create a new branch
+  * checkout (switch to) a different branch
+  * delete a branch
+  * create a tag
+  * pick commits from some other branch to apply to the current branch
+  * show differences between any two commits
+  * traverse the tree of commits
+  * search for commits based on all sorts of criteria
+
+There's a much more detailed description of [gitk's features](gitk.html) if
+you need it.
+
+## where you *really* need the command line {-}
+
+One common task that is needlessly complex in both the GUIs is `git pull`. In
+a properly setup repository that has been cloned from the project master or
+something like that, getting the latest changes is just a matter of typing
+`git pull`.  In `git gui`, described above, this takes 4 steps, although there
+is a reason for that complexity :-)
+
+## further reading {-}
+
+There's a really thorough introduction to these tools, including lots of
+screenshots, at <http://nathanj.github.com/gitguide/>. The page has an
+excellent example "project" that is simple enough that you can concentrate on
+the git features being demonstrated, and the author goes into quite a few
+things you can do with the GUI tools.
+
+Some minor caveats:
+
+  * if you're on Linux you'll just have to ignore some of the installation
+    related stuff
+
+  * if you're on Windiws, I suggest you stick to the ssh that comes with git.
+    Putty and plink have (in my experience supporting gitolite users) always
+    been problems and I would avoid them like the plague.  YMMV.
+
+    One tip: if you installed Putty/plink anyway, and now msysgit is not
+    talking to the repository properly, `unset GIT_SSH` is apparently the
+    thing to do.  Again, YMMV and all that.
+
+  * some of the stuff dealing with other servers (like adding a remote,
+    pulling from someone's IP address, etc.), may work differently in a
+    corporate environment.
+

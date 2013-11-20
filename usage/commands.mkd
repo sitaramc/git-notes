@@ -1,0 +1,123 @@
+# useful commands {-}
+
+<!-- pandoc: toc -->
+
+## grep {-}
+
+`git grep` is very, **very**, powerful.  It has pretty much all the normal
+grep options, plus:
+
+  * doesn't search files that are not revisioned (untracked, excluded/ignored,
+    etc)
+  * with `--cached`, looks only in the cache
+  * with one or more ref names, searched only within those revisions
+  * can take a pattern, like `*.c`, to restrict the files searched
+  * can do `--and`, `--or`, `--not`, etc with patterns.  This is a pretty big
+    wow.  As <http://gitster.livejournal.com/27674.html> says:
+
+        git grep -e ';;' --and --not -e 'for *(.*;;' -- '*.c'
+
+    which searches for ';;' in all C files, unless they occur in a typical
+    `for (;;) {` type of construct.
+
+  * finally, there's a somewhat gratuitously thrown in `--all-match` option,
+    which says "match any of these strings, but print matches only from files
+    that have *all* of them".  I wonder whose scratch that was... ;-)
+
+## log and show {-}
+
+  * `git lga` is pretty cool; lga is an alias in my config for
+
+        log --graph --pretty=oneline --abbrev-commit --decorate --all
+
+  * Check the logs to see what's happened recently
+
+        git log [--stat] -[p] [-n <number of commits to show>]
+        git log "@{yesterday}.."
+            # note the suffix "..", since the default is prefix "..", which is
+            # probably not what you want
+        git log somefile.c
+
+  * `git show` is almost an alias for `git log -p -n 1`.  In general, `git
+    show` does the right thing: shows a commit as a commit, a tree as a plain
+    "ls", etc.  But if you're printing a large blob you better use a pager or
+    redirect!
+
+        git show [ HEAD^ | HEAD^^ | HEAD@{3} | origin | origin/master | etc ]
+        git show 7a8b9c     # or some hex number; shows you the object
+        git show HEAD~3:file.c  # get file.c from 3 versions back
+
+## reflog {-}
+
+...see this more detailed [note](reflog.html)
+
+## show-branch {-}
+
+  * `git show-branch -a` is useful to get a bird's eye view of all your
+    branches and their topological relationships.
+  * `git show-branch -gN` (N is some number) shows you reflog info for the
+    current branch, including topological relationships and relative time.
+    This is useful if you had a lot of rebases or amended commits and you
+    think you might need one of them back :-)  See
+    [reflog](reflog.html) for more on this
+  * if you need serious troubleshooting with branches, use the following.  It
+    may be useful in some contexts where `git lg` is too complex to figure out
+    what tip contains what commit, and you are unable to use gitk
+
+        git show-branch $(git show-ref -h |cut -c41-)
+
+## cherry (not cherry-pick) {-}
+
+  * summary: `+` shows you commits you have that the 'upstream' doesn't
+
+        git cherry -v upstream [head]
+
+  * detail: for every commit in 'head' that doesn't exist in 'upstream'
+    * prefix `-` if there is at least an *equivalent* commit
+    * prefix `+` if there's not even that
+
+  * TIP: if you're trying to cut some branches (like `git branch --merged`)
+    * put the candidate to be cut **on the right side**, and
+    * make sure there are no `+`s in the output
+
+## cat-file (repo object) and ls-tree (tree object) {-}
+
+Note: I'm not sure what, if any, is the difference between `show` and
+`cat-file -p` for "blob" objects.  For commits there is a subtle
+difference.  (Try it)
+
+    # any object
+    git cat-file [ -t | -s | -p ] 789abc
+        # find the type or size of an object, or pretty print it
+        # If it's a blob, I'd use use "git show" until we find out what
+        # "pretty" means for arbitrary blobs :-)
+    git cat-file blob 789abc        # cat the object
+
+    # any tree
+    git ls-tree         # files and directories, top level only
+    git ls-tree -l      # also show the size of the object
+    git ls-tree -d      # only directories
+    git ls-tree -r      # recurse, only files
+    git ls-tree -r -d   # recurse, only directories
+    git ls-tree -r -t   # recurse, both directories and files
+
+## ls-files {-}
+
+To get listings of various types of files, use `git ls-files`.  The common
+but less intuitive ones are shown here, the rest can be had from the man page:
+
+    # deleted files and modified files (deleted files are also counted as
+    # modified, so may come up twice...
+    git ls-files -d -m
+    # what's in the index; includes files that were "git add"ed
+    git ls-files -s
+    # conflicted files
+    git ls-files -u
+    # "other files"; includes EVERYthing not in d/m/s, I think
+    # seems to be equal to untracked + ignored
+    git ls-files -o
+    # untracked files only
+    git ls-files --exclude-standard -o
+    # ignored files only
+    git ls-files --exclude-standard -o -i
+

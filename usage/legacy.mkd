@@ -1,0 +1,29 @@
+## tips for legacy VCS migrants! {-}
+
+  * **gotcha**: `git add somefile` adds the **current** content of `somefile`
+    to the staging area.  Changes made after this do not affect `git commit`
+    unless you again do a `git add` or use the `-a` option to `git commit`.
+
+  * **gotcha**: `commit` means to your local repo, not to the "server"!
+
+  * these commands/options effectively bypass the "index" or "staging area",
+    **but the INDEX is really a wonderful concept, and you really should not
+    bypass it like this**.  See [why the index is
+    useful](uses-of-index.html) or
+    <http://blogs.gnome.org/newren/2007/12/08/limbo-why-users-are-more-error-prone-with-git-than-other-vcses/>
+
+        git diff HEAD       # to see changes you made
+        git add             # to tell git about new files...
+        git commit -a       # ...and let git figure out changed and deleted files before committing
+
+  * CVS equivalence
+
+        CVS                 GIT
+        ---                 ---
+        checkout            clone
+        update              pull
+        checkin             commit + push
+        add                 add
+        remove              rm
+        ???                 mv   
+

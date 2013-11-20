@@ -1,0 +1,87 @@
+# what does "git pull --rebase" do? {-}
+
+[To understand this article you need to understand what a reflog is, and what
+a rebase does, especially the full form of the rebase command]
+
+[My initial article was a little simplistic; more exact details added thanks
+to doener!]
+
+----
+
+Sometimes we have an upstream that rebased/rewound a branch we're depending
+on.  This can be a big problem -- causing messy conflicts for us if we're
+downstream.
+
+Without going into why they would do that, and how many beers (I prefer
+rum+coke, thank you!) should be offered in compensation to downstream users,
+let's just try and describe how git helps you deal with it.
+
+The magic is `git pull --rebase`.
+
+A normal `git pull` is, loosely speaking, something like this (we'll use a
+remote called `origin` and a branch called `foo` in all these examples):
+
+    # assume current checked out branch is "foo"
+    git fetch origin
+    git merge origin/foo
+
+At first glance, you might think that a `git pull --rebase` does just this:
+
+    git fetch origin
+    git rebase origin/foo
+
+But that will not help if the upstream rebase involved any "squashing"
+(meaning that the `patch-id`s of the commits changed, not just their order).
+
+Which means `git pull --rebase` has to do a little bit more than that.  Here's
+an explanation of what it does and how.
+
+Let's say your starting point is this:
+
+    a---b---c---d---e  (origin/foo) (also your local "foo")
+
+Time passes, and you have made some commits on top of your own "foo":
+
+    a---b---c---d---e---p---q---r (foo)
+
+Meanwhile, in a fit of anti-social rage, the upstream maintainer has not only
+rebased his "foo", he even used a squash or two.  His commit chain now looks
+like this:
+
+    a---b+c---d+e---f  (origin/foo)
+
+A `git pull` at this point would result in chaos.  Even a `git fetch; git
+rebase origin/foo` would not cut it, because commits "b" and "c" on one side,
+and commit "b+c" on the other, would conflict.  (And similarly with d, e, and
+d+e).
+
+What `git pull --rebase` does, in this case, is:
+
+    git fetch origin
+    git rebase --onto origin/foo e foo
+
+This gives you:
+
+    a---b+c---d+e---f---p---q---r (foo)
+
+You may still get conflicts, but they will be genuine conflicts (between p/q/r
+and a/b+c/d+e/f), and not conflicts caused by b/c conflicting with b+c, etc.
+
+----
+
+So how does this actually work?
+
+The command tries to find out which commits are *really* your local ones, and
+which had come from upstream in an earlier fetch.
+
+To do this, it looks at the reflog of the remote tracking branch
+(`origin/foo`, in this case).  This reflog represents the tips of successive
+`git fetch` operations on `origin`, in "most recent first" order.
+
+For each reflog entry, (`origin/foo@{1}`, then `...{2}`, and so on) it checks
+if that commit is an ancestor of the current branch head `foo`.  As soon as it
+finds one, it picks it as the starting point for the rebase (`e` in the
+example above).
+
+That might sound a little complicated, but it works out fine.  Just try it
+next time your upstream rebases something on you.

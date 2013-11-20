@@ -1,0 +1,75 @@
+# git on the server {-}
+
+`git` is a *distributed* version control system (DVCS), and every developer
+thus has his/her own repository.  A central server is therefore not a
+technical requirement, but more of a practical and/or administrative one, if
+at least as a place for the "official" version of your repo.
+
+I have only 2 things to say about the server environment:
+
+  * install Gitolite
+
+  * for additional piece of mind, set the following
+
+        git config core.logAllRefUpdatess true
+        git config transfer.fsckObjects   true
+
+## protocols that git uses {-}
+
+Git uses the following protocols to access remote repositories; example URLs
+are given in parentheses:
+
+  * **ssh** (`ssh://user@my.server/path/to/repo`).  Authentication is handled
+    by ssh.  See the section on "gitolite and other tools" for authorisation.
+
+  * **http/https**: (`http://my.server/path/to/repo`).  Authentication is
+    handled by the web server.  Authorisation *can* be handled by gitolite if
+    you're using "smart http" (see 'man git-http-backend').
+
+  * **local file system**: (`file:///path/to/repo`).  Authentication is not
+    relevant (you're already logged in).
+
+    Authorisation is handled by OS file-system permissions, but there's a
+    little twist.  Using OS permissions, or even filesystem ACLs, you can only
+    get repo-level granularity for reads and writes (i.e., you can say Alice
+    can read the repo, Bob can read and write, and Carol cannot do either, but
+    that;s it).
+
+  * **git**: (`git://my.server/path/to/repo`).  This is an *UNAUTHENTICATED*
+    protocol, useful only for allowing clones of publicly accessible repos. If
+    they can reach port 9418 on your server, they can get it.  Pushes are
+    disabled by default, and -- needless to say -- you must *NEVER* enable
+    them!
+
+    This protocol is handled by the special 'git-daemon' program, which you
+    can run either directly or via inetd/xinetd.  Please see its man page etc
+    for details.
+
+## gitolite and other tools for authorisation {-}
+
+There are many situations where you need to establish limits on what someone
+can do.  When you have a number of developers, with varying levels of
+experience and expertise, accessing a number of repos, and different branches
+in different repos have different levels of "importance", you need some
+serious authorisation tool.
+
+[Gitolite][gl] is the best such tool I know (blame author bias if you don't
+agree!).  It comes with a [quick
+install](http://sitaramc.github.com/gitolite/index.html#qi) section, plus lots
+and lots of [documentation][gld].
+
+[gl]: http://github.com/sitaramc/gitolite
+[gld]: http://gitolite.com/gitolite
+
+Other tools exist, but they are all web-based.  "Gerrit code review" is the
+most powerful of the free ones, but it's much more focused on (and much more
+useful for) code review / workflow enforcement.  Less capable tools are
+gitorious, gitlab, and so on (I don't believe any of them has the kind of
+branch level and file/directory level access controls that Gitolite has).
+
+For open source projects or if you don't mind paying a small amount of money,
+Github is very nice. (Gitolite's primary host is Github, and I have no other
+relationship with them than being a free user).  Github's access control is
+not at all fine-grained so it's best if it's used only as a "meeting point"
+server for your team, and not as a "source of truth".
+

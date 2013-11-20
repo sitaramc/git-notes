@@ -1,0 +1,140 @@
+# sizing a server for git {-}
+
+<!-- pandoc: toc -->
+
+**Update Dec 2013**: this was written some years ago; the measurements could
+only have gotten better now...
+
+----
+
+How big a server do you need to host git repos?  These are my current thoughts
+on this, and they're essentially what I sent in an internal email to someone
+at work who asked about that as well as network bandwidth concerns when the
+server is used from multiple sites over a WAN.
+
+Note: the specific question also asked how many "concurrent" users a git
+server with a given spec could handle.  However, a typical developer will only
+interact with the git server on average 2-6 times a day, with each interaction
+lasting at most for a few seconds.  That's it!
+
+This is why "concurrent users" is not a meaningful measure, unless everyone
+hits "push" or "pull" at exactly the same time  :-) 
+
+Anyway, here are some details, from the point of view of a typical
+"enterprise" use of a VCS.  Be sure to read the last section on the [one
+operation](#repack) that *can* stress out a git server.
+
+## bandwidth usage: {-}
+
+  * the initial clone (like when a new team member joins the project)
+    transfers data about the size of the repository.  This is highly
+    compressed but it could still be large.
+
+    Just as a point of reference, I pulled down the entire Linux kernel
+    repository just now.  It was 310 MB and took about 20 minutes to come in
+    on my home DSL line here.
+
+    Please note this is about 4 years and 3 months worth of changes on a
+    project with hundreds of active developers; you have to ask yourself if
+    your project is really that large.
+
+  * after the initial clone, regular updates (git pull/fetch) take very little
+    time.
+
+    Again, to give you a point of reference, I had an older copy of the linux
+    kernel tree that was last updated 6 days ago.  I just pulled down those 6
+    days worth of changes, and the actual data trasferred was about 400 KB
+    (yes, **kilo** bytes, for 6 days of changes in a very active project)
+
+  * if you're worried that the initial clone will be a killer when an entire
+    remote site (with, say, 50 people) joins the repository, don't worry.  Git
+    has ways to get around that also, if you are worried about it.
+
+    There's a command called "git bundle" which lets you package up the entire
+    repository into one file, which you can transfer one time to the other
+    site.  At the other site, they share that bundle file on their LAN
+    (instead of each person essentially getting the same file on the WAN), and
+    clone from it.  After the clone is done, you make a one-line change to the
+    config file (change the URL to point to the real server instead of a local
+    file!) and it's done.
+
+    What all this means is, for the cost of one extra command on the server
+    and one extra command on each client, you have "seeded" an entire site
+    with just one download  :-) 
+
+## CPU usage {-}
+
+Git does take some CPU time to pack up a repository, especially to supply an
+initial clone.  Even in the initial clone, on a decent dual-core machine it
+will be as fast as the hard disk can read the repository data, which means
+pretty fast.  On subsequent pull/push operations, it is very fast.
+
+The CPU-bound operations in day to day git operations are
+
+  * compressing each file (aka "blob") using zlib
+  * computing deltas (differences) between objects to optimise sending data
+    when someone clones or pulls
+
+Zlib is quite efficiently coded, and besides, is so widely used in so many
+other parts of a modern operating system, that it is not much of an issue.
+
+Computing deltas is definitely more CPU hungry (as well as memory hungry), but
+-- except on the initial clone -- it happens incrementally so any
+decent/recent dual-core CPU should be able to handle it very fast.
+
+>   ----
+>   ^^Further details on this, courtesy charon on #git:
+
+>   Even when computing deltas to send, git reuses packs.  This means that
+    objects that are already packed are not delta compressed again --
+    send-pack just uses the existing delta-compressed form.  Anyway it doesn't
+    really send the _entire_ pack, only the parts that are relevant, so this
+    works fine.
+
+>   As a result, cpu usage on the server is now mostly in the "counting
+    objects" phase (i.e., figuring out what to send), which is not much of a
+    load.^^
+
+## memory {-}
+
+A machine with about 512 MB ***free*** RAM will probably work fine for most
+development style repositories.  In practice this means about 1 GB total RAM,
+assuming no other big programs are running.  Note that all this is transient
+use -- there is no "long running background process" in a normal git install
+that sits around hogging memory.  If no one is accessing the repository
+(push/pull/clone), then no memory is used.
+
+The only time you get into memory problems under normal use is if you have
+files that are really large, like more than 50 MB or so.  (We're not talking
+about total repo size here; we're talking one individual file).  If you have
+any such files in the repo (or worse, many such files), it may be a good idea
+to run some benchmarks first.  [I'm being very conservative here; in practice
+I'm sure much larger files can be used without trouble but at some point it
+will cause problems.  That may be 100MB, or 250MB, or whatever but it will
+happen...]
+
+Otherwise there's nothing inherently in git to gobble up memory except the
+[repack](#repack) operation mentioned in the last section.
+
+## disk {-}
+
+As I mentioned in one of my presentations, git takes about 1/20th the size of
+an SVN repository, so this should not be a concern.  However, this does assume
+the "repack" operation referred to below is being run at least once a month or
+so.
+
+## #repack stressing out a git server {-}
+
+The only time git does anything that seriously stresses the machine (in ***all
+respects***, not just CPU) is a "repack" operation that (by default) runs very
+rarely.  You can, if you wish, set a config variable to make it never happen
+automatically, and just do it manually about once a month, or by cron at 4am
+on Sunday, or whatever suits you.
+
+I tried a full repack of the linux kernel tree on my desktop, and it took
+approximately 700 MB of RAM, 5:20 minutes elapsed time, and 7:04 minutes of
+CPU time (CPU time is more than elapsed time because parts of this repacking
+are multi-threaded).
+
+So -- if you schedule it at night or Sunday morning or whatever, you'll be
+fine.  Don't worry about it...
