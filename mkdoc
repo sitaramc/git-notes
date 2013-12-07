@@ -1,32 +1,33 @@
-#!/usr/bin/perl
-use strict;
-use warnings;
-use 5.10.0;
+#!/bin/bash
 
 # run from git-notes as "./mkdoc"
 
-# my $OUTDIR = "/tmp/doc2";
-my $OUTDIR = "$ENV{HOME}/imli/tech/repos/sitaramc.github.com";
-system("rm     $OUTDIR/*.html");
-system("rm -rf $OUTDIR/images");
-system("mkdir  $OUTDIR/images");
-system("rm -rf $OUTDIR/archived");
-system("mkdir  $OUTDIR/archived");
+OUTDIR="/tmp/doc2"
+OUTDIR="$HOME/imli/tech/repos/sitaramc.github.com"
 
-my @mkd = `find . -name "*.mkd" | sort`;
-chomp(@mkd);
+rm     $OUTDIR/*.html
+rm -rf $OUTDIR/images
+mkdir  $OUTDIR/images
+rm -rf $OUTDIR/archived
+mkdir  $OUTDIR/archived
 
-for (@mkd) {
-    m(([^/]+)\.mkd) or die "bad mkd file: '$_'";
-    my $base = $1;
-    $base = "archived/$base" if m(archived/);
+for mkd in `find . -name "*.mkd" | sort`
+do
+    base=$(basename $mkd .mkd)
+    [[ $mkd =~ archived ]] && base="archived/$base"
 
-    system("md-pandoc html < $_ > $OUTDIR/$base.html") and die 1;
-}
+    md-pandoc html < $mkd > $OUTDIR/$base.html
+done
 
-system("mkdir -p   $OUTDIR/tools");
-system("cp tools/* $OUTDIR/tools");
-# -- XXX do we need this? -- system("cp images/* $OUTDIR/images");
+mkdir -p   $OUTDIR/tools
+cp tools/* $OUTDIR/tools
+# -- XXX do we need this? -- cp images/* $OUTDIR/images
 
 # cleanup
-system("rm fig*.png");
+rm fig*.png
+
+cd $OUTDIR
+mkdir -p 1-basic-usage gcs the-list-and-irc
+cp tias.html 1-basic-usage
+cp gcs.html gcs/index.html
+cp deploy.html the-list-and-irc
