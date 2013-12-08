@@ -11,7 +11,7 @@ from slide to slide, and the .@blue<up/down>@ arrow keys to scroll within a
 slide.
 
 The "help" button you see in the footer misses some important stuff, so here's
-a [quick, 1-page, help page for slidy](_slidy.html).
+a [quick, 1-page, help page for slidy](slidy-help.html).
 
 ## acknowledgements
 
