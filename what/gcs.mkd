@@ -6,39 +6,12 @@
 
 <!-- pandoc: slidy-2 -->
 
-This is "HTML Slidy", a simple presentation software from the W3C. Although
-there's a help button in the footer, it's missing some important stuff, so
-here's a summary.
+This is a "Slidy" presentation.  Use the .@blue<left/right>@ arrow keys to go
+from slide to slide, and the .@blue<up/down>@ arrow keys to scroll within a
+slide.
 
-.#d
-
-.@blue<**Navigation**>@
-
-*   **Next slide**: right arrow, page down, space, or left click
-*   **Prev slide**: left arrow, page up
-*   **Down in slide**: down arrow, mouse wheel down
-*   **Up within slide**: up arrow, mouse wheel up
-*   **First slide**: home
-*   **Last slide**: end
-
-.#d
-
-\ \ \ \ 
-
-.#d
-
-.@blue<**Display**>@
-
-*   **Toggle footer**: "F" key
-*   **Toggle Current versus *All* slides**: "A" key
-*   **Toggle Table of Contents popup**: "C" key
-*   **Smaller font**: "S" or "<" key
-*   **Larger font**: "B" or ">" key
-
-.#t
-
-**To search** for stuff in the full document using your browser's Ctrl-F,
-first view all slides (press the "A" key).
+The "help" button you see in the footer misses some important stuff, so here's
+a [quick, 1-page, help page for slidy](_slidy.html).
 
 ## acknowledgements
 
