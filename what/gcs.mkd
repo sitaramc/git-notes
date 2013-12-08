@@ -4,7 +4,7 @@
 
 ## using this slideshow
 
-<!-- pandoc: slidy-2 -->
+<!-- pandoc: slidy-2-N -->
 
 This is a "Slidy" presentation.  Use the .@blue<left/right>@ arrow keys to go
 from slide to slide, and the .@blue<up/down>@ arrow keys to scroll within a

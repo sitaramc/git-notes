@@ -16,7 +16,7 @@ do
     base=$(basename $mkd .mkd)
     [[ $mkd =~ archived ]] && base="archived/$base"
 
-    md-pandoc html < $mkd > $OUTDIR/$base.html
+    md-pandoc html-N < $mkd > $OUTDIR/$base.html
 done
 
 mkdir -p   $OUTDIR/tools

@@ -2,7 +2,7 @@
 
 ## why {-}
 
-<!-- pandoc: slidy -->
+<!-- pandoc: slidy-N -->
 
 ![](images/git/projects-sans-vcs.png)
 
