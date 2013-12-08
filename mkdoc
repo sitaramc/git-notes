@@ -28,6 +28,6 @@ rm fig*.png
 
 cd $OUTDIR
 mkdir -p 1-basic-usage gcs the-list-and-irc
-cp tias.html 1-basic-usage
-cp gcs.html gcs/index.html
-cp deploy.html the-list-and-irc
+echo '"Try it and see" has <a href="../tias.html">moved</a>' > 1-basic-usage/tias.html
+echo '"Git concepts simplified" has <a href="../gcs.html">moved</a>' > gcs/index.html
+echo '"Git as a deployment tool" has <a href="../deploy.html">moved</a>' > the-list-and-irc/deploy.html
