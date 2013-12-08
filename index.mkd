@@ -25,43 +25,50 @@ also.
 
 .#t
 
-.#d
-
-**Why git?**
-:   Why is git so popular?  If you're just curious, but not curious enough to
-    dig in like a developer, maybe [this article](git-lfy.html), which I wrote
-    in 2008, will help.
-
-**What is git?**
-:   If you want to understand git, we have .@red<**slideshows**>@.
-:   *   an [introduction](vc.html) to version control and the central concepts
-        behind git -- for those who have never used *any* version control
-        tool.
-    *   what makes [git](git.html) so powerful -- for those who know something
-        about version control but not git.
-
-**git usage**
-:   In the ["git usage"](usage.html) page you will find various tips and
-    traps, information for command line and GUI users, Windows users, running
-    a git server, plus a quick set of hints for people familiar with
-    traditional VCSs like SVN and CVS.
+.#t cellspacing=10
 
 .#d
 
-**popular links**
-:   These links show up a dozen or more times a day on #git (the git channel
-    on IRC)
-:   *   git as a [deployment](deploy.html) tool
-    *   [Git concepts simplified](gcs.html) has lots of diagrams explaining git
-    *   [Try it and see!](tias.html) -- shows how easy it is to safely try out
-        almost any git feature on your own userid
+#### Why git? {-}
 
-**Other write-ups**
-:   A whole bunch of [other articles](articles.html) on git
+Why is git so popular?  If you're just curious, but not curious enough to dig
+in like a developer, maybe [this article](git-lfy.html), which I wrote in
+2008, will help.
 
-**Refreshers**
-:   Git and DVCS [terminology](terminology.html)
-:   
+#### What is git? {-}
+
+If you want to understand git, we have .@red<**slideshows**>@.
+
+*   an [introduction](vc.html) to version control and the central concepts
+    behind git -- for those who have never used *any* version control tool.
+*   what makes [git](git.html) so powerful -- for those who know something
+    about version control but not git.
+
+#### git usage {-}
+
+In the ["git usage"](usage.html) page you will find various tips and traps,
+information for command line and GUI users, Windows users, running a git
+server, plus a quick set of hints for people familiar with traditional VCSs
+like SVN and CVS.
+
+.#d
+
+#### Popular links {-}
+
+These links show up several times a day on #git (the git channel on IRC)
+
+*   git as a [deployment](deploy.html) tool
+*   [Git concepts simplified](gcs.html) has lots of diagrams explaining git
+*   [Try it and see!](tias.html) -- shows how easy it is to safely try out
+    almost any git feature on your own userid
+
+#### Other write-ups {-}
+
+A whole bunch of [other articles](articles.html) on git
+
+#### Refreshers {-}
+
+Git and DVCS [terminology](terminology.html)
 
 .#t
 
@@ -70,16 +77,6 @@ also.
 .@gray<There are also some [older articles and write-ups](archived/index.html)
 that may still be relevant and useful, but I have not revisited them for a
 while now.  Caveat reader!>@
-
-----
-
-## Basics
-
-<font color="red">If you...
-
-  * if you're itching to get started, but have become overwhelmed by having to
-    understand git itself and how it fits with ssh or http etc., read
-    [this](tias.html).
 
 ----
 
