@@ -2,17 +2,48 @@
 
 # preface
 
-## using this slideshow
+## viewing this slideshow
 
 <!-- pandoc: slidy-2-N -->
+
+This presentation uses [HTML
+Slidy](http://www.w3.org/Talks/Tools/Slidy2/Overview.html), a simple
+presentation software from the W3C. Although there's a help button in the
+footer of each presentation, it's missing some important stuff, so here's a
+smaller but more complete summary of the keyboard controls.
+
+.#d
+
+.@blue<**Navigation**>@
+
+|   **Next slide**: right arrow, page down, space
+|   **Prev slide**: left arrow, page up
+
+|   **Down within slide**: down arrow
+|   **Up within slide**: up arrow
+
+|   **First slide**: home
+|   **Last slide**: end
+
+.#d
+
+.@blue<**Display**>@
+
+|   **Smaller font**: "S" or "<" key
+|   **Larger font**: "B" or ">" key
+
+|   **Toggle Current versus *All* slides**: "A" key
+|   **Toggle Table of Contents popup**: "C" key
+|   **Toggle footer**: "F" key
+
+.#t
+
+.@blue<**To search**>@ for stuff in the full document using your browser's
+Ctrl-F, first view all slides (press the "A" key).
+
+<!-- end slidy help -->
+
 <!-- gv: rankdir=BT edge[dir=back] -->
-
-This is a "Slidy" presentation.  Use the .@blue<left/right>@ arrow keys to go
-from slide to slide, and the .@blue<up/down>@ arrow keys to scroll within a
-slide.
-
-The "help" button you see in the footer misses some important stuff, so here's
-a [quick, 1-page, help page for slidy](slidy-help.html).
 
 ## acknowledgements
 
