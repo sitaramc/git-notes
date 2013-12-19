@@ -9,10 +9,10 @@
 ## what is a VCS {-}
 
 ## why use a VCS {-}
-  * reversibility or rollback@@, aka C-Y-A!
-      * linear (on the time axis)@@, simple to implement
+  * reversibility or rollback, aka C-Y-A!
+      * linear (on the time axis), simple to implement
   * concurrency
-      * non-linear@@, all the complexity is here
+      * non-linear, all the complexity is here
   * annotation
 
 # some simple operations
@@ -81,7 +81,7 @@
 
 ## what is a 'repo' {-}
   * A repository is just
-      * a work tree, @@plus
+      * a work tree, plus
       * a special '.git' directory at the top level of the work tree.
   * NEVER FIDDLE WITH THIS DIRECTORY UNLESS YOU KNOW WHAT YOU ARE DOING!
   * YOU HAVE BEEN WARNED!
@@ -144,7 +144,7 @@ Here, to refresh your memory:
 ![](images/vc/repo-6.png)
 
 ## what is a repo again? {-}
-  * a work tree + .git?  @@sure, but also...
+  * a work tree + .git?  sure, but also...
   * a bunch of commits laid out as a 'graph'
       * a "directed acyclic graph", if you're interested
 
@@ -165,7 +165,7 @@ Here, to refresh your memory:
 
 ## what is a tag {-}
   * when you checkout a branch and then commit, the branch is now pointing at
-    the new 'snapshot'.  @@This means...
+    the new 'snapshot'.  This means...
   * ...the branch 'tip' keeps moving with every commit
   * But sometimes you want to mark a point in your development
       * with some sort of a permanent label
@@ -198,7 +198,7 @@ Here, to refresh your memory:
   * the developers can push and pull from each other directly
       * because they're also repositories just like the "central" one
   * so do we still need a "central" repo?
-      * not really@@; that's only an administrative decision now
+      * not really; that's only an administrative decision now
       * not a technical requirement
       * but it makes managing projects easier
       * so yes, we still have central repos for most projects
@@ -370,7 +370,7 @@ Here, to refresh your memory:
 ## advanced workflow activities {-}
   * cherry-pick -- pick up specific changes from another branch or repo and
     make those changes happen in your repo
-  * rebase -- move commits around@@; sort of like
+  * rebase -- move commits around; sort of like
       * cut off a branch where it connects to the trunk of a tree...
       * ...and graft it somewhere else
   * bisect
