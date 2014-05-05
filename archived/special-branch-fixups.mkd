@@ -115,7 +115,7 @@ can, if you wish, check that the trees are indeed the same
 The `@{1}` notation specifies the shape of the TEMP branch before the rebase
 started.
 
-### #utcb Updating and testing the 'common' branch
+### Updating and testing the 'common' branch {#utcb}
 
 Now switch to the 'common' branch and cherry pick the
 changes that belong on 'common'.  The simplest way to cherry

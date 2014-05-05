@@ -170,7 +170,7 @@ no harm keeping two tools around...!
 
 <font size=-1>
 
-### #perlmodinstalls installing the perl modules
+### installing the perl modules {#perlmodinstalls}
 
 Note: I *did* indeed have to install DBD::SQLite2 manually.  Also, Text::Glob
 had to be installed using `perl -MCPAN -e shell` followed by `install
@@ -194,7 +194,7 @@ Text::Glob`; for some reason the "-e install ..." thing didn't work
     make
     make install
 
-### #libboostpatch patch for libboost 1.36
+### patch for libboost 1.36 {#libboostpatch}
 
     commit 4a3a283593bf8a991e0553e3ac3252c75a1349db
     Author: Sitaram Chamarty <sitaramc@gmail.com>

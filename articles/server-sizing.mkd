@@ -123,7 +123,7 @@ an SVN repository, so this should not be a concern.  However, this does assume
 the "repack" operation referred to below is being run at least once a month or
 so.
 
-## #repack stressing out a git server {-}
+## stressing out a git server {#repack -}
 
 The only time git does anything that seriously stresses the machine (in ***all
 respects***, not just CPU) is a "repack" operation that (by default) runs very

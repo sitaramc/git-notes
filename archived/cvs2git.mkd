@@ -59,7 +59,7 @@ seemed to deal with a lot more nuances, so I used that instead.
 
         cat ~-/cvs2svn-tmp/git-{blob,dump}.dat | git fast-import
 
-## #patch Appendix
+## Appendix {#patch}
 
 These are the changes I made to the options file:
 
