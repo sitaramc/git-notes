@@ -1,4 +1,4 @@
-## version control habits of good developers {-}
+# version control habits of good developers {-}
 
 .@gray\<(not necessarily git-specific)\>@
 
@@ -75,7 +75,7 @@ most of the words are mine.
     -   in git, it's easy to use the "gitk" gui to pick individual changes
         from another branch into the current one
 
-### write useful, readable, commit messages {-}
+## write useful, readable, commit messages {-}
 
 A good description of this is at <http://www.tpope.net/node/106>.  But
 briefly, try and stick to the following guidelines:

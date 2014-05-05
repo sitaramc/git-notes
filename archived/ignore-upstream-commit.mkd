@@ -1,4 +1,4 @@
-# ignoring an upstream commit permanently
+% ignoring an upstream commit permanently
 
 (untested)
 
@@ -6,7 +6,7 @@
 
 ----
 
-## problem
+# problem
 
     A---B---C---D---E (master)
      \
@@ -21,24 +21,24 @@ You decide that you don't want V's version of the changes, now or in future.
 That is, though you will keep merging from upstream, you don't want to see "V"
 ever again.
 
-## assumption
+# assumption
 
 You never have to push this upstream; it's your private copy (think "customer
 specific branch")
 
-## caveats
+# caveats
 
 Eventually, something upstream will patch something from V, and since you
 don't have that particular set of code, you'll get a patch that cannot be
 applied.  At that point you can repeat this method to discard *that* commit,
 or fix the conflicts somehow and move on.
 
-## the hard solution
+# the hard solution
 
 Fix all the conflicts and commit.  For people still living in other version
 control systems :-)
 
-## the easy solution
+# the easy solution
 
 Create a branch from upstream where you revert V and merge that to master
 
@@ -71,7 +71,7 @@ First, this only uses porcelain, no plumbing.  Second, the extra commit "R"
 makes it clear that something happened, even if the merge commit at "M" was
 not properly commented.
 
-## the hackish, low-level solution
+# the hackish, low-level solution
 
 Don't use this if, like me, you're not comfortable with plumbing.  This
 section is just for the record, and because the idea is very cool.

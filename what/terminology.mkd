@@ -1,8 +1,8 @@
-# terminology
+<!-- options: toc -->
 
-<!-- pandoc: toc -->
+% terminology
 
-## general VCS terminology
+# general VCS terminology
 
 A **project** is the minimum set of source code (and related files) that need
 to be kept together to **build** the software.  Example: Linux
@@ -34,13 +34,13 @@ Example: the disk subsystem, the networking subsystem, etc., in Linux
     stable points in its development cycle -- merges its changes back into the
     main line
 
-## git-specific terminology
+# git-specific terminology
 
 **(By the way, [git concepts simplified](gcs.html) contains a much more
 extensive treatment of some of the following concepts, with lots of diagrams
 to help).**
 
-### working tree, repository, bare repository
+## working tree, repository, bare repository
 
   * a **working tree** in git is the same as anywhere else.  When you edit,
     compile, test, etc., it is your working tree files that are used
@@ -56,7 +56,7 @@ to help).**
     Central (or server) repos, meant only for people to push to and clone/pull
     from, are usually bare.
 
-### commits, SHAs
+## commits, SHAs
 
   * a **commit** records the content of the working tree at a point in time
 
@@ -69,7 +69,7 @@ to help).**
     become very, very, famous in the cryptography world if you find two
     different commits with the same SHA :-)]>@
 
-### parent commits, commit tree
+## parent commits, commit tree
 
   * most commits build on top of one or more previous commits, called
     **parents**.  Normal commits have only one parent, while "merge" commits
@@ -88,7 +88,7 @@ to help).**
   * as a result, the entire repo can look like a **tree**.  Strictly speaking,
     this is a DAG -- or "directed acyclic graph".
 
-### head, branch, tag
+## head, branch, tag
 
   * a **branch** represents an active line of development; you use different
     branches to track different lines of development.  Without branches,
@@ -112,7 +112,7 @@ to help).**
     Tags are used to mark specific milestones in a project, like "v1.3", or
     "v2.9", etc.
 
-### reachability
+## reachability
 
   * you can start from a commit X and follow the parent SHAs ("arrows") until
     you come to a root commit.  The commits you found in this process are all
@@ -129,7 +129,7 @@ to help).**
     commits reachable from the branch being merged, which are not already
     reachable from the current branch, are pulled in and applied
 
-### master, HEAD
+## master, HEAD
 
   * *master*: default branch in a project (main development tree), by
     convention
@@ -138,7 +138,7 @@ to help).**
     that you should be aware of.  See the article on the [detached
     HEAD](detached-head.html) for more.
 
-### index
+## index
 
   * a staging area for the next commit; when you commit, the current
     index is turned into a real commit object
@@ -161,9 +161,9 @@ to help).**
   * see [uses of index](uses-of-index.html) for the cool things you
     can do with it
 
-## terminology related to being "distributed"
+# terminology related to being "distributed"
 
-### clone versus checkout
+## clone versus checkout
 
 In a *distributed* VCS, every developer's workstation has a full copy of the
 entire repository.  It is therefore called a **clone** -- you **clone** the
@@ -181,7 +181,7 @@ However, you can checkout some other branch at any time (and if you're using
 git, you will checkout and manage multiple branches on your local repo all the
 time, otherwise you're not really *using* git!)
 
-### accessing remote repositories
+## accessing remote repositories
 
 Every remote repository (often called just a **remote**) has a URL associated
 with it, which tells your (local) git client how to reach it.  There are
@@ -196,7 +196,7 @@ typically 4 kinds of Git URLs:
 
 See 'man git-clone' for all the allowed syntaxes for git URLs.
 
-### naming remote repositories
+## naming remote repositories
 
 You can refer to, (or fetch from, and push to) more than one remote repo in
 *your* clone, giving them all different URLs.  After a while it gets
@@ -212,7 +212,7 @@ git commands and it would be the same thing.
 (Note: for convenience, a 'remote' called 'origin' is automatically created
 when you clone a repo, pointing to the repo you cloned from.)
 
-#### origin
+### origin
 
 So now you know what a nickname is, you can understand what "origin" means.
 "origin" is just the default name given to the remote repository when you do a

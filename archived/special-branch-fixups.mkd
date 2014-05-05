@@ -1,4 +1,4 @@
-# fixing-up common and customer branches
+% fixing-up common and customer branches
 
 The following document explains how to maintain a 'common' branch,
 with one or more 'customer specific' branches that hang off of the
@@ -16,7 +16,7 @@ done in one branch, or whatever), and so you now have a mix of 'common' and
 **This article describes one way to 'fix up' such a mixed development into the
 proper form**.
 
-## The basic rules
+# The basic rules
 
 The basic rules are best described by Junio in
 <http://permalink.gmane.org/gmane.comp.version-control.git/110489>
@@ -28,7 +28,7 @@ This document shows how one might do that.  [Junio also helped
 with comments on a previous draft of this text.  However, any
 errors or other problems that remain are mine.]
 
-## Terminology
+# Terminology
 
 We use the following terminology:
 
@@ -47,9 +47,9 @@ too many such customers you may also want to look at [Never
 merging back](http://gitster.livejournal.com/26540.html)
 for an additional tip on this.
 
-## The nitty gritty
+# The nitty gritty
 
-### Before you start
+## Before you start
 
 The history looks like this in the beginning:
 
@@ -91,7 +91,7 @@ eventually want on the special branch as well.
         /                                            
     ---o--X--Y                      <- common
 
-### Separating 'common' and 'special'
+## Separating 'common' and 'special'
 
 The first thing to do is to tease the tangled commits apart
 using rebase.
@@ -115,7 +115,7 @@ can, if you wish, check that the trees are indeed the same
 The `@{1}` notation specifies the shape of the TEMP branch before the rebase
 started.
 
-### Updating and testing the 'common' branch {#utcb}
+## Updating and testing the 'common' branch {#utcb}
 
 Now switch to the 'common' branch and cherry pick the
 changes that belong on 'common'.  The simplest way to cherry
@@ -140,7 +140,7 @@ the new code in TEMP goes to 'common'.  If the test failed or required fixups,
 do them in the context of the 'common' case only, right here on the 'common'
 branch.  **Note that this affects the rebase coming up later!**
 
-### Merging 'common' into 'special'
+## Merging 'common' into 'special'
 
 Once that test is done, merge from 'common' to 'special'
 
@@ -155,7 +155,7 @@ which results in the following topology:
         /                 /
     ---o--X--Y--A'--B'--C'
 
-### Fixing up 'special'
+## Fixing up 'special'
 
 Now all we need is to get commits 1, 2, and 3 onto 'special'.  Although this
 is easiest done by using 'rebase', that will only work if your [updating and
@@ -177,7 +177,7 @@ branch)
         /                 /
     ---o--X--Y--A'--B'--C'
 
-### Final sanity check
+## Final sanity check
 
 At this point you should *definitely* re-test all the changes you made, to
 make sure nothing got missed out.  If there were no 'X' and 'Y' commits on

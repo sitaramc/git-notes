@@ -1,4 +1,4 @@
-# git performance {-}
+% git performance
 
 One of the things git did was to try and optimise disk storage by adopting an
 aggressive delta compression technique.  Most version control systems give you

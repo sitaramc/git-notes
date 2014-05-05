@@ -1,4 +1,4 @@
-# detached HEAD explained {-}
+% detached HEAD explained
 
 Git has something called a 'detached HEAD' that bears some explanation.  You
 are told 'do not commit on a detached HEAD', and it is not always clear what
@@ -11,7 +11,7 @@ provides a nice analogy.  However, [git concepts simplified](gcs.html) should
 be a much nicer read for most people. It has a lot of nice pictures, and it
 also touches upon many other issues, not just on detached HEADs.</font>
 
-## the analogy {-}
+# the analogy
 
 Forget git for a bit and think about linked lists from your data structures
 course.  Specifically, consider a *singly linked* list, where each node is
@@ -62,7 +62,7 @@ But 'temp' is a temporary variable, and unless you somehow save its value
 into some 'global' (or 'static') variable, you risk losing that commit you
 just made, oops, I mean the new node you added to the linked list :-)
 
-## reality check {-}
+# reality check
 
 A previous version of this article took the analogy too far into git
 territory, and I did not realise how many facts about git I had passed
@@ -102,7 +102,7 @@ HEAD to become detached (ouch!) are<sup>[[1]](#fn)</sup>:
 These will all make `.git/HEAD` contain the actual (40-hex-digit) hash of the
 corresponding commit instead of some string like `ref: refs/heads/branch`.
 
-### re-attaching the HEAD {-}
+## re-attaching the HEAD
 
 If you made the classic error of checking out a remote branch (like `git
 checkout origin/master`) and making a few commits on it before realising
@@ -115,7 +115,7 @@ To go back to the linked list analogy way up there, you just created a new
 'global' variable to save off the value of 'temp' before some other operation
 overwrote it.
 
-### Auld Lang Syne {-}
+## Auld Lang Syne
 
 What if you didn't realise this, and -- after making those commits -- blithely
 switched to another branch:
@@ -165,7 +165,7 @@ Now you look at this, decide which one you want, and grab it:
     # like 'thank_God_its_safe = 0x7fdae94815d6c676742c9984132b7b9e71a57f98'
     git checkout thank_God_its_safe
 
-### reality check -- conclusion {-}
+## reality check -- conclusion
 
 There are a few other points that don't fit the simple 'linked list' analogy,
 or present some additional information that may be useful:
@@ -192,7 +192,7 @@ or present some additional information that may be useful:
 
 ----
 
-### footnotes {-}
+## footnotes
 
 <a name="fn"><sup>[1] Curiously, `git checkout master^0` also gets you a detached HEAD.  The
 command actually says "switch to the commit that master currently points to".

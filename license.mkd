@@ -1,4 +1,4 @@
-# License {-}
+% License
 
 &copy; Copyright Sitaram Chamarty, sitaramc@gmail.com.  This documentation is
 provided under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0

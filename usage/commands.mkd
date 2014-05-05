@@ -1,8 +1,8 @@
-# useful commands {-}
+<!-- options: toc -->
 
-<!-- pandoc: toc -->
+% useful commands
 
-## grep {-}
+# grep {-}
 
 `git grep` is very, **very**, powerful.  It has pretty much all the normal
 grep options, plus:
@@ -24,7 +24,7 @@ grep options, plus:
     which says "match any of these strings, but print matches only from files
     that have *all* of them".  I wonder whose scratch that was... ;-)
 
-## log and show {-}
+# log and show {-}
 
   * `git lga` is pretty cool; lga is an alias in my config for
 
@@ -47,11 +47,11 @@ grep options, plus:
         git show 7a8b9c     # or some hex number; shows you the object
         git show HEAD~3:file.c  # get file.c from 3 versions back
 
-## reflog {-}
+# reflog {-}
 
 ...see this more detailed [note](reflog.html)
 
-## show-branch {-}
+# show-branch {-}
 
   * `git show-branch -a` is useful to get a bird's eye view of all your
     branches and their topological relationships.
@@ -66,7 +66,7 @@ grep options, plus:
 
         git show-branch $(git show-ref -h |cut -c41-)
 
-## cherry (not cherry-pick) {-}
+# cherry (not cherry-pick) {-}
 
   * summary: `+` shows you commits you have that the 'upstream' doesn't
 
@@ -80,7 +80,7 @@ grep options, plus:
     * put the candidate to be cut **on the right side**, and
     * make sure there are no `+`s in the output
 
-## cat-file (repo object) and ls-tree (tree object) {-}
+# cat-file (repo object) and ls-tree (tree object) {-}
 
 Note: I'm not sure what, if any, is the difference between `show` and
 `cat-file -p` for "blob" objects.  For commits there is a subtle
@@ -101,7 +101,7 @@ difference.  (Try it)
     git ls-tree -r -d   # recurse, only directories
     git ls-tree -r -t   # recurse, both directories and files
 
-## ls-files {-}
+# ls-files {-}
 
 To get listings of various types of files, use `git ls-files`.  The common
 but less intuitive ones are shown here, the rest can be had from the man page:

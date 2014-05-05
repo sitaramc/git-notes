@@ -1,4 +1,4 @@
-# for people who think SVN is good enough ;-)
+% for people who think SVN is good enough ;-)
 
 The official comparison is [here](http://git.or.cz/gitwiki/GitSvnComparsion).
 There is also a [Git - SVN crash course](http://git-scm.com/course/svn.html).
@@ -12,7 +12,7 @@ What follows is my understanding of the SVN scenario, from various sources.  I
 personally have used SVN only briefly.  If there are errors in the SVN part of
 this description please let [me](mailto:sitaramc@gmail.com) know.
 
-## briefly...
+# briefly...
 
 Git's advantages over SVN (all of them affect productivity and/or
 maintainability, indicated in parens as **P** or **M**) are:
@@ -70,9 +70,9 @@ Git does a lot of things better than any other VCS:
     real lifesaver for someone who picks up a complex project for maintenance
     or a new team member is trying to understand the existing project.
 
-## ...and a bit more detail
+# ...and a bit more detail
 
-### 'svn update' on very active projects
+## 'svn update' on very active projects
 
 When you, as a developer, have made a fair number of changes on your
 workstation, and wish to commit these to the SVN repo, you do an 'svn update'.
@@ -116,9 +116,9 @@ a manual conflict resolution, *but*:
 ^^Basic idea from a post by Junio at
 <http://article.gmane.org/gmane.comp.version-control.git/110671>^^
 
-### local caching and repository size
+## local caching and repository size
 
-#### What extra information is cached locally?
+### What extra information is cached locally?
 
 When you do an 'svn checkout', you get a working copy of the revision you
 checked out, plus svn saves away an extra copy of the same stuff.  This allows
@@ -144,7 +144,7 @@ Mozilla repository, with full history from 1998 or so:
 
 That's a ratio of almost 20:1 in size over SVN.
 
-## some links
+# some links
 
   * <http://markmcb.com/2008/10/18/3-reasons-to-switch-to-git-from-subversion/>:
     the first example, 'Endless, Easy, Non-File-System-Based, Local Branches',

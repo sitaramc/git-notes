@@ -1,4 +1,4 @@
-# gardening tips -- grafting branches
+% gardening tips -- grafting branches
 
 ^[If you think the jokes are bad, you don't know me very well.  Clearly that
 is *your* fault, not mine :-)]^
@@ -22,7 +22,7 @@ Note: The following description will use the word "line" to mean "a long chain
 of commits with no branch or merge within it".  In `gitk --all`, it is
 literally a straight line.
 
-## connecting two unrelated lines
+# connecting two unrelated lines
 
 Let's say you have the following history, with two unrelated lines of
 development (quite easily achieved by just fetching from some other repo that
@@ -154,7 +154,7 @@ That's it!
 ^^
 
 
-## breaking a line into two...
+# breaking a line into two...
 
 What other tricks can you get up to?
 
@@ -208,7 +208,7 @@ We've made "a6" what is called a "root" commit -- it has no parent.  Of
 course, if you do this without giving "a5" ("a6"'s original parent) a proper
 name, "a5" will become unreachable.  Which is why we gave it a name.
 
-## ...and joining them parallely (branch + merge)
+# ...and joining them parallely (branch + merge)
 
 Or how about not just breaking them and leaving them separate, but taking the
 pieces and putting them *parallel* to each other, with the tops and bottoms

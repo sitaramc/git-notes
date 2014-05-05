@@ -1,6 +1,6 @@
-# git as a deployment tool
+<!-- options: toc -->
 
-<!-- pandoc: toc -->
+% git as a deployment tool
 
 One of the first things people want to do with a server side repo is to
 automatically deploy something when someone pushes to it.
@@ -12,7 +12,7 @@ So let's talk deployment...
 
 ----
 
-## introduction
+# introduction
 
 Deploying on a push to a bare repo should be easy.  Just add a post-receive
 hook that contains this code:
@@ -23,7 +23,7 @@ hook that contains this code:
 Opinions differ on what that magic deploy command should actually be, and
 indeed whether there should even *be* one at all :-)
 
-## deployment rules
+# deployment rules
 
 Here's what we expect from a deployment tool.  Note the rule numbers -- we'll
 be referring to some of them simply by number later.
@@ -52,7 +52,7 @@ situation does not require it.
 
 [gdgd]: https://github.com/git-deploy/git-deploy
 
-## why git is not a deployment tool
+# why git is not a deployment tool
 
 The most important reason is this: git does not track permissions (other than
 the first "x" in "rwxrwxrwx").  Many real-world deployments need a bit more
@@ -64,7 +64,7 @@ Also, git does not track empty directories, which could also be a problem
 There could be other reasons; I'll update this section as I hear of any but
 I'm sure those are the main ones.
 
-## 6 different ways to deploy
+# 6 different ways to deploy
 
 We'll discuss these 6 ways of deploying your project using git.  Note that
 none of these methods can overcome git's inherent limitations for deployment
@@ -77,7 +77,7 @@ or script of any kind.  (If you don't know why, the short answer is "pull =
 fetch + merge" and merges cannot be guaranteed to complete without manual
 fixups).
 
-### checkout -- the "fight club" of git deployment
+## checkout -- the "fight club" of git deployment
 
 **Summary**
 
@@ -113,7 +113,7 @@ Aborting on finding untracked files is also easy enough:
 
     git ls-files -o | grep >/dev/null . && exit 1
 
-### fetch -- reverse the flow
+## fetch -- reverse the flow
 
 **Summary**
 
@@ -141,7 +141,7 @@ those commands just before the fetch.
 
 **Security**: a readable ".git" may be a security issue in some cases.
 
-### reset -- another reversing trick
+## reset -- another reversing trick
 
 **Summary**
 
@@ -172,7 +172,7 @@ you can use this.  But do you really want to take that chance?
 
 Finally, it has *no* advantage over the first method in any way.
 
-### direct archive dump
+## direct archive dump
 
 **Summary**
 
@@ -189,7 +189,7 @@ instead of rule 2, see the next section!
 
 It's also inefficient for large repos if only a few files have changed.
 
-### archive dump with staging
+## archive dump with staging
 
 **Summary**
 
@@ -228,7 +228,7 @@ Aborting on finding local changes is not easy.  You need to checkout the *old*
 commit somewhere and compare files manually.  If this is important, use one of
 the earlier methods.
 
-### archive dump with staging, using rsync
+## archive dump with staging, using rsync
 
 This is a variation of the previous one, except that your deploy directory is
 on a different host, or on a different user on the same server.  The git user
@@ -247,7 +247,7 @@ comes with rsync.  This is left as an exercise for the reader :-)
 
 [ek]: https://github.com/EugeneKay/scripts/blob/master/bash/git-deploy-hook.sh
 
-## summary/recap
+# summary/recap
 
 We've seen 6 methods.  Here's my summary.  The ones in gray are considered not
 useful enough to be in the running.

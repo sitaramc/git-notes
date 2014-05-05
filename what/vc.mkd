@@ -1,8 +1,11 @@
-# a very basic intro to version control and git
+<!-- to: slidy-N -->
+
+% a very basic intro to version control and git
+% Sitaram Chamarty (sitaramc@gmail.com)
+
+# preface
 
 ## why {-}
-
-<!-- pandoc: slidy-N -->
 
 ![](images/git/projects-sans-vcs.png)
 

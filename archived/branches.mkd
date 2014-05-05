@@ -1,4 +1,4 @@
-# all about branches and product maintenance
+% all about branches and product maintenance
 
 **CVS/SVN folks -- please read this first**
 
@@ -17,7 +17,7 @@ Thus, branches and subdirectories have *nothing* to do with each other.
 
 ----
 
-## local and remote branches
+# local and remote branches
 
 The git repository is really just a DAG (directed acyclic graph) of commits.
 Each commits points to its parent or parents (merge commits have more than one
@@ -45,7 +45,7 @@ And the most important thing is, you can have any other branches you wish!  Go
 wild -- no one will stop you, and it's quite difficult to lose data so have
 fun!
 
-## topic branches
+# topic branches
 
 As you read about workflows in modern VCSs, you'll often hear about topic
 branches. According to the [git
@@ -62,7 +62,7 @@ independent-of-others, line of development.  A specific bug, a new feature, a
 refactor, a set of enhancements to a core feature, etc., can all be managed as
 topics in their own right.
 
-## product maintenance
+# product maintenance
 
 Let's say your version tree looks like this:
 
@@ -136,7 +136,7 @@ deal with those is as follows:
 Note that V3only will never get merged into V4maint or V3maint, preserving the
 condition that commits made in V3only are not picked up by the newer versions.
 
-## throwaway integration branches
+# throwaway integration branches
 
 In all the above discussion, we kept saying "merge X into Y".  Which is all
 very well if things go fine, but how do you back out if something went wrong?

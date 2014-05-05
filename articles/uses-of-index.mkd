@@ -1,4 +1,4 @@
-# Why the index/staging area is so useful {-}
+% Why the index/staging area is so useful
 
 >   Newcomers to git often ask why there is such a thing as the index, and
     what use is it.  They'd rather just do `git add -A; git commit` each time
@@ -9,7 +9,7 @@
     index, staging area, and cache?
 
 
-## what is the index {-}
+# what is the index {-}
 
 The index (or any of its other names) is essentially a "holding area" for
 changes that will be committed when you next do `git commit`.  That is, unlike
@@ -21,7 +21,7 @@ operation.
 That should be sufficient background to appreciate (in abstract terms) the
 following discussion.
 
-## staging helps you split up one large change into multiple commits {-}
+# staging helps you split up one large change into multiple commits {-}
 
 Let's say you worked on a large-ish change, involving a lot of files and quite
 a few different subtasks.  You didn't actually commit any of these -- you were
@@ -37,7 +37,7 @@ With the index, just stage each set of changes and commit until no more
 changes are pending.  Really works well with `git gui` if you're into that
 too, or you can use `git add -p` or, with newer gits, `git add -e`.
 
-## staging helps in reviewing changes {-}
+# staging helps in reviewing changes {-}
 
 Staging helps you "check off" individual changes as you review a complex
 commit, and to concentrate on the stuff that has not yet passed your review.
@@ -60,7 +60,7 @@ that the file now appears on *both* top and bottom left panes!
 ^^[Do remember, however, that if the change is really complex maybe you should
 split it into multiple commits!]^^
 
-## staging helps when a merge has conflicts {-}
+# staging helps when a merge has conflicts {-}
 
 When a merge happens, changes that merge cleanly are updated both in the
 staging area as well as in your work tree.  Only changes that did not merge
@@ -70,7 +70,7 @@ or in the top left pane of `git gui`.
 Again, this lets you concentrate on the stuff that needs your attention -- the
 merge conflicts.
 
-## staging helps you keep extra local files hanging around {-}
+# staging helps you keep extra local files hanging around {-}
 
 Usually, files that should not be committed go into `.gitignore` or the
 local variant, `.git/info/exclude`.
@@ -93,7 +93,7 @@ test... whatever.
 In git, all you have to do is never to stage that file or that change.  That's
 it.
 
-## staging helps you sneak in small changes ;-) {-}
+# staging helps you sneak in small changes ;-) {-}
 
 Let's say you're in the middle of a somewhat large-ish change and you are told
 about a very important bug that needs to be fixed asap.
@@ -109,7 +109,7 @@ Again, if you use `git gui`, whatever's on the bottom left pane gets
 committed, so just make sure only that change gets there and commit, then
 push!
 
-### a word of warning... {-}
+## a word of warning... {-}
 
 While the first 3 use cases are perfectly legitimate and useful uses of the
 index, this last example could be dangerous if you get carried away.  You

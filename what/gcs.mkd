@@ -1,10 +1,11 @@
-# git concepts simplified {-}
+<!-- to: slidy-2-N -->
+
+% git concepts simplified
+% Sitaram Chamarty (sitaramc@gmail.com)
 
 # preface
 
-## viewing this slideshow
-
-<!-- pandoc: slidy-2-N -->
+## viewing This slideshow
 
 This presentation uses [HTML
 Slidy](http://www.w3.org/Talks/Tools/Slidy2/Overview.html), a simple

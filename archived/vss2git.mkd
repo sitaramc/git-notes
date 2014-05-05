@@ -1,4 +1,4 @@
-# converting Visual Source Shredder to GIT
+% converting Visual Source Shredder to GIT
 
 [Thanks to http://martinfowler.com/bliki/VersionControlTools.html for the
 new expansion of VSS]
@@ -7,7 +7,7 @@ This is a 2 step process.  For large values of 2, as they say :)  But the nice
 thing is it can all be done in Linux; no need to use a Windows machine as long
 as you have a copy of the full VSS repo.
 
-## build vss2svn
+# build vss2svn
 
 The base for all this is <http://www.pumacode.org/projects/vss2svn>.  What I
 did is the following:
@@ -36,7 +36,7 @@ did is the following:
 
 And that should be that...
 
-## run vss2svn
+# run vss2svn
 
 This should be easy enough, for most normal repos.  You need to get the entire
 VSS repo onto your system (the one that contains something called
@@ -47,7 +47,7 @@ VSS repo onto your system (the one that contains something called
 I have no idea how to deal with labels etc., properly in this command, but the
 basic stuff should work fine.
 
-## load the SVN dump file
+# load the SVN dump file
 
 The previous step should produce just an SVN dump file, which you need to
 load, and that gives you an SVN repo.
@@ -62,7 +62,7 @@ because I do not know any other way of doing this if you don't already know
     mkdir svnco
     svn checkout file://$PWD/svnrepo svnco
 
-## convert svn to git
+# convert svn to git
 
 This is, naturally, the easiest of all, especially if you don't intend to go
 back :)
@@ -81,9 +81,9 @@ So do it this way:
     git svn clone file://PATH_TO_SVN_REPO/projectname
         # for each project
 
-## checking the results
+# checking the results
 
-### tags
+## tags
 
 Tags (labels in VSS) don't seem to carry across properly.
 
@@ -96,12 +96,12 @@ repo where the tags are actually used (and I mean *used*, as in, "these tags
 do get *checked out* when needed; they're not just for show!") I'm not going
 to worry about it.^^
 
-### deleted files
+## deleted files
 
 I've also not tested if renamed/deleted files etc also work OK, but I think
 they ought to.
 
-### that damn CRLF thing
+## that damn CRLF thing
 
 When you do it this way, you don't have an opportunity to fix the CRLFs as
 they go in -- they'll all go into the repo as CRLF.  If you try to force it on
@@ -128,7 +128,7 @@ Note: in theory, a dummy filter that does nothing *should* work.  But it seems
 to miss a lot of files, which still go in with CRLFs.  Doing an explicit touch
 seems to be the only way.  I have no idea why this is so.
 
-### bottom line
+## bottom line
 
 Anyway, your bottom line should be:
 
@@ -142,7 +142,7 @@ Anyway, your bottom line should be:
     history at some revision that was not explicitly checked during the
     migration.
 
-## alternative method using perl on windows
+# alternative method using perl on windows
 
 There is another method, achieved by hacking a perl script that was supposed
 to convert [to SVN](http://www.riseup.com/~brettw/dev/VSS2Subversion.html), to
@@ -166,11 +166,11 @@ no harm keeping two tools around...!
 
 ----
 
-## Appendices
+# Appendices
 
 <font size=-1>
 
-### installing the perl modules {#perlmodinstalls}
+## installing the perl modules {#perlmodinstalls}
 
 Note: I *did* indeed have to install DBD::SQLite2 manually.  Also, Text::Glob
 had to be installed using `perl -MCPAN -e shell` followed by `install
@@ -194,7 +194,7 @@ Text::Glob`; for some reason the "-e install ..." thing didn't work
     make
     make install
 
-### patch for libboost 1.36 {#libboostpatch}
+## patch for libboost 1.36 {#libboostpatch}
 
     commit 4a3a283593bf8a991e0553e3ac3252c75a1349db
     Author: Sitaram Chamarty <sitaramc@gmail.com>

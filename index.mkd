@@ -1,6 +1,4 @@
-<center>
-# Notes on Git {-}
-</center>
+% Notes on Git
 
 .#d
 
@@ -29,13 +27,13 @@ also.
 
 .#d
 
-#### Why git? {-}
+### Why git? {-}
 
 Why is git so popular?  If you're just curious, but not curious enough to dig
 in like a developer, maybe [this article](git-lfy.html), which I wrote in
 2008, will help.
 
-#### What is git? {-}
+### What is git? {-}
 
 If you want to understand git, we have .@red<**slideshows**>@.
 
@@ -44,7 +42,7 @@ If you want to understand git, we have .@red<**slideshows**>@.
 *   what makes [git](git.html) so powerful -- for those who know something
     about version control but not git.
 
-#### git usage {-}
+### git usage {-}
 
 In the ["git usage"](usage.html) page you will find various tips and traps,
 information for command line and GUI users, Windows users, running a git
@@ -53,7 +51,7 @@ like SVN and CVS.
 
 .#d
 
-#### Popular links {-}
+### Popular links {-}
 
 These links show up several times a day on #git (the git channel on IRC)
 
@@ -62,11 +60,11 @@ These links show up several times a day on #git (the git channel on IRC)
 *   [Try it and see!](tias.html) -- shows how easy it is to safely try out
     almost any git feature on your own userid
 
-#### Other write-ups {-}
+### Other write-ups {-}
 
 A whole bunch of [other articles](articles.html) on git
 
-#### Refreshers {-}
+### Refreshers {-}
 
 Git and DVCS [terminology](terminology.html)
 
@@ -80,7 +78,7 @@ while now.  Caveat reader!>@
 
 ----
 
-## License
+# License {-}
 
 (c) Copyright Sitaram Chamarty, sitaramc@gmail.com.  This documentation is
 provided under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0

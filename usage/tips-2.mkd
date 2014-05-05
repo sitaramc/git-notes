@@ -1,8 +1,8 @@
-# slightly more advanced tips {-}
+<!-- options: toc -->
 
-<!-- pandoc: toc -->
+% slightly more advanced tips
 
-## how to remember what "..." does {-}
+# how to remember what "..." does {-}
 
 Git's "..." operator is confusing, because it does different things in git
 diff and git log.  Here's something that may help you reason it out.
@@ -43,7 +43,7 @@ Now look at `git log A...B`
 
 So: `git log CA(A,B)..A` PLUS `git log CA(A,B)..B`
 
-## Easy way to remember what git reset's soft/hard/mixed do {-}
+# Easy way to remember what git reset's soft/hard/mixed do {-}
 
 ^^loosely based on <http://gitster.livejournal.com/25150.html>^^
 

@@ -1,6 +1,6 @@
-# git's native GUI tools {-}
+<!-- options: toc -->
 
-<!-- pandoc: toc -->
+% git's native GUI tools
 
 Git comes with 3 GUI tools, but two of them are a bit more important than the
 third so we'll focus on those for now.
@@ -17,7 +17,7 @@ Git's GUI interfaces let you do almost anything that you **normally** need to
 do -- all the simple straightforward things as well as some sophisticated
 things.
 
-## git gui {-}
+# git gui {-}
 
 `git gui` shows you the current state of your work area with respect to the
 currently checked-out branch.  In the top left pane, it shows you what files
@@ -44,7 +44,7 @@ things:
   * you can also "push" the changes to some central repository so that others
     can pull them
 
-## gitk {-}
+# gitk {-}
 
 `gitk` (or `gitk --all`, which is what I use more often) shows you a visual
 tree of all the commits that have happened on this repository.  It is a very
@@ -62,7 +62,7 @@ powerful tool, allowing you to do all sorts of things like
 There's a much more detailed description of [gitk's features](gitk.html) if
 you need it.
 
-## where you *really* need the command line {-}
+# where you *really* need the command line {-}
 
 One common task that is needlessly complex in both the GUIs is `git pull`. In
 a properly setup repository that has been cloned from the project master or
@@ -70,7 +70,7 @@ something like that, getting the latest changes is just a matter of typing
 `git pull`.  In `git gui`, described above, this takes 4 steps, although there
 is a reason for that complexity :-)
 
-## further reading {-}
+# further reading {-}
 
 There's a really thorough introduction to these tools, including lots of
 screenshots, at <http://nathanj.github.com/gitguide/>. The page has an

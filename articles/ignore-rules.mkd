@@ -1,4 +1,4 @@
-# rules for .gitignore and the like {-}
+% rules for .gitignore and the like
 
 Those of you who have read the manual for gitignore will have noticed that,
 while the rules for precedence of the various files (pattern sources) are very

@@ -1,4 +1,4 @@
-# customer branches
+% customer branches
 
 <!-- http://colabti.org/irclogger/irclogger_log/git?date=2009-08-15#l585 -->
 
@@ -25,7 +25,7 @@ at a time.
 
 ----
 
-## SVN-itis
+# SVN-itis
 
 The first thing to note is that the question reflects what I have started
 calling `SVN-itis` -- where "branch" and "(sub)directory" are conflated :-)
@@ -50,7 +50,7 @@ the actual directory structure for this version is pretty much the same as,
 say, for customer "B", and both of them are similar to the directory structure
 of the main branch.
 
-## cherry-pick versus merge
+# cherry-pick versus merge
 
 [also see `git help workflows`]
 
@@ -86,7 +86,7 @@ merge a branch, *all* the changes in that branch are brought in (merging is
 *not* a selective operation) so it is best to *create a different branch for
 each logically separate set of changes*.
 
-## customer specific branches
+# customer specific branches
 
 The idea is you use one common branch, and two (or as many as you need)
 customer specific branches.  All common changes go into the master, and each
@@ -111,7 +111,7 @@ If, sometime later, you find a minor bug in that feature, you make the change
 in the same branch (`git checkout AC_feature; edit/test/commit`), and then you
 merge it into `custA` and `custC` as above.
 
-## Summary
+# Summary
 
 The main thing we're avoiding in all this is cherry-picking specific commits
 because you only wanted a part of that code in this branch -- cherry-picking

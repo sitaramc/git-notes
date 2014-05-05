@@ -1,11 +1,11 @@
-# dev/integ workflow
+% dev/integ workflow
 
-## workflow
+# workflow
 
 This is one possible workflow for dev/integ using gitolite.  It assumes that
 there is one "integrator" and N developers "dev1", ... "devN".
 
-### branches
+## branches
 
   * `integ` -- a branch that is `R` (readonly) for devs, `RW+` for integrator.
     This branch will always be kept in a compilable, basically runnable, state
@@ -28,13 +28,13 @@ there is one "integrator" and N developers "dev1", ... "devN".
     filter `integ` even more, maybe based on some EQA (External Quality
     Assurance) perhaps.  If so, it's name can be changed to reflect that
 
-### assumptions / startup:
+## assumptions / startup:
 
   * a repo is created
   * the code is kept in a branch called `integ`, even if it is bare minimum
     code in the beginning
 
-### developer workflow
+## developer workflow
 
 We use a sample developer called dev5 in the examples below.
 
@@ -136,7 +136,7 @@ has to make it work against that:
   * send email to integrator asking him to pull and test
     `dev/dev5/issue-3394/v1`
 
-### integrator
+## integrator
 
   * receive mail from dev5 saying `issue-3394` is done and ready
 
@@ -177,7 +177,7 @@ has to make it work against that:
     has been integrated successfully, and dev5 can be assigned some other
     task.
 
-## gitolite advanced features supporing this flow
+# gitolite advanced features supporing this flow
 
 Here's a typical gitolite conf file:
 

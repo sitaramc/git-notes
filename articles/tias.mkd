@@ -1,4 +1,4 @@
-# try it and see... {-}
+% try it and see...
 
 It's easy to forget that a lot of git's features, including features concerned
 with remote repos like fetch/pull/push, can be safely and easily tried out

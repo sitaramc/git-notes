@@ -1,8 +1,8 @@
-# git -- URLs galore {-}
+<!-- options: toc -->
 
-<!-- pandoc: toc -->
+% git -- URLs galore
 
-## basic stuff/concepts {-}
+# basic stuff/concepts {-}
 
   * <http://sitaramc.github.com/gcs.html> -- my version of the classic
     "Git for Computer Scientists"
@@ -13,7 +13,7 @@
   * very nice, pictorial, explanation at
     <http://www.kernel.org/~junio/200607-ols.pdf>
 
-### ...for SVN and other Centralised VCS users {-}
+## ...for SVN and other Centralised VCS users {-}
 
   * If you always wondered what exactly was meant by "**commit-then-merge
     versus merge-then-commit**", take a couple of minutes to read
@@ -43,7 +43,7 @@
     git or hg (which is IMHO even less complicated than SVN, once you let go
     of the centralized-repo, poisoned-by-CVS mindset.)
 
-## detailed tutorials {-}
+# detailed tutorials {-}
 
   * about the best darn doc on using the 3 GUIs that come with git:
     <http://nathanj.github.com/gitguide/tour.html> has a Windows slant but
@@ -60,7 +60,7 @@
     [squashing commits with
     rebase](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)).
 
-## advanced stuff/best practices {-}
+# advanced stuff/best practices {-}
 
   * release engineering, branches never-merged-back, etc.,
     <http://gitster.livejournal.com/2009/01/14/>
@@ -71,13 +71,13 @@
   * Shawn on contrib/workdir/git-new-workdir:
     <http://kerneltrap.org/mailarchive/git/2007/10/11/335637>
 
-## digging into git/troubleshooting {-}
+# digging into git/troubleshooting {-}
 
   * <http://article.gmane.org/gmane.comp.version-control.git/46609> -- how
     `git am -3` works
   * <http://www.kernel.org/pub/software/scm/git/docs/howto/recover-corrupted-blob-object.txt>
 
-## opinions/discussion/DVCSs in general {-}
+# opinions/discussion/DVCSs in general {-}
 
   * a somewhat longer, more philosophical article on git:
     <http://www.betaversion.org/~stefano/linotype/news/106/>
@@ -102,7 +102,7 @@
       something, or you just want to fix this one thing real quick before
       having to commit all the other crap in your working copy.
 
-## advocacy {-}
+# advocacy {-}
 
   * features unique to git: <http://gitster.livejournal.com/16077.html>
   * <http://lwn.net/Articles/317154/>: *git bisect "is well-nigh
@@ -119,7 +119,7 @@
     about a "hash indexed backup system" to store backups from different
     systems efficiently?
 
-## the chief penguin wrangler speaks :-) {-}
+# the chief penguin wrangler speaks :-) {-}
 
   * Linus on merging: <http://git.or.cz/gitwiki/LinusTalk200705Transcript>
   * linus explaining merging (what should be automatic and what should not) in
@@ -131,7 +131,7 @@
     <http://www.mail-archive.com/dri-devel@lists.sourceforge.net/msg39091.html>
   * <http://www.kernel.org/pub/software/scm/git/docs/howto/recover-corrupted-blob-object.txt>
 
-### fanboi links {-}
+## fanboi links {-}
 
   * <http://gitster.livejournal.com/9970.html> -- It still is amazing that all
     of these were done without having to go back to the drawing board.  It
@@ -141,12 +141,12 @@
     than other times. And dammit, when I say "files don't matter", I'm really 
     really Right(tm).
 
-## other VCSs -- comparision, criticism, etc {-}
+# other VCSs -- comparision, criticism, etc {-}
 
 look, don't expect too much praise for any of the other systems, except
 possibly Hg -- and even that might be back-handed ;-)
 
-### CVS {-}
+## CVS {-}
 
   * <http://stackoverflow.com/questions/802573/difference-between-git-and-cvs/824241#824241>
     -- no summary possible; it's very well written and covers a lot of ground.
@@ -154,7 +154,7 @@ possibly Hg -- and even that might be back-handed ;-)
     on single machine (single account), there are a few differences between
     Git and CVS", listing 10 points there :-)  A "must read".
 
-### SVN {-}
+## SVN {-}
 
 ...but also see the [archived article on subversion](svn.html) for
 a lot more; SVN is the most used VCS in terms of what potential git users are
@@ -162,7 +162,7 @@ a lot more; SVN is the most used VCS in terms of what potential git users are
 
   * <http://blog.mwolson.org/tech/why_i_dislike_subversion.html>
 
-### Visual Source <font size=-5>un</font>Safe and TFS {-}
+## Visual Source <font size=-5>un</font>Safe and TFS {-}
 
   * data integrity issues in VSS:
     <http://www.developsense.com/testing/VSSDefects.html>
@@ -176,7 +176,7 @@ a lot more; SVN is the most used VCS in terms of what potential git users are
 
   * TFS rant <http://developers.slashdot.org/comments.pl?sid=1872398&cid=34258672>
 
-### Clearcase {-}
+## Clearcase {-}
   * <http://creativekarma.com/ee.php/weblog/comments/why_clearcase_sucks/>
   * <http://evilparty.org/~orc/2004/08/03/001/index.html>
   * <http://selenic.com/pipermail/mercurial/2007-April/012864.html>
@@ -188,13 +188,13 @@ a lot more; SVN is the most used VCS in terms of what potential git users are
   * <http://permalink.gmane.org/gmane.comp.version-control.git/132311> -- on
     CC's speed
 
-### Hg {-}
+## Hg {-}
 
   * <http://weblog.masukomi.org/2008/2/4/some-thoughts-about-git> (cf Hg)
   * <http://weblogs.mozillazine.org/preed/2007/04/version_control_system_shootou_1.html>
     :-)
 
-### darcs {-}
+## darcs {-}
 
 Used to be very slow.  Now it's probably just slow :-)
 
@@ -202,14 +202,14 @@ Used to be very slow.  Now it's probably just slow :-)
     a very cogent comparision with Darcs from someone who used Darcs for 3
     years and git for 1 year
 
-### perforce {-}
+## perforce {-}
 
   * <http://kb.perforce.com/UserTasks/WorkingDisconnected>
   * <http://luqui.org/blog/archives/2007/02/19/perforce-sucks/>
   * very interesting stuff.  SVN guys will like this :-)
     <http://www.harukizaemon.com/2006/09/no-really-perforce-does-suck.html>
 
-## funny stuff {-}
+# funny stuff {-}
 
   * <http://changelog.complete.org/posts/698-If-Version-Control-Systems-were-Airlines.html>
     -- esp the last 2 "airlines".  No wonder I like git so much :-)

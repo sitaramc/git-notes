@@ -1,11 +1,11 @@
-# blame detection {-}
+% blame detection
 
 Git tracks content, not files.  As a result, the `git blame` and the
 `git gui blame` commands can detect code moved or copied from elsewhere in
 the project.  It's a very powerful feature, accessed by specifying the
 `-C` flag one or more times, but there are some nuances.
 
-## move detection versus copy detection {-}
+# move detection versus copy detection {-}
 
 When the `-C` flag is given only once, it looks for code blocks that were
 **moved**.  That is, it searches for new code among other files that were also
@@ -18,7 +18,7 @@ files in the parent commit, and so it detects code that was **copied**.
 `gui.fastcopyblame` is true.  (In addition, it also appears to set `-w`, to
 ignore whitespace changes while blaming).
 
-## threshold, and how to specify it {-}
+# threshold, and how to specify it {-}
 
 There is a concept of a "threshold", which is the minimum number of
 alphanumeric characters required to count something as a code move/copy -- be
@@ -32,7 +32,7 @@ detection.  You can override it by appending a number to the `-C` option.
 GUI (Edit->Options), or directly set the `gui.copyblamethreshold` config
 variable.
 
-## documentation lacunae {-}
+# documentation lacunae {-}
 
 The documentation does not seem to be very clear about the effect of _three_
 `-C` options on `git blame`.  (In the GUI this is done by choosing full copy
@@ -54,6 +54,6 @@ documentation, I imagine "removed files" actually means "code from some other
 modified file in the same commit", and similarly "existing files" means "code
 from any files in the parent commit".
 
-## my observations {-}
+# my observations {-}
 
   * a very high threshold makes it behave like no `-C` flags were supplied

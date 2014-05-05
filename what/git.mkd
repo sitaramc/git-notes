@@ -1,8 +1,11 @@
-# presentation on git, a DVCS
+<!-- to: slidy-N -->
+
+% presentation on git, a DVCS
+% Sitaram Chamarty (sitaramc@gmail.com)
+
+# preface
 
 ## why
-
-<!-- pandoc: slidy-N -->
 
 ![](images/git/projects-sans-vcs.png)
 

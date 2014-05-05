@@ -1,4 +1,4 @@
-# fixup whitespace errors
+% fixup whitespace errors
 
 When you have whitespace errors in a repo and want to fix them all together,
 here's what you do.  Written by doener circa 2009-07-12 19:23

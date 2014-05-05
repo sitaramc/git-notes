@@ -1,4 +1,4 @@
-## tips for legacy VCS migrants! {-}
+# tips for legacy VCS migrants! {-}
 
   * **gotcha**: `git add somefile` adds the **current** content of `somefile`
     to the staging area.  Changes made after this do not affect `git commit`

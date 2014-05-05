@@ -1,8 +1,8 @@
-# tips for the beginner {-}
+<!-- options: toc -->
 
-<!-- pandoc: toc -->
+% tips for the beginner
 
-## set up your gitconfig {-}
+# set up your gitconfig {-}
 
 This is `$HOME/.gitconfig`.  Whenever you add the `--global` option to the
 `git config` command, it acts on the global gitconfig file.
@@ -23,7 +23,7 @@ If you intend to use the command line more than the GUI, please do check out
 my gitconfig (at the end of this page) for many useful examples that may save
 you lots of time and trouble.
 
-### my `~/.gitconfig` file {-}
+## my `~/.gitconfig` file {-}
 
 This is as of Dec 2013.  One of these days I'll stop being lazy and explain
 some of them :-)

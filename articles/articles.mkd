@@ -1,4 +1,4 @@
-# articles and write-ups {-}
+% articles and write-ups
 
 These are some longer write-ups on git that I think are still useful.  (If
 they weren't, they'd be dumped into the [archived](archived/index.html)

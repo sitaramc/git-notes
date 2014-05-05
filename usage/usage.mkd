@@ -1,4 +1,4 @@
-# using git {-}
+% using git
 
 I've somewhat arbitrarily divided the miscellaneus tips into
 [beginner](tips-1.html), [intermediate](tips-2.html), and

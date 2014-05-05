@@ -1,4 +1,4 @@
-# git -- a distributed version control system {-}
+% git -- a distributed version control system
 
 ^[Please note that this article was written in June 2008.  Although I have
 kept the article largely the same, I have (in 2011) updated the text in one or
@@ -25,7 +25,7 @@ looking at the revisions.  That's an amazing level of traceability in a world
 where most current VCSs can't handle even a simple file-rename without being
 explicitly told, such as with the `svn rename` command!
 
-## Some history and background {-}
+# Some history and background {-}
 
 The reason git is able to work this, and many other, bits of magic is because
 it tackles the problem from the point of view of a file system designer.
@@ -56,7 +56,7 @@ anything else to understand the git model quickly and easily. It is called
 <http://eagain.net/articles/git-for-computer-scientists/>.  I consider this
 essential reading for anyone trying to understood the git object store.
 
-## Merging -- git's first and biggest strength {-}
+# Merging -- git's first and biggest strength {-}
 
 The most basic function of a VCS is to give us a way to rollback to a known
 state, should we really mess up whatever we are working on. In that sense, a
@@ -145,7 +145,7 @@ have always been to fix the problems in CVS rather than do anything
 revolutionary, but today, in 2008, merely fixing problems in a system designed
 more than 15 years ago is too little, too late.
 
-## Rebasing instead of merging {-}
+# Rebasing instead of merging {-}
 
 Merging is very nice, but for long-lived branches, the frequent merges tend to
 make the history look like Figure 3 (note: this is not a real project!). When
@@ -168,7 +168,7 @@ than a parallel set of updates followed by a merge.
 The biggest advantage of rebasing instead of normal merging is when you try
 and track down a bug using `git bisect`, which we will discuss later.
 
-## Speed -- git's second big feature {-}
+# Speed -- git's second big feature {-}
 
 The other explicit design goal was speed, which has been one of the pain
 points of earlier VCSs. Centralised VCSs can take minutes to do a simple
@@ -192,7 +192,7 @@ to want to examine the entire tree for the current and the previous few
 revisions -- the further a revision is from our current one, the less
 interesting it usually is for normal work.
 
-## Distributed and disconnected {-}
+# Distributed and disconnected {-}
 
 The fact that git is a distributed VCS means that you have your own repository
 on your machine. Coupled with the excellent branch/merge in git, this allows
@@ -223,7 +223,7 @@ A good analysis of how much each VCS caches on a checkout, and its
 implications, is at
 http://blogs.gnome.org/newren/2007/11/24/local-caching-a-major-distinguishing-difference-between-vcses/
 
-## Cool features -- git bisect {-}
+# Cool features -- git bisect {-}
 
 Git has a command called `bisect` (this is one of those "aaaah, why didn't
 I think of it?" things!) that is very nice. The idea is this: say you find a
@@ -245,7 +245,7 @@ with a command that returns "0" for "good" and some non-zero value for "bad",
 then git will essentially do all this by itself! Who says finding the source
 of a bug is a programmer's job? Let the machines take over!
 
-## Summary {-}
+# Summary {-}
 
 I hope this has whetted your interest in git.  There's not enough space in
 this article to go into all the other wonderful things about git, like git

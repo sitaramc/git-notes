@@ -1,4 +1,4 @@
-# what does "git pull --rebase" do? {-}
+% what does "git pull --rebase" do?
 
 [To understand this article you need to understand what a reflog is, and what
 a rebase does, especially the full form of the rebase command]

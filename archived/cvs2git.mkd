@@ -1,4 +1,4 @@
-# converting CVS to git
+% converting CVS to git
 
 Update 2009-10-08: It has been pointed out that cvsimport, which I recommend
 against using below, can do incremental imports.  If this is important to you
@@ -17,7 +17,7 @@ the repo!!
 It's been too long since I last used CVS to figure this out, and cvs2svn
 seemed to deal with a lot more nuances, so I used that instead.
 
-## step 1 -- make a dump file
+# step 1 -- make a dump file
 
   * download cvs2svn version 2.1 or higher from somewhere within
     <http://cvs2svn.tigris.org/cvs2git.html>. DO NOT BE DISTRACTED BY THE
@@ -47,7 +47,7 @@ seemed to deal with a lot more nuances, so I used that instead.
   - when it completes, check the `cvs2svn-tmp` directory for a rather large
     file called git-dump.dat
 
-## step 2 -- import into git
+# step 2 -- import into git
 
   - make an empty directory, cd to it, git init, then run
 
@@ -59,7 +59,7 @@ seemed to deal with a lot more nuances, so I used that instead.
 
         cat ~-/cvs2svn-tmp/git-{blob,dump}.dat | git fast-import
 
-## Appendix {#patch}
+# Appendix {#patch}
 
 These are the changes I made to the options file:
 

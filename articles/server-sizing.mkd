@@ -1,6 +1,6 @@
-# sizing a server for git {-}
+<!-- options: toc -->
 
-<!-- pandoc: toc -->
+% sizing a server for git
 
 **Update Dec 2013**: this was written some years ago; the measurements could
 only have gotten better now...
@@ -24,7 +24,7 @@ Anyway, here are some details, from the point of view of a typical
 "enterprise" use of a VCS.  Be sure to read the last section on the [one
 operation](#repack) that *can* stress out a git server.
 
-## bandwidth usage: {-}
+# bandwidth usage: {-}
 
   * the initial clone (like when a new team member joins the project)
     transfers data about the size of the repository.  This is highly
@@ -62,7 +62,7 @@ operation](#repack) that *can* stress out a git server.
     and one extra command on each client, you have "seeded" an entire site
     with just one download  :-) 
 
-## CPU usage {-}
+# CPU usage {-}
 
 Git does take some CPU time to pack up a repository, especially to supply an
 initial clone.  Even in the initial clone, on a decent dual-core machine it
@@ -95,7 +95,7 @@ decent/recent dual-core CPU should be able to handle it very fast.
     objects" phase (i.e., figuring out what to send), which is not much of a
     load.^^
 
-## memory {-}
+# memory {-}
 
 A machine with about 512 MB ***free*** RAM will probably work fine for most
 development style repositories.  In practice this means about 1 GB total RAM,
@@ -116,14 +116,14 @@ happen...]
 Otherwise there's nothing inherently in git to gobble up memory except the
 [repack](#repack) operation mentioned in the last section.
 
-## disk {-}
+# disk {-}
 
 As I mentioned in one of my presentations, git takes about 1/20th the size of
 an SVN repository, so this should not be a concern.  However, this does assume
 the "repack" operation referred to below is being run at least once a month or
 so.
 
-## stressing out a git server {#repack -}
+# stressing out a git server {#repack -}
 
 The only time git does anything that seriously stresses the machine (in ***all
 respects***, not just CPU) is a "repack" operation that (by default) runs very

@@ -1,6 +1,6 @@
-# the missing gitk documentation
+<!-- options: toc -->
 
-<!-- pandoc: toc -->
+% the missing gitk documentation
 
 `gitk` is a very powerful GUI tool.  It's one of those rare beasts where the
 pretty stuff is not just a crutch for the command-line-ignorant -- it actually
@@ -13,7 +13,7 @@ This is my attempt to do something about that.  Strictly speaking, you can
 explore the UI and find all these features yourself, and indeed, if you find
 any that are not listed here, please [email me](mailto:sitaramc@gmail.com).
 
-## colors and bold
+# colors and bold
 
   * local branch names are in a green background
   * remote branch names are in a mixed orange/green background
@@ -23,7 +23,7 @@ any that are not listed here, please [email me](mailto:sitaramc@gmail.com).
   * a yellow square marks commits which have "notes" ('man git-notes' for what
     that means)
 
-## repository operations
+# repository operations
 
 All these are from the commit list (the top pane):
 
@@ -37,7 +37,7 @@ All these are from the commit list (the top pane):
     * checkout the branch (please heed the warning above
     * remove the branch
 
-## the main menu
+# the main menu
 
   * reload: if you're doing stuff on the command line in another screen, and
     want those changes reflected in gitk, hit `F5`.
@@ -55,7 +55,7 @@ All these are from the commit list (the top pane):
     to that reference.  The list window will stay open so you can click on
     other refs.
 
-## browsing the commit list (top pane)
+# browsing the commit list (top pane)
 
 Many of these functions also have character key bindings.  For example "n"
 acts the same as a "down arrow".  I'm not listing those; if you need them,
@@ -68,7 +68,7 @@ with the others.  It's not hard, and you don't need to know Tcl.  (I don't).
   * shift-up/down: find previous/next match (see [searching for commits](#sfc)
     below)
 
-## browsing the diff
+# browsing the diff
 
 At any time, the bottom left pane shows a "diff", usually of the current
 commit shown in the top pane.  The bottom right pane (by default) shows a list
@@ -84,7 +84,7 @@ of files in this "diff".
   * click a file in the bottom right pane: scrolls the left pane to show that
     file's changes
 
-### running a diff between two arbitrary commits
+## running a diff between two arbitrary commits
 
   * left click on the "new" commit
   * navigate using the scrollbar (no keyboard shortcut, AFAICT) to some other
@@ -98,7 +98,7 @@ change the view to show that commit, so while examining this "diff", stick to
 
 <a name="sfc">
 
-## searching for commits
+# searching for commits
 
 Here're some ways to search for commits.  The commits that result will become
 highlighted in bold, so you can see them in the context of their surrounding
@@ -129,7 +129,7 @@ also; they're fairly self-explanatory.  Note that the last widget (All fields,
 Headlines, Comments, Author, Committer) is only valid when the type of search
 widget shows "containing:".
 
-## navigating the commit tree
+# navigating the commit tree
 
 There are several ways to navigate the tree quickly.
 
@@ -156,7 +156,7 @@ There are several ways to navigate the tree quickly.
     find the commit for a bugfix or a feature you want, this will tell you the
     minimum version you should upgrade to.
 
-## some other tricks
+# some other tricks
 
   * expand the diff view by using the spin control that says "Lines of
     context"; the default value is 3.

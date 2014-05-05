@@ -1,4 +1,4 @@
-# git on the server {-}
+% git on the server
 
 `git` is a *distributed* version control system (DVCS), and every developer
 thus has his/her own repository.  A central server is therefore not a
@@ -14,7 +14,7 @@ I have only 2 things to say about the server environment:
         git config core.logAllRefUpdatess true
         git config transfer.fsckObjects   true
 
-## protocols that git uses {-}
+# protocols that git uses {-}
 
 Git uses the following protocols to access remote repositories; example URLs
 are given in parentheses:
@@ -45,7 +45,7 @@ are given in parentheses:
     can run either directly or via inetd/xinetd.  Please see its man page etc
     for details.
 
-## gitolite and other tools for authorisation {-}
+# gitolite and other tools for authorisation {-}
 
 There are many situations where you need to establish limits on what someone
 can do.  When you have a number of developers, with varying levels of

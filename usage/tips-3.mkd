@@ -1,8 +1,8 @@
-# advanced tips {-}
+<!-- options: toc -->
 
-<!-- pandoc: toc -->
+% advanced tips
 
-## backing up work in progress {-}
+# backing up work in progress {-}
 
 This is how you can backup everything on your local repo that is not already
 on one of your remotes, including all untracked files not covered by the
@@ -29,7 +29,7 @@ the regular desktop.
     # copy that file wherever you want, however you want...
     rsync /tmp/sos.bdl bkphost:   # or scp, or whatever
 
-## conflicts on pull/merge {-}
+# conflicts on pull/merge {-}
 
   * try `gitk --merge conflicted_path`
   * `git diff MERGE_HEAD...HEAD` (note the *three* dots) shows you
@@ -43,14 +43,14 @@ the regular desktop.
 
         git blame -C $(git merge-base HEAD MERGE_HEAD).. conflicted_path
 
-## log pickaxe and blame {-}
+# log pickaxe and blame {-}
 
   * finding out when a particular change happened or who made it
 
         git log -S"some code line" file.c   # why is this called pickaxe search?
         git blame -b file.c
 
-## what are all these "HEAD"s? {-}
+# what are all these "HEAD"s? {-}
 
   * `ORIG_HEAD`: pull or merge (or anything that moves HEAD drastically)
     leave a copy of the old head with this name.  Reset can use it if needed.
@@ -61,7 +61,7 @@ the regular desktop.
   * `MERGE_HEAD` records the commit(s) you are merging into your branch
     when you run 'git-merge'
 
-## garbage collection {-}
+# garbage collection {-}
 
 NOTE: this section is old; I have not looked at it with respect to recent git
 versions.
@@ -87,9 +87,9 @@ versions.
         # use branchname(s) instead of --all
         # units can be seconds, minutes, etc
 
-## recovering a dropped stash: {-}
+# recovering a dropped stash: {-}
 
-### the GUI way {-}
+## the GUI way {-}
 
 You dropped a stash that was created recently, and now you want to recover it.
 As long as you did not do a garbage collection in between, this should work:
@@ -107,7 +107,7 @@ with gitk you can visually find stashes really fast.  For me, this is the kind
 of task that *calls out* for a GUI -- infrequently required, no conceivable
 need to automate, and containing data that stands out visually.
 
-### the command line way {-}
+## the command line way {-}
 
 Writing something longer than that for a problem that occurs once in a blue
 moon is not my style (very low ROI!), but doener gave me this:

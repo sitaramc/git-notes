@@ -1,6 +1,6 @@
-# git on windows {-}
+% git on windows
 
-## using git's GUI tools {-}
+# using git's GUI tools {-}
 
 Here's how to launch the GUI tools:
 
@@ -11,7 +11,7 @@ Here's how to launch the GUI tools:
     ("Repository -> Visualise History", or "File -> Start Git GUI")
 
 
-## using git at the command line {-}
+# using git at the command line {-}
 
 Git has a command line interface and two different GUI interfaces.
 
