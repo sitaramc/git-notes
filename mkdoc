@@ -26,6 +26,8 @@ cp tools/* $OUTDIR/tools
 # cleanup
 rm fig*.png
 
+cp index.html $OUTDIR
+
 cd $OUTDIR
 mkdir -p 1-basic-usage gcs the-list-and-irc
 echo '"Try it and see" has <a href="../tias.html">moved</a>' > 1-basic-usage/tias.html
