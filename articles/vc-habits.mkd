@@ -1,6 +1,6 @@
 # version control habits of good developers {-}
 
-.@gray\<(not necessarily git-specific)\>@
+@@gray((not necessarily git-specific))@@
 
 This article is based on <http://blog.bstpierre.org/version-control-habits> --
 a blog post that is well worth checking out, especially if you want more

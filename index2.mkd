@@ -35,7 +35,7 @@ in like a developer, maybe [this article](git-lfy.html), which I wrote in
 
 ### What is git? {-}
 
-If you want to understand git, we have .@red<**slideshows**>@.
+If you want to understand git, we have @@red(**slideshows**)@@.
 
 *   an [introduction](vc.html) to version control and the central concepts
     behind git -- for those who have never used *any* version control tool.
@@ -72,9 +72,9 @@ Git and DVCS [terminology](terminology.html)
 
 ----
 
-.@gray<There are also some [older articles and write-ups](archived/index.html)
+@@gray(There are also some [older articles and write-ups](archived/index.html)
 that may still be relevant and useful, but I have not revisited them for a
-while now.  Caveat reader!>@
+while now.  Caveat reader!)@@
 
 ----
 
