@@ -22,7 +22,7 @@ smaller but more complete summary of the keyboard controls.
 
 .#d
 
-.@blue<**Navigation**>@
+@@blue(<**Navigation**>)@@
 
 |   **Next slide**: right arrow, page down, space
 |   **Prev slide**: left arrow, page up
@@ -35,7 +35,7 @@ smaller but more complete summary of the keyboard controls.
 
 .#d
 
-.@blue<**Display**>@
+@@blue(<**Display**>)@@
 
 |   **Smaller font**: "S" or "<" key
 |   **Larger font**: "B" or ">" key
@@ -46,7 +46,7 @@ smaller but more complete summary of the keyboard controls.
 
 .#t
 
-.@blue<**To search**>@ for stuff in the full document using your browser's
+@@blue(<**To search**>)@@ for stuff in the full document using your browser's
 Ctrl-F, first view all slides (press the "A" key).
 
 <!-- end slidy help -->
