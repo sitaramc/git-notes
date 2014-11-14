@@ -5,6 +5,13 @@
 
 # preface
 
+## about this slideshow
+
+If you're viewing this on "gitolite.com", please be aware that's only an
+artifact of some very lazy DNS and hosting decisions I made.  Just think of it
+as "sitaramc.github.com" instead, because these pages really have nothing to
+do with gitolite per se.  They're about git in general.
+
 ## viewing This slideshow
 
 This presentation uses [HTML
