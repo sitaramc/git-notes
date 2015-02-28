@@ -12,6 +12,12 @@ artifact of some very lazy DNS and hosting decisions I made.  Just think of it
 as "sitaramc.github.com" instead, because these pages really have nothing to
 do with gitolite per se.  They're about git in general.
 
+## license
+
+(c) Copyright Sitaram Chamarty, sitaramc@gmail.com.  This documentation is
+provided under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0
+Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/).
+
 ## viewing This slideshow
 
 This presentation uses [HTML
