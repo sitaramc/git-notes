@@ -21,12 +21,12 @@ there is one "integrator" and N developers "dev1", ... "devN".
     branches under the `dev/devX/` hierarchy belong to the developer called
     `devX`.  He submits his work to the integrator by pushing to one such
     branch and emailing the integrator the branch name (say
-    `dev/sitaram/issue3423` or `dev/someone-else/bugfix-2321`
+    `dev/sitaram/issue3423` or `dev/someone-else/bugfix-2321`.
 
   * master -- a branch that is even more sacred than `integ`.  Its usage and
     role are optional in the below described flow, but it can be used to
     filter `integ` even more, maybe based on some EQA (External Quality
-    Assurance) perhaps.  If so, it's name can be changed to reflect that
+    Assurance) perhaps.  If so, its name can be changed to reflect that.
 
 ## assumptions / startup:
 
