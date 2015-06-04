@@ -3,7 +3,7 @@
 # run from git-notes as "./mkdoc"
 
 OUTDIR="/tmp/doc2"
-OUTDIR="$HOME/gits/sitaramc.github.com"
+OUTDIR="$HOME/data/gits/sitaramc.github.com"
 
 rm     $OUTDIR/*.html
 rm -rf $OUTDIR/images
