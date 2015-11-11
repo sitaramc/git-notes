@@ -573,7 +573,7 @@ You can have several remotes.
 .#d
 
 Now let's say Sita's repo had a couple of new commits on its master, and you
-run `git fetch sitas-repo`.  (We have pruned the graph a litle for clarity,
+run `git fetch sitas-repo`.  (We have pruned the graph a little for clarity,
 showing only the relevant commits; the rest of the commits and branches are
 assumed to be present as in the previous picture).
 
