@@ -84,42 +84,18 @@ only one file to maintain!
 
 # basics
 
-## the 4 git object types
-
-Git keeps all its data inside a special directory called `.git` at the top
-level of your repository.  Somewhere in there is what we will simply call the
-*object store* (if you're not comfortable with that phrase, pretend it's some
-sort of database).
-
-Git knows about 4 types of objects:
-
-  * **blob** -- each file that you add to the repo is turned into a blob
-    object.
-
-  * **tree** -- each directory is turned into a tree object.
-
-    Obviously, a tree object can contain other tree objects and blob objects,
-    just like a directory can contain other directories and files.
-
-  * **commit** -- a commit is a snapshot of your working tree at a point in
-    time, although it contains a lot of other information also.
-
-  * **tag** -- we will see this type a bit later.
-
 ## what is a SHA
 
 A commit is uniquely identified by a 160-bit hex value (the 'SHA').  This is
-computed from the tree, plus the following pieces of information:
+computed from the following pieces of information:
 
+  * the SHA of the "tree" of files and directories as they exist in that
+    commit (details on how that SHA is computed is not relevant here)
   * the SHA of the parent commit(s) -- every commit except the very first one
     in the repo has at least one parent commit that the change is based upon.
   * the commit message -- what you type in the editor when you commit
   * the author name/email/timestamp
   * the committer name/email/timestamp
-
-(Actually, all 4 git objects types are identified by SHAs, but of course
-they're computed differently for each object type.  However, the SHAs of the
-other object types are not relevant to this discussion).
 
 In the end, as I said, it's just a large, apparently random looking, number,
 which is actually a cryptographically-strong checksum.  It's usually written
@@ -635,9 +611,28 @@ this:
 
 ## the object store
 
-Git stores all your data in an "object store".  There are 4 types of objects
-in this store: files (called "blobs"), trees (which are directories+files),
-commits, and tags.  All objects are referenced by a 160-bit SHA.
+Git keeps all its data inside a special directory called `.git` at the top
+level of your repository.  Somewhere in there is what we will simply call the
+*object store* (if you're not comfortable with that phrase, pretend it's some
+sort of database).
+
+Git stores all your data in this object store.  There are 4 types of objects
+in this store:
+
+  * **blob** -- each file that you add to the repo is turned into a blob
+    object.
+
+  * **tree** -- each directory is turned into a tree object.
+
+    Obviously, a tree object can contain other tree objects and blob objects,
+    just like a directory can contain other directories and files.
+
+  * **commit** -- a commit is a snapshot of your working tree at a point in
+    time, although it contains a lot of other information also.
+
+  * **tag** -- an annotated tag (please see 'man git-tag' for more info)
+    contains the SHA of the commit being tagged, some other metadata, and the
+    message.  A GPG-signed tag will also contain the GPG signature.
 
 (Details, if you like: a blob is the lowest in the hierarchy.  One or more
 blobs and trees make a tree.  A commit is a tree, plus the SHA of its parent
