@@ -346,8 +346,9 @@ section):
 
 At this point, you could leave `feature_X` as it is forever.  Or you could
 delete the branch (as we showed in that section), in which case that label
-would simply disappear.  (The commit it points to is safely reachable from
-`master` because of the merge.)
+would simply disappear.  (The commit it points to ("4") is safely reachable
+from `master` because of the merge.  That is, it is not "lost", since there is
+a sequence of commits from master which lead to it.)
 
 .#d
 
