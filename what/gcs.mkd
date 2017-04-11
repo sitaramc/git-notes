@@ -1,4 +1,4 @@
-<!-- to: slidy-2-N -->
+<!-- options: to=slidy-2-N -->
 
 % git concepts simplified
 % Sitaram Chamarty (sitaramc@gmail.com)

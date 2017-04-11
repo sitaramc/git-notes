@@ -1,4 +1,4 @@
-<!-- to: slidy-N -->
+<!-- options: to=slidy-N -->
 
 % presentation on git, a DVCS
 % Sitaram Chamarty (sitaramc@gmail.com)

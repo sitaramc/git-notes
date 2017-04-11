@@ -1,4 +1,4 @@
-<!-- to: slidy-N -->
+<!-- options: to=slidy-N -->
 
 % a very basic intro to version control and git
 % Sitaram Chamarty (sitaramc@gmail.com)
