@@ -112,6 +112,16 @@ just take it on faith).
 
 An example SHA: `a30236028b7ddd65f01321af42f904479eaff549`
 
+## what is a "ref"
+
+A ref is just a name for a SHA.  Branches or tags (described later) are refs.
+
+There are also some special refs (the most common being `HEAD`), that are
+usually **symbolic** refs (i.e., they usually point to a ref instead of
+directly pointing to a SHA).
+
+Anyway, for now just think of them as a human-readable name you gave to a SHA.
+
 ## what is a repo
 
 .#d
