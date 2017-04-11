@@ -151,6 +151,8 @@ That's a ratio of almost 20:1 in size over SVN.
     is particularly powerful and convincing
   * <http://developers.slashdot.org/comments.pl?sid=1079921&cid=26321869> from
     somewhere in the trenches
+  * <http://colabti.org/irclogger/irclogger_log/git?date=2009-09-05#l1271> has
+    something about changeset-atomic but not commit-atomic.
 
 ----
 
