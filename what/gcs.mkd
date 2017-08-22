@@ -671,19 +671,6 @@ this
 
 ## objects and branches/tags
 
-<font color="gray">
-
-Hg folks should read this section carefully.  Among various crazy notions Hg
-has is one that encodes the branch name within the commit object in some way.
-Unfortunately, Hg's vaunted "ease of use" (a.k.a "we support Windows better
-than git", which in an ideal world would be a negative, but in this world
-sadly it is not) has caused enormous takeup, and dozens of otherwise excellent
-developers have been brain-washed into thinking that is the only/right way.
-
-I hope this section gives at least a few of them a "light-bulb" moment.
-
-</font>
-
 .#d
 
 The really, **really** important thing to understand is that the object store
