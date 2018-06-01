@@ -11,7 +11,7 @@ I have only 2 things to say about the server environment:
 
   * for additional piece of mind, set the following
 
-        git config core.logAllRefUpdatess true
+        git config core.logAllRefUpdates true
         git config transfer.fsckObjects   true
 
 # protocols that git uses {-}
