@@ -759,7 +759,9 @@ All you did was move a pointer from one node to another.
 
 First, let's do merging.  The merge you saw earlier was what is called a
 "fast-forward" merge, because your local master did not have any commits that
-the remote branch you were merging did not have.
+the remote branch you were merging did not have. In simple words,
+"fast-forward" only happens when the branch you're merging is a superset of
+branch you're merging to.
 
 In practice, this is rare, especially on an active project with many
 developers.  So let's see what that looks like.  The starting point was this:
