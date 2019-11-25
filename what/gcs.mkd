@@ -52,8 +52,8 @@ smaller, but more complete summary of the keyboard controls.
 
 .#t
 
-@@blue(<**To search**>)@@ for stuff in the full document using your browser's
-Ctrl-F, first view all slides (press the "A" key).
+@@blue(<**To search**>)@@ for stuff in the full document using your browser,
+first view all slides (by pressing the "A" key) then press **Ctrl-F**.
 
 <!-- end slidy help -->
 
@@ -364,7 +364,7 @@ a sequence of commits from master which lead to it.)
 
 You can also continue to develop on the `feature_X` branch, further refining
 it with a view to once again merging it at some later point in time.  <font
-color="gray">Although not relevant to the topic of this document, I should
+color="gray">Although it's not relevant to the topic of this document, I should
 mention that the usual practice is to first merge master back into `feature_X`
 to make sure it has all the other stuff that master may have acquired till
 now (this is shown by commit 9 below) before continuing further
@@ -432,7 +432,7 @@ More commonly, inner nodes are **tags**.  We show tag names in yellow circles.
 
 .#d
 
-The main difference between a branch and a tag is branches move, tags don't.
+The main difference between a branch and tag is branches move, tags don't.
 When you make a commit with the "master" branch currently checked out, master
 will move to point to the new commit.
 
@@ -848,7 +848,7 @@ When you merge, the end result will usually look like this:
 
 ## Cherry-pick
 
-A cherry-pick is not very commonly done -- in well designed workflows it
+A cherry-pick is not very commonly done -- in a well designed workflow it
 should actually be rare.  However, it's a good way to illustrate an important
 concept in git.
 
