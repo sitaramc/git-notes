@@ -1,24 +1,24 @@
 <!-- options: to=slidy-2-N -->
 
-% git concepts simplified
+% Git Concepts Simplified
 % Sitaram Chamarty (sitaramc@gmail.com)
 
-# preface
+# Preface
 
-## about this slideshow
+## About this slide show
 
 If you're viewing this on "gitolite.com", please be aware that's only an
 artifact of some very lazy DNS and hosting decisions I made.  Just think of it
 as "sitaramc.github.com" instead, because these pages really have nothing to
 do with gitolite per se.  They're about git in general.
 
-## license
+## License
 
 (c) Copyright Sitaram Chamarty, sitaramc@gmail.com.  This documentation is
 provided under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0
 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/).
 
-## viewing This slideshow
+## Viewing this slide show
 
 This presentation uses [HTML
 Slidy](http://www.w3.org/Talks/Tools/Slidy2/Overview.html), a simple
@@ -59,16 +59,16 @@ Ctrl-F, first view all slides (press the "A" key).
 
 <!-- gv: rankdir=BT edge[dir=back] -->
 
-## acknowledgements
+## Acknowledgements
 
-### this document {-}
+### This document {-}
 
 This document is vaguely inspired by
 http://eagain.net/articles/git-for-computer-scientists, except this page is
 not *just* for CS folks.  And it's a lot more detailed. Oh, and it's actively
 maintained, meaning I will respond to feedback ;-)
 
-### this slide show {-}
+### This slide show {-}
 
 This slide show was all done with pandoc's slidy output mode, and a few little
 pre-processing tweaks.  [Pandoc](http://johnmacfarlane.net/pandoc/) is
@@ -82,9 +82,9 @@ only one file to maintain!
 
 [nodag]: https://github.com/sitaramc/git-notes/commit/13a2ffaca484a1136c256dc72e93a88eff8fd4ff
 
-# basics
+# Basics
 
-## what is a SHA
+## What is a SHA?
 
 A commit is uniquely identified by a 160-bit hex value (the 'SHA').  This is
 computed from the following pieces of information:
@@ -112,7 +112,7 @@ just take it on faith).
 
 An example SHA: `a30236028b7ddd65f01321af42f904479eaff549`
 
-## what is a "ref"
+## What is a "ref"?
 
 A ref is just a name for a SHA.  Branches or tags (described later) are refs.
 
@@ -122,7 +122,7 @@ directly pointing to a SHA).
 
 Anyway, for now just think of them as a human-readable name you gave to a SHA.
 
-## what is a repo
+## What is a repo?
 
 .#d
 
@@ -140,7 +140,7 @@ upward (bottom to top).
 
 .#t
 
-## **(Hey, why are the arrows backward in your pictures?)** {-}
+## **Hey, why are the arrows backward in your pictures?** {-}
 
 So why are the arrows pointing backward?
 
@@ -151,9 +151,9 @@ Well... every commit knows what its parent commit is (as described in the
 Therefore a repo is like a single linked list.  It cannot be a double linked
 list -- this is because any change to the contents would change the SHA!
 
-# branches and tags
+# Branch(es) and tag(s)
 
-## branch
+## Branch
 
 .#d
 
@@ -172,7 +172,7 @@ name.  We show branch names in green circles.
 
 .#t
 
-## more than one branch
+## More than one branch
 
 (a.k.a "more than one child commit")
 
@@ -201,7 +201,7 @@ branch, and will have a name.
 
 .#t
 
-## more than one parent commit
+## More than one parent commit
 
 .#d
 
@@ -261,7 +261,7 @@ feature_X`, which gives you this:
 
 .#t
 
-## current branch/checked out branch
+## Current and checked-out branch
 
 .#d
 
@@ -289,7 +289,7 @@ special ref called HEAD.  HEAD is a **symbolic** ref, which points to the
 
 .#t
 
-## committing
+## Committing
 
 .#d
 
@@ -323,7 +323,7 @@ branch HEAD is pointing to will move.
 
 .#t
 
-## naming non-leaf nodes
+## Naming non-leaf nodes
 
 .#d
 
@@ -398,7 +398,7 @@ development:</font>
 
 .#t
 
-## tags
+## Tag
 
 .#d
 
@@ -428,7 +428,7 @@ More commonly, inner nodes are TAGS.  We show tag names in yellow circles.
 
 .#t
 
-## the difference between branches and tags
+## The Difference between a branch and tag
 
 .#d
 
@@ -466,9 +466,9 @@ will move to point to the new commit.
 
 .#t
 
-# digressions - 1
+# Digressions - 1
 
-## what is a git URL?
+## What is a git URL?
 
 Git repos are accessed by providing a URL.  There are typically 4 kinds of Git
 URLs:
@@ -482,7 +482,7 @@ URLs:
 
 (see 'man git-clone' for all the allowed syntaxes for git URLs).
 
-## what is a "remote"?
+## What is a "remote"?
 
 A remote is a short name (like an alias) used to refer to a specific git
 repository.  Instead of always saying `git fetch git://sitaramc/gitolite`, you
@@ -491,9 +491,9 @@ can add that as a remote and use that short name instead of the long URL.
 For convenience, a 'remote' called 'origin' is automatically created
 when you clone a repo, pointing to the repo you cloned from.
 
-# local and remote repos
+# Local and Remote Repos
 
-## remote branches
+## Remote branch
 
 .#d
 
@@ -526,7 +526,7 @@ the name of the remote, and we show them in orange.
 
 .#t
 
-## multiple remotes
+## Multiple remotes
 
 You can have several remotes.
 
@@ -555,7 +555,7 @@ You can have several remotes.
 
 ![several remotes](fig13.png "several remotes")
 
-## fetching and merging from another repo
+## Fetching and merging from another repo
 
 .#d
 
@@ -618,9 +618,9 @@ this:
 
 .#t
 
-# digressions - 2
+# Digressions - 2
 
-## the object store
+## The object store
 
 Git keeps all its data inside a special directory called `.git` at the top
 level of your repository.  Somewhere in there is what we will simply call the
@@ -650,7 +650,7 @@ blobs and trees make a tree.  A commit is a tree, plus the SHA of its parent
 commit(s), the commit message, author/committer names and emails, and
 timestamps.  Under normal usage, you don't need to deal with all this).
 
-## what is a repo (again)
+## What is a repo (again)?
 
 Earlier, we saw that a repo was a graph of commits.  At the file system level,
 however, it is basically a directory called `.git` which looks somewhat like
@@ -669,7 +669,7 @@ this
     drwxrwxr-x 4 sitaram sitaram 4096 Sep 14 18:54 objects/
     drwxrwxr-x 4 sitaram sitaram 4096 Sep 14 18:54 refs/
 
-## objects and branches/tags
+## Objects and branches/tags
 
 .#d
 
@@ -751,9 +751,9 @@ command at all.
 
 All you did was move a pointer from one node to another.
 
-# advanced operations
+# Advanced Operations
 
-## merging
+## Merging
 
 .#d
 
@@ -846,7 +846,7 @@ When you merge, the end result will usually look like this:
 
 .#t
 
-## cherry-pick
+## Cherry-pick
 
 A cherry-pick is not very commonly done -- in well designed workflows it
 should actually be rare.  However, it's a good way to illustrate an important
@@ -930,7 +930,7 @@ name/email, commit time, etc).
 
 .#t
 
-## rebasing
+## Rebasing
 
 Instead of merging, let's say you wanted to rebase your commits on top of
 Sita's commits.
@@ -1046,9 +1046,9 @@ rebase branches that have already been published.
 
 .#t
 
-# tying up some loose ends
+# Tying Up Some Loose Ends
 
-## the confusion about checkout versus reset
+## The confusion about checkout and reset
 
 **Please note** <font color="gray">that this section completely ignores the
 myriad options available to both these commands, especially the ones that
@@ -1065,9 +1065,9 @@ those are specific cases of two quite different commands that just happen to
 
 The basic difference is very simple:
 
-  * checkout changes what your current branch is (i.e., it changes where HEAD
-    is pointing to)
-  * reset changes which commit the current branch is pointing to
+  * Checkout changes what your current branch (i.e., it changes where HEAD) is
+    pointing to.
+  * Reset changes which commit the current branch is pointing to.
 
 ## {-}
 
@@ -1142,7 +1142,7 @@ be a *completely* different history.
 one that cannot be reached by any branch.  It is still accessible using the
 'reflog' and will eventually get garbage collected)
 
-## detached HEAD and all that
+## Detached HEAD and all that
 
 All this time you have seen HEAD pointing to a branch name, and the branch
 itself pointing to a commit.  Then, when you make a commit, the branch moves
@@ -1298,7 +1298,7 @@ master`, you get this:
 Notice what happened to your new commit 8?  It's dangling.  Unreachable.
 (Except by the reflog, of course, but beginners can get shaken up!)
 
-## other ways to detach your HEAD
+## Other ways to detach your HEAD
 
 The most common way to get into a detached HEAD state is to check out a remote
 branch (like `git checkout origin/branch`), without realising that you need to
@@ -1331,7 +1331,7 @@ That last one (`git checkout master^0`) is interesting.  The `master^0`
 notation means "the actual commit that master points to", so it's just like
 saying `git checkout <SHA>`.
 
-## re-attaching the HEAD
+## Reattaching the HEAD
 
 Modern git will warn you about losing commits on a detached HEAD if you're at
 the command line, and tell you how to recover (immediately).
@@ -1347,7 +1347,7 @@ and switch to that using some command like:
 
     git branch newbranch HEAD@{1}
 
-## the reflog
+## The reflog
 
 The reflog can show you all the values that HEAD has taken in the past.
 Here's a simulated example.  I cloned a repo that had a master and a 'foo'
@@ -1373,6 +1373,6 @@ newbranch e2558a9` to save those commits.  (Notice that the SHA value of
 `HEAD@{3}` is the same one mentioned in the `moving from <SHA>...` message on
 the line above it).
 
-## The end
+## The End
 
 Hope that was useful...!
