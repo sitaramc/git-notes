@@ -86,16 +86,23 @@ only one file to maintain!
 
 ## what is a SHA
 
-A commit is uniquely identified by a 160-bit hex value (the 'SHA').  This is
-computed from the following pieces of information:
+A commit is uniquely identified by a 160-bit hex value (the **digest**), and
+these digests are calculated by using an algorithm called Cryptographic Hash
+Function.
 
-  * the SHA of the "tree" of files and directories as they exist in that
-    commit (details on how that SHA is computed is not relevant here)
-  * the SHA of the parent commit(s) -- every commit except the very first one
-    in the repo has at least one parent commit that the change is based upon.
-  * the commit message -- what you type in the editor when you commit
-  * the author name/email/timestamp
-  * the committer name/email/timestamp
+**Note :** There are many algorithms available to calculate digest and SHA
+(Secure Hash Algorithm) is one of them, Git uses SHA-1.
+
+Digest of a commit is computed from the following pieces of information:
+
+  * The digest of the "tree" of files and directories as they exist in that
+    commit (details on how that digest is computed is not relevant here).
+  * The digest of the parent commit(s) -- every commit has at least one parent
+    commit that the change is based upon, except the very first one (initial
+    commit) in the repo.
+  * The commit message -- what you type in the editor when you commit.
+  * The author name/email/timestamp.
+  * The committer name/email/timestamp.
 
 In the end, as I said, it's just a large, apparently random looking, number,
 which is actually a cryptographically-strong checksum.  It's usually written
@@ -106,29 +113,29 @@ discussion, think of it as something similar to a memory address returned by
 malloc().
 
 It is also GLOBALLY unique!  No commit in any repo anywhere in the world will
-have the same SHA.  (It's not a mathematical impossibility, but just so
+have the same digest.  (It's not a mathematical impossibility, but just so
 extremely improbable that we take it as fact.  If you didn't understand that,
 just take it on faith).
 
-An example SHA: `a30236028b7ddd65f01321af42f904479eaff549`
+An example digest (using SHA-1): `a30236028b7ddd65f01321af42f904479eaff549`
 
 ## what is a "ref"
 
-A ref is just a name for a SHA.  Branches or tags (described later) are refs.
+A ref is just a name for a digest.  Branches or tags are refs, described later.
 
 There are also some special refs (the most common being `HEAD`), that are
 usually **symbolic** refs (i.e., they usually point to a ref instead of
-directly pointing to a SHA).
+directly pointing to a digest).
 
-Anyway, for now just think of them as a human-readable name you gave to a SHA.
+Anyway, for now just think of them as a human-readable name, you gave to a digest.
 
 ## what is a repo
 
 .#d
 
 A repository ('repo') is a graph of commits.  In our figures, we represent
-SHAs with numbers for convenience.  We also represent time going
-upward (bottom to top).
+digests with numbers, for convenience.  We also represent time going upward
+(bottom to top).
 
 .#d
 
@@ -148,8 +155,8 @@ Well... every commit knows what its parent commit is (as described in the
 "what is a SHA" section above).  But it can't know what it's child commits are
 -- they haven't been made yet!
 
-Therefore a repo is like a single linked list.  It cannot be a double linked
-list -- this is because any change to the contents would change the SHA!
+Therefore, a repo is like a single linked list.  It cannot be a double linked
+list -- this is because any change to the contents would change the digest!
 
 # branches and tags
 
@@ -646,7 +653,7 @@ in this store:
     message.  A GPG-signed tag will also contain the GPG signature.
 
 (Details, if you like: a blob is the lowest in the hierarchy.  One or more
-blobs and trees make a tree.  A commit is a tree, plus the SHA of its parent
+blobs and trees make a tree.  A commit is a tree, plus the digest of its parent
 commit(s), the commit message, author/committer names and emails, and
 timestamps.  Under normal usage, you don't need to deal with all this).
 
@@ -746,7 +753,7 @@ reference.
 
 However, note that commits 10 and 11 did not change in any way simply because
 they are now in **your local "master" branch**.  They continue to have the
-same SHA values and the object store does not change as a result of this
+same digest values and the object store does not change as a result of this
 command at all.
 
 All you did was move a pointer from one node to another.
@@ -900,7 +907,7 @@ able to guess!), but here's the command you might run:
 This results in the following commit graph.
 
 Note that I've called the new commit "13a".  This is to reflect the fact that,
-while the *change* made is the same as in the original commit 13, the *SHA*
+while the *change* made is the same as in the original commit 13, the *digest*
 will not be the same anymore (new parent commit, new "tree", new committer
 name/email, commit time, etc).
 
@@ -998,7 +1005,7 @@ rebase origin/master`, and this is the result:
 .#t
 
 Note that again, we're ignoring command syntax and nuances here.  This is
-about concepts.  Also again, note that the SHAs of the 2 commits have changed,
+about concepts.  Also again, note that the digests of the 2 commits have changed,
 since they now have new parents, trees, etc., so we represent that by
 suffixing an "a".
 
@@ -1040,8 +1047,8 @@ where "22delta" is a minor fixup to "22", into
 
 using "git rebase -i".
 
-Notice that since commit 22 changes its SHA, all its child commits -- now
-rebased -- will also have new SHAs.  This is why you should (almost) never
+Notice that since commit 22 changes its digest, all its child commits -- now
+rebased -- will also have new digests.  This is why you should (almost) never
 rebase branches that have already been published.
 
 .#t
@@ -1320,16 +1327,16 @@ Here are various ways to detach HEAD:
     git checkout master^        # parent of master
     git checkout HEAD~2         # grandparent of current HEAD
     git checkout tagname        # since you cant commit to a tag!
-    git checkout <SHA>          # hex digits forming a full or partial SHA
+    git checkout <digest>       # hex digits forming a full or partial digest
     git checkout master^0       # (see note below)
 
 These will all make the file called `HEAD` contain the actual (40-hex-digit)
-SHA of the corresponding commit instead of some string like `ref:
+digest of the corresponding commit instead of some string like `ref:
 refs/heads/branch`.
 
 That last one (`git checkout master^0`) is interesting.  The `master^0`
 notation means "the actual commit that master points to", so it's just like
-saying `git checkout <SHA>`.
+saying `git checkout <digest>`.
 
 ## re-attaching the HEAD
 
@@ -1367,10 +1374,10 @@ recent HEAD value is first):
     802f184 HEAD@{5}: checkout: moving from master to origin/foo
     58c1539 HEAD@{6}: clone: from /tmp/tmp.lv5IqjK0ZI/b
 
-That `moving from <SHA>...` is usually a sign that some commits may have been
+That `moving from <digest>...` is usually a sign that some commits may have been
 lost.  In this case you can run `git branch newbranch HEAD@{3}` or `git branch
-newbranch e2558a9` to save those commits.  (Notice that the SHA value of
-`HEAD@{3}` is the same one mentioned in the `moving from <SHA>...` message on
+newbranch e2558a9` to save those commits.  (Notice that the digest of
+`HEAD@{3}` is the same one mentioned in the `moving from <digest>...` message on
 the line above it).
 
 ## The end
