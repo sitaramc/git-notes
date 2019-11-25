@@ -8,9 +8,9 @@
 ## About this slide show
 
 If you're viewing this on "gitolite.com", please be aware that's only an
-artifact of some very lazy DNS and hosting decisions I made.  Just think of it
+artifact of some very lazy DNS and hosting decisions, I made.  Just think of it
 as "sitaramc.github.com" instead, because these pages really have nothing to
-do with gitolite per se.  They're about git in general.
+do with gitolite per se.  They're about git, in general.
 
 ## License
 
@@ -24,7 +24,7 @@ This presentation uses [HTML
 Slidy](http://www.w3.org/Talks/Tools/Slidy2/Overview.html), a simple
 presentation software from the W3C. Although there's a help button in the
 footer of each presentation, it's missing some important stuff, so here's a
-smaller but more complete summary of the keyboard controls.
+smaller, but more complete summary of the keyboard controls.
 
 .#d
 
@@ -72,7 +72,7 @@ maintained, meaning I will respond to feedback ;-)
 
 This slide show was all done with pandoc's slidy output mode, and a few little
 pre-processing tweaks.  [Pandoc](http://johnmacfarlane.net/pandoc/) is
-absolutely fantastic and bloody powerful!  I wish I'd discovered it sooner but
+absolutely fantastic and bloody powerful!  I wish, I'd discovered it sooner but
 now (Dec 2013) that I have, it's eliminating a lot of my home-grown scripts to
 do various things like this!
 
@@ -145,8 +145,8 @@ upward (bottom to top).
 So why are the arrows pointing backward?
 
 Well... every commit knows what its parent commit is (as described in the
-"what is a SHA" section above).  But it can't know what it's child commits are
--- they haven't been made yet!
+"What is a SHA?" section, above).  But it can't know what it's child
+commits are -- they haven't been made yet!
 
 Therefore a repo is like a single linked list.  It cannot be a double linked
 list -- this is because any change to the contents would change the SHA!
@@ -157,7 +157,7 @@ list -- this is because any change to the contents would change the SHA!
 
 .#d
 
-Traditionally, the top of a linked list has a name.  That name is a BRANCH
+Traditionally, the top of a linked list has a name.  That name is a **branch**
 name.  We show branch names in green circles.
 
 .#d
@@ -178,7 +178,7 @@ name.  We show branch names in green circles.
 
 .#d
 
-Remember we said a repo is a GRAPH?  Specifically, more than one child node
+Remember, we said a repo is a **graph**.  Specifically, more than one child node
 may be pointing at the same parent node.  In this case, each 'leaf node' is a
 branch, and will have a name.
 
@@ -205,7 +205,7 @@ branch, and will have a name.
 
 .#d
 
-Well we can't keep creating more branches without eventually merging them
+Well, we can't keep creating more branches without eventually merging them
 back.  So let's say "feature X" is now tested enough to be merged into the
 main branch, so you `git merge feature_X`.  Here's what you get:
 
@@ -402,7 +402,7 @@ development:</font>
 
 .#d
 
-More commonly, inner nodes are TAGS.  We show tag names in yellow circles.
+More commonly, inner nodes are **tags**.  We show tag names in yellow circles.
 
 .#d
 
@@ -641,7 +641,7 @@ in this store:
   * **commit** -- a commit is a snapshot of your working tree at a point in
     time, although it contains a lot of other information also.
 
-  * **tag** -- an annotated tag (please see 'man git-tag' for more info)
+  * **tag** -- an annotated tag (please see `man git-tag`, for more info)
     contains the SHA of the commit being tagged, some other metadata, and the
     message.  A GPG-signed tag will also contain the GPG signature.
 
@@ -1351,9 +1351,9 @@ and switch to that using some command like:
 
 The reflog can show you all the values that HEAD has taken in the past.
 Here's a simulated example.  I cloned a repo that had a master and a 'foo'
-branch.  I then checked out `origin/foo`, ignored all the warnings, and made
+branch.  Then I checked out `origin/foo`, ignored all the warnings, and made
 two commits on what I thought was the "foo" branch.  Then I switched back to
-master and made two normal commits on master before I realised that I had
+master and made two normal commits on master before, I realised that I had
 'lost' two commits.
 
 At this point, running `git reflog show` gives me the following (the most
