@@ -9,6 +9,11 @@ does really useful things that just cannot be done in a CLI.
 Sadly, it is woefully undocumented.  Scratch that, it's almost *completely*
 undocumented.
 
+[Update 2020-06-28: I just found [Exploring
+gitk](https://www.youtube.com/watch?v=BuDYATyhl0U), which is pretty neat too.
+A lot of things in gitk are better explained in video than text so be sure to
+check that out also.]
+
 This is my attempt to do something about that.  Strictly speaking, you can
 explore the UI and find all these features yourself, and indeed, if you find
 any that are not listed here, please [email me](mailto:sitaramc@gmail.com).
@@ -46,14 +51,13 @@ All these are from the commit list (the top pane):
     you the old ones*.  It is most useful after operations like rebase,
     because you can compare the previous branch head with the new one.
 
-    (`Ctrl-F5`, on the other hand, is a total refresh, throwing away
+    (`Shift-F5`, on the other hand, is a total refresh, throwing away
     everything that was previously shown.)
 
-  * list/choose references: to quickly go to a particular reference, hit `F2`.
+  * list references: to quickly go to a particular reference, hit `F2`.
     If there are too many, you can specify a glob pattern in the box at the
-    bottom to subset the list.  Clicking on a reference takes the main window
-    to that reference.  The list window will stay open so you can click on
-    other refs.
+    bottom to subset the list.  Clicking on a reference jumps to that
+    reference.
 
 # browsing the commit list (top pane)
 
@@ -99,6 +103,10 @@ change the view to show that commit, so while examining this "diff", stick to
 <a name="sfc">
 
 # searching for commits
+
+Searching for commits is done by typing something in the search box just below
+the SHA ID.  (The "Search" box on the *next* line is to search for text within
+a commit diff; that's not the one we want, despite its name!)
 
 Here're some ways to search for commits.  The commits that result will become
 highlighted in bold, so you can see them in the context of their surrounding
@@ -169,8 +177,16 @@ There are several ways to navigate the tree quickly.
     the focus onto the SHA1 field, then type in the first few characters of
     the SHA you want.
 
-    If you click in the field with a mouse, it deselects the text within the
-    field, and (for some reason), shift-select is disabled so you have to hold
-    down the delete key to delete the entire field before you start typing in
-    the new hash.  Irritating, but it's only the mouse use, not keyboard use,
-    so it's ok, I guess.
+    On Linux, you can grab the current SHA into a terminal command line by
+    using the middle-click.
+
+  * Just above the diff view are some additional widgets.  One of them is a
+    drop-down called `Line diff`.  Be sure to try the `Color words` diff,
+    especially when long lines have had just one or two changes.
+
+    Similarly, the "Ignore space change" checkbox is useful when blocks have
+    indentation changes that cause the normal diff to look a lot noisier than
+    it should be.
+
+  * Finally, for a great birds-eye view of all the **refs** in a repo (but not
+    the commits between them), try `gitk --all --simplify-by-decoration`.
