@@ -145,7 +145,7 @@ upward (bottom to top).
 So why are the arrows pointing backward?
 
 Well... every commit knows what its parent commit is (as described in the
-"what is a SHA" section above).  But it can't know what it's child commits are
+"what is a SHA" section above).  But it can't know what its child commits are
 -- they haven't been made yet!
 
 Therefore a repo is like a single linked list.  It cannot be a double linked
